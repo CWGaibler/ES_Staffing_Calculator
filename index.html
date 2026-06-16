@@ -378,7 +378,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div class="input-card">
     <div class="input-row">
       <div class="input-group" style="position:relative;">
-        <input type="text" id="jobInput" placeholder="e.g. 538680" maxlength="10" oninput="toggleClearBtn()" />
+        <input type="text" id="jobInput" placeholder="Enter job number" maxlength="10" oninput="toggleClearBtn()" />
         <button id="clearBtn" onclick="clearJobInput()" title="Clear" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:#E2E5EF;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;color:#7A8099;line-height:0;padding:0;display:flex;align-items:center;justify-content:center;">&#215;</button>
       </div>
       <button class="calc-btn" onclick="calculate()">Get Recommendation &#8594;</button>
@@ -544,12 +544,43 @@ var currentRec={cf:0,br:0,as:0,sv:0,fr:0};
 var currentJob="";
 
 function getRow(b){for(var i=0;i<MODEL.length;i++){if(b>=MODEL[i].min&&b<=MODEL[i].max)return MODEL[i];}return null;}
-function activeBooths(s){return(s.currentBooths/s.projectedBooths)>=0.80?{count:s.currentBooths,source:"actual"}:{count:s.projectedBooths,source:"projected"};}
-function activeRevenue(s){return(s.revenueActuals/s.sfRevenue)>=0.80?{amount:s.revenueActuals,source:"actual"}:{amount:s.sfRevenue,source:"projected"};}
+function activeBooths(s){
+  var cur=s.currentBooths||0, proj=s.projectedBooths||0, py=s.pyBooths||0;
+  if(cur>0 && py>0){
+    var ratio=cur/py;
+    if(ratio>=0.80 && ratio<=1.20){
+      return{count:cur,source:"list"};
+    }
+  }
+  return{count:proj,source:"projected"};
+}
+function activeRevenue(s,boothCount){
+  var pyRev=s.pyRevenue||0, pyB=s.pyBooths||0, sfRev=s.sfRevenue||0;
+  if(pyRev>0 && pyB>0){
+    var perBooth=pyRev/pyB;
+    var histEst=perBooth*boothCount;
+    var warn=false;
+    if(sfRev>0){
+      var sfPerBooth=sfRev/boothCount;
+      var diff=Math.abs(sfPerBooth-perBooth)/perBooth;
+      if(diff>0.20) warn=true;
+    }
+    return{amount:histEst,source:"history",warn:warn,perBooth:perBooth};
+  }
+  return{amount:sfRev,source:"projected",warn:false,perBooth:0};
+}
 function applyOverlay(row,rev){
-  var cf=row.cf,br=row.br,as_=row.as,sv=row.sv,r=[];
-  if(rev>2000000&&rev>row.avgRev){var ex=rev-row.avgRev,extra=Math.floor(ex/1250000);if(extra>0){br+=extra;r.push("Back Room increased by "+extra+" \u2014 revenue "+ff(rev)+" exceeds both $2M threshold and range average of "+fm(row.avgRev));}}
-  if(rev>2000000&&sv===0){sv=1;r.push("Supervisory role triggered \u2014 revenue "+ff(rev)+" exceeds the $2M absolute threshold");}
+  var cf=row.cf, as_=row.as, sv=row.sv, r=[];
+  // BR driven purely by revenue band
+  var br=0;
+  if(rev>=16000000){br=5;}
+  else if(rev>=8000000){br=4;}
+  else if(rev>=5000000){br=3;}
+  else if(rev>=2000000){br=2;}
+  else if(rev>=1000000){br=1;}
+  else{br=0;}
+  // SV: baseline from model, or triggered by revenue >= $2M
+  if(sv===0 && rev>=2000000){sv=1;r.push("sv_rev");}
   return{cf:cf,br:br,as:as_,sv:sv,reasons:r};
 }
 function fm(n){if(n>=1000000)return"$"+(n/1000000).toFixed(1).replace(/\.0$/,"")+"M";if(n>=1000)return"$"+Math.round(n/1000)+"K";return"$"+n;}
@@ -580,13 +611,15 @@ function showCustomPlan(booths, revenue, s){
   var tier=MODEL.find(function(t){return booths>=t.min && booths<=t.max;});
   var sugCF=tier?tier.cf:5, sugBR=tier?tier.br:2, sugAS=tier?tier.as:1, sugSV=tier?tier.sv:1;
 
-  // Back room overlay
-  if(tier && tier.br>0 && revenue>2000000 && revenue>tier.avgRev){
-    var extra=Math.floor((revenue-tier.avgRev)/1250000);
-    sugBR+=extra;
-  }
-  // Supervisor revenue overlay
-  if(sugSV===0 && revenue>2000000) sugSV=1;
+  // BR driven by revenue band
+  if(revenue>=16000000){sugBR=5;}
+  else if(revenue>=8000000){sugBR=4;}
+  else if(revenue>=5000000){sugBR=3;}
+  else if(revenue>=2000000){sugBR=2;}
+  else if(revenue>=1000000){sugBR=1;}
+  else{sugBR=0;}
+  // SV revenue trigger
+  if(sugSV===0 && revenue>=2000000) sugSV=1;
 
   document.getElementById("custom-cf").value=sugCF;
   document.getElementById("custom-br").value=sugBR;
@@ -623,7 +656,7 @@ function showRemoteEligibility(booths){
   showOnlyFlow("remoteEligibilityCard");
   document.getElementById("remoteBoothCount").textContent=booths;
   var s=SHOWS[currentJob];
-  if(s){var rev=s.revenueActuals>0?s.revenueActuals:s.sfRevenue;document.getElementById("remote-revenue").value=Math.round(rev);}
+  if(s){var ab_=activeBooths(s),ar_=activeRevenue(s,ab_.count);document.getElementById("remote-revenue").value=Math.round(ar_.amount);}
   ["remoteResultFull","remoteResultHybrid","remoteResultOnsite"].forEach(function(id){document.getElementById(id).classList.remove("active");});
   document.getElementById("remoteConsiderCard").style.display="none";
   document.getElementById("remotePlanActions").style.display="none";
@@ -802,7 +835,7 @@ function calculate(){
   ["whySection","questionsSection"].forEach(function(id){document.getElementById(id).classList.remove("open");});
   ["whyHeader","questionsHeader"].forEach(function(id){document.getElementById(id).classList.remove("open");});
 
-  var ab=activeBooths(s),ar=activeRevenue(s);
+  var ab=activeBooths(s),ar=activeRevenue(s,ab.count);
 
   // ── SHOW INFO CARD (Events Lens style) ──
   function fmtDateRange(o,c){if(!o)return"";var p=o.split("-"),q=c?c.split("-"):p;var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var om=M[parseInt(p[1],10)-1],cm=M[parseInt(q[1],10)-1],od=parseInt(p[2],10),cd=parseInt(q[2],10),yr=p[0];if(p[1]===q[1])return om+" "+od+"–"+cd+", "+yr;return om+" "+od+" – "+cm+" "+cd+", "+yr;}
@@ -885,9 +918,26 @@ function calculate(){
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
   document.getElementById("sfRevenueVal").textContent=ff(s.sfRevenue);
   badge("currentBoothsBadge","Prior Year Reference",false);
-  badge("projectedBoothsBadge","Driving Recommendation",true);
+  // Box 3: dynamic label and badge based on booth source
+  var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
+  if(ab.source==="list"){
+    box3lbl.textContent="Current Booths (TSS)";
+    badge("projectedBoothsBadge","Exhibitor List Loaded",true);
+  } else {
+    box3lbl.textContent="Projected Booths";
+    badge("projectedBoothsBadge","Projected — No List",false);
+  }
   badge("revenueActualsBadge","Prior Year Reference",false);
-  badge("sfRevenueBadge","Driving Recommendation",true);
+  // Box 4: amber warning if Salesforce diverges >20% from history estimate
+  if(ar.warn){
+    badge("sfRevenueBadge","⚠ Salesforce differs >20% from history estimate",false);
+    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderColor="#FFB500";
+    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderWidth="2px";
+    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderStyle="solid";
+  } else {
+    badge("sfRevenueBadge","Driving Recommendation",true);
+    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.border="";
+  }
 
   // Prior year is now shown inline in the job line — hide the chip
   // pyJobChip now rendered in showInfoCard
@@ -927,16 +977,49 @@ function calculate(){
 
   // Why
   var why=[];
-  why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"\u2013"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
-  var brBase=base.br,brExtra=ov.br-brBase;
-  if(brBase===0){why.push("<strong>Back Room Roles:</strong> Back room roles begin at 301 booths. This show has "+ab.count+" booths, which is below that threshold.");}
-  else if(brExtra>0){why.push("<strong>Back Room Roles:</strong> The "+base.min+"\u2013"+base.max+" booth range has a baseline of "+brBase+" back room role"+(brBase!==1?"s":"")+"."+" Revenue of "+ff(ar.amount)+" exceeds both the $2M threshold and the range average of "+fm(base.avgRev)+", adding "+brExtra+" additional back room role"+(brExtra!==1?"s":"")+".");}
-  else{why.push("<strong>Back Room Roles:</strong> The "+base.min+"\u2013"+base.max+" booth range has a baseline of "+brBase+" back room role"+(brBase!==1?"s":"")+"."+" Revenue of "+ff(ar.amount)+" does not exceed both the $2M threshold and range average of "+fm(base.avgRev)+", so no additional back room staff were added.");}
-  if(base.as>0){why.push("<strong>Additional Support Roles:</strong> The "+base.min+"\u2013"+base.max+" booth range includes "+base.as+" additional support role"+(base.as!==1?"s":"")+" in the baseline. These roles provide extra coverage for customer-facing tasks on high-demand days.");}
+
+  // Revenue source label (set here for use throughout why block)
+  var revSourceLabel, revSourceDetail;
+  if(ar.source==="history"){
+    revSourceLabel="history-based estimate";
+    revSourceDetail="Prior year revenue of "+ff(s.pyRevenue)+" ÷ "+s.pyBooths.toLocaleString()+" prior year booths = "+ff(ar.perBooth)+" per booth × "+ab.count.toLocaleString()+" booths = "+ff(ar.amount)+".";
+  } else {
+    revSourceLabel="Salesforce projection";
+    revSourceDetail="No prior year data available. Using Salesforce projection of "+ff(ar.amount)+".";
+  }
+
+  // Booth source explanation
+  var boothSourceLabel;
+  if(ab.source==="list"){
+    boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded and within 20% of last year’s "+s.pyBooths.toLocaleString()+" booths.";
+  } else if(s.currentBooths>0 && s.pyBooths>0){
+    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — current TSS count of "+s.currentBooths.toLocaleString()+" is outside 20% of last year’s "+s.pyBooths.toLocaleString()+" booths, suggesting the exhibitor list hasn’t been fully loaded yet.";
+  } else if(s.currentBooths===0){
+    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no exhibitor list has been loaded into TSS yet.";
+  } else {
+    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no prior year booth count available to validate against.";
+  }
+
+  why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);
+  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail+(ar.warn?" <em style=\"color:#B8860B\">Note: Salesforce projection differs from this history-based estimate by more than 20%.</em>":""));
+  why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"–"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
+
+  // BR — revenue band
+  var brBandLabel;
+  if(ar.amount>=16000000){brBandLabel="$16M+";}
+  else if(ar.amount>=8000000){brBandLabel="$8M–$16M";}
+  else if(ar.amount>=5000000){brBandLabel="$5M–$8M";}
+  else if(ar.amount>=2000000){brBandLabel="$2M–$5M";}
+  else if(ar.amount>=1000000){brBandLabel="$1M–$2M";}
+  else{brBandLabel="under $1M";}
+  if(ov.br===0){why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, which does not require back room staffing.");}
+  else{why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue, not booth count. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, recommending "+ov.br+" back room role"+(ov.br!==1?"s":"")+".");}
+
+  if(base.as>0){why.push("<strong>Additional Support Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.as+" additional support role"+(base.as!==1?"s":"")+" in the baseline. These roles provide extra coverage for customer-facing tasks on high-demand days.");}
   else{why.push("<strong>Additional Support Roles:</strong> Additional support roles are included in the baseline starting at 601 booths. This show has "+ab.count+" booths. If this show has specific high-demand dates or compressed timelines, a modification can be documented below.");}
-  if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This show has "+ab.count+" booths and revenue of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger.");}
-  else if(base.sv>0){why.push("<strong>Supervisory Roles:</strong> The "+base.min+"\u2013"+base.max+" booth range includes "+base.sv+" supervisory role"+(base.sv!==1?"s":"")+" in the baseline. Events of this size require dedicated on-site leadership.");}
-  else{why.push("<strong>Supervisory Roles:</strong> This show\u2019s "+ab.count+" booths are below the 451-booth baseline trigger, but revenue of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
+  if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This show has "+ab.count+" booths and a "+revSourceLabel+" of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger.");}
+  else if(base.sv>0){why.push("<strong>Supervisory Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.sv+" supervisory role"+(base.sv!==1?"s":"")+" in the baseline. Events of this size require dedicated on-site leadership.");}
+  else{why.push("<strong>Supervisory Roles:</strong> This show’s "+ab.count+" booths are below the 451-booth baseline trigger, but the "+revSourceLabel+" of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
   why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> These roles fall outside the staffing model and are not driven by booth count or revenue. They default to 0. If this show requires cold storage, access/controlled storage, or freight rigging desks, document them as a modification below.");
   document.getElementById("whyList").innerHTML=why.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
 

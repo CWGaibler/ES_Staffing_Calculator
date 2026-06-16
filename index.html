@@ -930,7 +930,7 @@ function calculate(){
   badge("revenueActualsBadge","Prior Year Reference",false);
   // Box 4: amber warning if Salesforce diverges >20% from history estimate
   if(ar.warn){
-    badge("sfRevenueBadge","⚠ Salesforce differs >20% from history estimate",false);
+    badge("sfRevenueBadge","⚠ Revenue projection differs significantly from prior year actuals",false);
     document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderColor="#FFB500";
     document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderWidth="2px";
     document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderStyle="solid";
@@ -1001,7 +1001,7 @@ function calculate(){
   }
 
   why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);
-  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail+(ar.warn?" <em style=\"color:#B8860B\">Note: Salesforce projection differs from this history-based estimate by more than 20%.</em>":""));
+  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail+(ar.warn?" <em style=\"color:#B8860B\">Note: The Salesforce revenue projection differs significantly from prior year actuals.</em>":""));
   why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"–"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
 
   // BR — revenue band

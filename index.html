@@ -656,7 +656,7 @@ function showRemoteEligibility(booths){
   showOnlyFlow("remoteEligibilityCard");
   document.getElementById("remoteBoothCount").textContent=booths;
   var s=SHOWS[currentJob];
-  if(s){var ab_=activeBooths(s),ar_=activeRevenue(s,ab_.count);document.getElementById("remote-revenue").value=Math.round(ar_.amount);}
+  if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0);}
   ["remoteResultFull","remoteResultHybrid","remoteResultOnsite"].forEach(function(id){document.getElementById(id).classList.remove("active");});
   document.getElementById("remoteConsiderCard").style.display="none";
   document.getElementById("remotePlanActions").style.display="none";

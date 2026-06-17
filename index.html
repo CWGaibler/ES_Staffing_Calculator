@@ -561,6 +561,7 @@ function activeBooths(s){
       return{count:cur,source:"list"};
     }
   }
+  if(py>0){return{count:py,source:"prior-year"};}
   return{count:proj,source:"projected"};
 }
 function activeRevenue(s,boothCount){
@@ -962,11 +963,14 @@ function calculate(){
   // Box 3: dynamic label and badge based on booth source
   var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
   if(ab.source==="list"){
-    box3lbl.textContent=ab.source==="list"?"Current Year Booth Count":"Current Year Booth Count Projection";
+    box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Exhibitor List Loaded",true);
+  } else if(ab.source==="prior-year"){
+    box3lbl.textContent="Prior Year Booth Count";
+    badge("projectedBoothsBadge","Prior Year — No List Loaded",false);
   } else {
-    box3lbl.textContent=ab.source==="list"?"Current Year Booth Count":"Current Year Booth Count Projection";
-    badge("projectedBoothsBadge","Projected — No List",false);
+    box3lbl.textContent="Current Year Booth Count Projection";
+    badge("projectedBoothsBadge","Projected — No Prior Year",false);
   }
   badge("revenueActualsBadge","Prior Year Reference",false);
   // Box 4: amber warning if Salesforce diverges >20% from history estimate
@@ -1031,12 +1035,10 @@ function calculate(){
   var boothSourceLabel;
   if(ab.source==="list"){
     boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded and within 20% of last year’s "+s.pyBooths.toLocaleString()+" booths.";
-  } else if(s.currentBooths>0 && s.pyBooths>0){
-    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — current TSS count of "+s.currentBooths.toLocaleString()+" is outside 20% of last year’s "+s.pyBooths.toLocaleString()+" booths, suggesting the exhibitor list hasn’t been fully loaded yet.";
-  } else if(s.currentBooths===0){
-    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no exhibitor list has been loaded into TSS yet.";
+  } else if(ab.source==="prior-year"){
+    boothSourceLabel="Prior Year Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded yet. Prior year booth count is used as the most reliable available reference."+(s.currentBooths>0?" (Current TSS count of "+s.currentBooths.toLocaleString()+" is outside 20% of prior year and may not reflect a fully loaded list.)":"");
   } else {
-    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no prior year booth count available to validate against.";
+    boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded and no prior year data is available for this show.";
   }
 
   why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);

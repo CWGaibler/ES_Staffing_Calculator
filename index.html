@@ -626,8 +626,13 @@ function showCustomPlan(booths, revenue, s){
   document.getElementById("customBoothCount").textContent=booths.toLocaleString();
 
   // Run model rules to suggest a starting plan
-  var tier=MODEL.find(function(t){return booths>=t.min && booths<=t.max;});
-  var sugCF=tier?tier.cf:5, sugBR=0, sugAS=tier?tier.as:1, sugSV=tier?tier.sv:1;
+  // CF: ceil(booths/150) — same rule as normal model, no ceiling
+  var sugCF=Math.ceil(booths/150);
+  // AS: 1 if booths >= 601
+  var sugAS=booths>=601?1:0;
+  // SV: 1 if booths >= 451 (revenue trigger checked below)
+  var sugSV=booths>=451?1:0;
+  var sugBR=0;
 
   // BR driven by revenue band
   if(revenue>=16000000){sugBR=5;}
@@ -1122,7 +1127,7 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 
 <!-- build: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-17 18:59 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-17 19:03 UTC</div>
 </body>
 </html>
 

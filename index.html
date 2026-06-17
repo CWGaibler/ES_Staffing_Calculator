@@ -959,14 +959,19 @@ function calculate(){
   document.getElementById("projectedBoothsVal").textContent=s.projectedBooths.toLocaleString();
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
   document.getElementById("sfRevenueVal").textContent=ff(ar.amount);
-  badge("currentBoothsBadge","Prior Year Reference",false);
+  // Box 1 and Box 3 badges depend on booth source
+  if(ab.source==="prior-year"){
+    badge("currentBoothsBadge","Driving Recommendation",true);
+  } else {
+    badge("currentBoothsBadge","Prior Year Reference",false);
+  }
   // Box 3: dynamic label and badge based on booth source
   var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
   if(ab.source==="list"){
     box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Exhibitor List Loaded",true);
   } else if(ab.source==="prior-year"){
-    box3lbl.textContent="Prior Year Booth Count";
+    box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Prior Year — No List Loaded",false);
   } else {
     box3lbl.textContent="Current Year Booth Count Projection";

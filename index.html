@@ -614,11 +614,15 @@ function showNormalFlow(){
   document.getElementById("normalRecSection").style.display="block";
   document.getElementById("customPlanCard").classList.remove("active");
   document.getElementById("remoteEligibilityCard").classList.remove("active");
+  document.getElementById("whyHeader").style.display="";
+  document.getElementById("questionsHeader").style.display="";
 }
 
 // ── 751+ CUSTOM PLAN ────────────────────────────────────────────────────────
 function showCustomPlan(booths, revenue, s){
   showOnlyFlow("customPlanCard");
+  document.getElementById("whyHeader").style.display="none";
+  document.getElementById("questionsHeader").style.display="none";
   document.getElementById("customBoothCount").textContent=booths.toLocaleString();
 
   // Run model rules to suggest a starting plan
@@ -1117,7 +1121,7 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 
 <!-- build: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-17 18:32 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-17 18:55 UTC</div>
 </body>
 </html>
 

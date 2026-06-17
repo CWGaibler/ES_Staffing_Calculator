@@ -430,8 +430,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         <div class="flow-card-desc">This show has <strong id="remoteBoothCount">0</strong> booths. Events at this size may be eligible for fully remote, hybrid, or fully on-site staffing. Answer the three questions below to receive a recommendation.</div>
         <div class="flow-inputs">
           <div class="flow-input-group"><label>Expected Outbound MHAs</label><div class="flow-input-wrapper"><input type="number" id="remote-mha" min="0" max="999" value="0" /><span class="flow-input-affix suffix">MHAs</span></div></div>
-          <div class="flow-input-group"><label>Expected Exhibitor Freight Weight</label><div class="flow-input-wrapper"><input type="number" id="remote-freight" min="0" max="999999" value="0" /><span class="flow-input-affix suffix">lbs</span></div></div>
-          <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="number" id="remote-revenue" min="0" max="9999999" value="0" /></div></div>
+          <div class="flow-input-group"><label>Expected Exhibitor Freight Weight</label><div class="flow-input-wrapper"><input type="text" id="remote-freight" value="0" inputmode="numeric" style="text-align:right;" /><span class="flow-input-affix suffix">lbs</span></div></div>
+          <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="text" id="remote-revenue" value="0" inputmode="numeric" style="text-align:right;" /></div></div>
         </div>
         <button class="flow-btn flow-btn-primary" onclick="determineRemote()" style="margin-bottom:14px;">Determine Staffing Approach &#8594;</button>
         <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the Remote Staffing SOP for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
@@ -667,15 +667,45 @@ function showRemoteEligibility(booths){
   showOnlyFlow("remoteEligibilityCard");
   document.getElementById("remoteBoothCount").textContent=booths;
   var s=SHOWS[currentJob];
-  if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0);}
+  if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0).toLocaleString("en-US");}
   ["remoteResultFull","remoteResultHybrid","remoteResultOnsite"].forEach(function(id){document.getElementById(id).classList.remove("active");});
   document.getElementById("remoteConsiderCard").style.display="none";
   document.getElementById("remotePlanActions").style.display="none";
 }
+function fmtThousands(val){
+  var n=parseInt(String(val).replace(/[^0-9]/g,''))||0;
+  return n.toLocaleString('en-US');
+}
+function parseFormatted(id){
+  return parseInt(String(document.getElementById(id).value).replace(/[^0-9]/g,''))||0;
+}
+function attachRemoteFormatting(){
+  var freight=document.getElementById('remote-freight');
+  var revenue=document.getElementById('remote-revenue');
+  if(!freight||!revenue) return;
+  freight.addEventListener('input',function(){
+    var pos=this.selectionStart;
+    var raw=this.value.replace(/[^0-9]/g,'');
+    var formatted=parseInt(raw||0).toLocaleString('en-US');
+    this.value=formatted;
+  });
+  freight.addEventListener('blur',function(){
+    this.value=fmtThousands(this.value);
+  });
+  revenue.addEventListener('input',function(){
+    var raw=this.value.replace(/[^0-9]/g,'');
+    this.value=parseInt(raw||0).toLocaleString('en-US');
+  });
+  revenue.addEventListener('blur',function(){
+    this.value=fmtThousands(this.value);
+  });
+}
+document.addEventListener('DOMContentLoaded', attachRemoteFormatting);
+
 function determineRemote(){
   var mha=parseInt(document.getElementById("remote-mha").value)||0;
-  var freight=parseInt(document.getElementById("remote-freight").value)||0;
-  var revenue=parseFloat(document.getElementById("remote-revenue").value)||0;
+  var freight=parseFormatted("remote-freight");
+  var revenue=parseFormatted("remote-revenue");
   ["remoteResultFull","remoteResultHybrid","remoteResultOnsite"].forEach(function(id){document.getElementById(id).classList.remove("active");});
   var result;
   if(mha<=10&&freight<=10000&&revenue<=30000){result="full";}
@@ -1094,3 +1124,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781698163 -->
 <!-- build:1781698469 -->
 <!-- build:1781698610 -->
+<!-- build:1781698749 -->

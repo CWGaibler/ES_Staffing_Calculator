@@ -446,7 +446,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
             <div class="sf-decision-lbl">Notes or Rationale (optional)</div>
             <textarea class="sf-reason-textarea" id="remotePlanNotes" style="margin-bottom:10px;" placeholder="Add any notes about this staffing approach, grey city considerations, staff availability, or other factors that informed your decision."></textarea>
             <div class="sf-decision-btns">
-              <button class="btn-agree" onclick="submitRemotePlan()">&#10003; Confirm &amp; Submit This Approach</button>
+              <a class="btn-open-nss" onclick="submitRemotePlan(); return false;" href="#">&#10003; Confirm &amp; Submit This Approach</a>
             </div>
           </div>
         </div>
@@ -454,6 +454,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     </div>
 
     <!-- NORMAL RECOMMENDATION -->
+    <div id="normalRecSection">
     <div class="el-section-div">Staffing Recommendation <button class="role-info-btn" onclick="document.getElementById('roleModal').classList.add('open')" title="What do these roles mean?">i</button></div>
     <div class="sf-calc-full" id="recCard">
       <div class="sf-calc-roles">
@@ -499,6 +500,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         </div>
       </div>
     </div>
+    </div><!-- /normalRecSection -->
 
     <!-- CONFIRMATION BANNER -->
     <div class="confirm-banner" id="confirmBanner">
@@ -601,12 +603,14 @@ function toggleSection(sectionId,header){var body=document.getElementById(sectio
 // ── VISIBILITY HELPERS ──────────────────────────────────────────────────────
 function showOnlyFlow(flowId){
   document.getElementById("recCard").style.display="none";
+  document.getElementById("normalRecSection").style.display="none";
   document.getElementById("customPlanCard").classList.remove("active");
   document.getElementById("remoteEligibilityCard").classList.remove("active");
   if(flowId) document.getElementById(flowId).classList.add("active");
 }
 function showNormalFlow(){
   document.getElementById("recCard").style.display="block";
+  document.getElementById("normalRecSection").style.display="block";
   document.getElementById("customPlanCard").classList.remove("active");
   document.getElementById("remoteEligibilityCard").classList.remove("active");
 }
@@ -1086,3 +1090,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781692790 -->
 <!-- build:1781693414 -->
 <!-- build:1781693639 -->
+<!-- build:1781696419 -->

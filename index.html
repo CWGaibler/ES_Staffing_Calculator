@@ -940,12 +940,10 @@ function calculate(){
   // Box 4: amber warning if Salesforce diverges >20% from history estimate
   if(ar.warn){
     badge("sfRevenueBadge","⚠ Revenue projection differs significantly from prior year actuals",false);
-    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderColor="#FFB500";
-    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderWidth="2px";
-    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.borderStyle="solid";
+
   } else {
     badge("sfRevenueBadge","Driving Recommendation",true);
-    document.getElementById("sfRevenueVal").closest(".sf-data-card").style.border="";
+
   }
 
   // Prior year is now shown inline in the job line — hide the chip
@@ -1087,3 +1085,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781692606 -->
 <!-- build:1781692790 -->
 <!-- build:1781693414 -->
+<!-- build:1781693639 -->

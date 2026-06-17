@@ -565,19 +565,8 @@ function activeBooths(s){
   return{count:proj,source:"projected"};
 }
 function activeRevenue(s,boothCount){
-  var pyRev=s.pyRevenue||0, pyB=s.pyBooths||0, sfRev=s.sfRevenue||0;
-  if(pyRev>0 && pyB>0){
-    var perBooth=pyRev/pyB;
-    var histEst=perBooth*boothCount;
-    var warn=false;
-    if(sfRev>0){
-      var sfPerBooth=sfRev/boothCount;
-      var diff=Math.abs(sfPerBooth-perBooth)/perBooth;
-      if(diff>0.20) warn=true;
-    }
-    return{amount:histEst,source:"history",warn:warn,perBooth:perBooth};
-  }
-  return{amount:sfRev,source:"projected",warn:false,perBooth:0};
+  var sfRev=s.sfRevenue||0;
+  return{amount:sfRev,source:"salesforce",warn:false,perBooth:0};
 }
 function applyOverlay(row,rev){
   var cf=row.cf, as_=row.as, sv=row.sv, r=[];
@@ -630,14 +619,8 @@ function runNormalRecommendation(s, ab, ar){
   var why=[];
 
   // Revenue source label (set here for use throughout why block)
-  var revSourceLabel, revSourceDetail;
-  if(ar.source==="history"){
-    revSourceLabel="history-based estimate";
-    revSourceDetail="Prior year revenue of "+ff(s.pyRevenue)+" ÷ "+s.pyBooths.toLocaleString()+" prior year booths = "+ff(ar.perBooth)+" per booth × "+ab.count.toLocaleString()+" booths = "+ff(ar.amount)+". For reference, Salesforce projects "+ff(s.sfRevenue)+" for this show.";
-  } else {
-    revSourceLabel="Salesforce projection";
-    revSourceDetail="No prior year data is available for this show. Revenue projection is based on the Salesforce forecast of "+ff(ar.amount)+".";
-  }
+  var revSourceLabel="Salesforce projection";
+  var revSourceDetail="Salesforce projects "+ff(ar.amount)+" in exhibitor revenue for this show.";
 
   // Booth source explanation
   var boothSourceLabel;
@@ -650,7 +633,7 @@ function runNormalRecommendation(s, ab, ar){
   }
 
   why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);
-  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail+(ar.warn?" <em style=\"color:#B8860B\">Note: The Salesforce revenue projection differs significantly from prior year actuals.</em>":""));
+  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
   why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"–"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
 
   // BR — revenue band
@@ -1057,14 +1040,7 @@ function calculate(){
     badge("projectedBoothsBadge","Projected — No Prior Year",false);
   }
   badge("revenueActualsBadge","Prior Year Reference",false);
-  // Box 4: amber warning if Salesforce diverges >20% from history estimate
-  if(ar.warn){
-    badge("sfRevenueBadge","⚠ Revenue projection differs significantly from prior year actuals",false);
-
-  } else {
-    badge("sfRevenueBadge","Driving Recommendation",true);
-
-  }
+  badge("sfRevenueBadge","Driving Recommendation",true);
 
   // Prior year is now shown inline in the job line — hide the chip
   // pyJobChip now rendered in showInfoCard

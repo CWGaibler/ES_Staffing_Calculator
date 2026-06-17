@@ -839,7 +839,7 @@ function calculate(){
 
   // ── SHOW INFO CARD (Events Lens style) ──
   function fmtDateRange(o,c){if(!o)return"";var p=o.split("-"),q=c?c.split("-"):p;var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var om=M[parseInt(p[1],10)-1],cm=M[parseInt(q[1],10)-1],od=parseInt(p[2],10),cd=parseInt(q[2],10),yr=p[0];if(p[1]===q[1])return om+" "+od+"–"+cd+", "+yr;return om+" "+od+" – "+cm+" "+cd+", "+yr;}
-  var isNext=s.freemanPlatform==="Freeman Next";
+  var isNext=s.freemanPlatform==="Next";
 
   // Growth meta (title-cased; RD email omitted)
   function toTitleCase(str){

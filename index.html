@@ -203,7 +203,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 /* CONFIRMATION BANNER */
 .confirm-banner{border-radius:10px;padding:16px 18px;margin-bottom:16px;display:none}
 .confirm-banner.agreed{background:rgba(66,187,55,.06);border:1.5px solid rgba(66,187,55,.35)}
-.confirm-banner.deviated{background:rgba(251,71,31,.04);border:1.5px solid rgba(251,71,31,.25)}
+.confirm-banner.deviated{background:rgba(66,187,55,.06);border:1.5px solid rgba(66,187,55,.35)}
 .confirm-banner .cb-title{font-size:15px;font-weight:800;margin-bottom:6px}
 .confirm-banner.agreed .cb-title{color:#1A6B35}
 .confirm-banner.deviated .cb-title{color:#7A2A00}
@@ -417,7 +417,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="dev-role dev-role-freight"><label>Freight Rigging / Storage Desk Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-fr" min="0" max="50" value="0" /></div>
         </div>
         <div class="deviation-reason"><label>Custom Plan Rationale</label><textarea class="sf-reason-textarea" id="customPlanReason" placeholder="Explain your staffing plan for this show. Include any relevant context about show complexity, historical staffing, special requirements, or other factors that informed your decisions."></textarea></div>
-        <button class="flow-btn flow-btn-primary" onclick="submitCustomPlan()">Submit Custom Plan &#8594;</button>
+        <button class="sf-btn-agree" style="width:100%;justify-content:center;" onclick="submitCustomPlan()">&#10003; Confirm Custom Plan</button>
       </div>
     </div>
 
@@ -446,7 +446,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
             <div class="sf-decision-lbl">Notes or Rationale (optional)</div>
             <textarea class="sf-reason-textarea" id="remotePlanNotes" style="margin-bottom:6px;" placeholder="Add any notes about this staffing approach, grey city considerations, staff availability, or other factors that informed your decision."></textarea>
             <div class="sf-decision-btns">
-              <a class="btn-open-nss" onclick="submitRemotePlan(); return false;" href="#"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Open NSS to Record Decision →</a>
+              <button class="sf-btn-agree" style="width:100%;justify-content:center;" onclick="submitRemotePlan()">&#10003; Confirm Staffing Approach</button>
             </div>
           </div>
         </div>
@@ -654,7 +654,7 @@ function submitCustomPlan(){
   var banner=document.getElementById("confirmBanner");
   banner.className="confirm-banner deviated";
   document.getElementById("cbTitle").textContent="\u2705 Custom Plan Confirmed \u2014 Ready to Enter in NSS";
-  document.getElementById("cbBody").innerHTML="<strong>"+s.name+"</strong> has "+s.currentBooths.toLocaleString()+" booths and requires a custom staffing plan. Use the button below to open the NSS and record your plan.<br><br><strong>Rationale:</strong> "+reason;
+  document.getElementById("cbBody").innerHTML="<strong>"+s.name+"</strong> has "+s.currentBooths.toLocaleString()+" booths and requires a custom staffing plan. Use the button below to open the NSS and record your plan.";
   var roles=[{s:"Customer-Facing<br>Role",p:"Customer-Facing<br>Roles",c:cf},{s:"Back Room<br>Role",p:"Back Room<br>Roles",c:br},{s:"Additional Support<br>Role",p:"Additional Support<br>Roles",c:as_},{s:"Supervisory<br>Role",p:"Supervisory<br>Roles",c:sv},{s:"Freight / Storage Desk<br>Role",p:"Freight / Storage Desk<br>Roles",c:fr}];
   document.getElementById("cbSummary").innerHTML=roles.map(function(r){return'<div class="cb-role"><div class="cb-role-count">'+r.c+'</div><div class="cb-role-name">'+(r.c===1?r.s:r.p)+'</div></div>';}).join("");
   document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Custom plan (751+ booths)"
@@ -715,8 +715,8 @@ function submitRemotePlan(){
   var banner=document.getElementById("confirmBanner");
   banner.className="confirm-banner agreed";
   document.getElementById("cbTitle").textContent="\u2705 Staffing Approach Confirmed \u2014 Ready to Enter in NSS";
-  document.getElementById("cbBody").innerHTML="<strong>"+s.name+"</strong> \u2014 Staffing approach: <strong>"+resultType+"</strong>. Use the button below to open the NSS and record this approach."+(notes?"<br><br><strong>Notes:</strong> "+notes:"");
-  document.getElementById("cbSummary").innerHTML="";
+  document.getElementById("cbBody").innerHTML="<strong>"+s.name+"</strong> \u2014 Staffing approach: <strong>"+resultType+"</strong>. Use the button below to open the NSS and record this approach.";
+  document.getElementById("cbSummary").innerHTML='<div class="cb-role" style="grid-column:1/-1;text-align:left;padding:8px 12px;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7A8099;margin-bottom:4px;">Determined staffing approach</div><div style="font-size:16px;font-weight:800;color:#001F5F;">'+resultType+'</div></div>';
   document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Small event remote eligibility determination"
     +"<br><a class=\"btn-open-nss\" href=\"https://app.smartsheet.com/sheets/2gG6m5j4V639GvH7FjqJWG2VMjW2M7fXjJ9xFPW1?view=grid\" target=\"_blank\">"
     +"<svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
@@ -1093,3 +1093,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781696419 -->
 <!-- build:1781696765 -->
 <!-- build:1781696990 -->
+<!-- build:1781698163 -->

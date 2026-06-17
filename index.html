@@ -438,13 +438,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
         <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Proceeding to the standard ES Staffing Model recommendation below...</p></div>
         <div class="collapsible-card" id="remoteConsiderCard" style="display:none;">
-          <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Additional Considerations Before Finalizing <span class="sf-chev">&#9660;</span></button>
-          <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
+          <div class="sf-collapsible-btn" style="cursor:default;">Additional Considerations Before Finalizing</div>
+          <div class="sf-collapsible-body open" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
         </div>
         <div id="remotePlanActions" style="display:none;">
           <div class="sf-decision-section" style="border-top:none;padding:0;">
-            <div class="sf-decision-lbl">Notes or Rationale (optional)</div>
-            <textarea class="sf-reason-textarea" id="remotePlanNotes" style="margin-bottom:6px;" placeholder="Add any notes about this staffing approach, grey city considerations, staff availability, or other factors that informed your decision."></textarea>
             <div class="sf-decision-btns">
               <button class="sf-btn-agree" onclick="submitRemotePlan()">&#10003; Confirm Staffing Approach</button>
             </div>
@@ -1095,3 +1093,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781696990 -->
 <!-- build:1781698163 -->
 <!-- build:1781698469 -->
+<!-- build:1781698610 -->

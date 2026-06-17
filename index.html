@@ -585,8 +585,8 @@ function applyOverlay(row,rev){
   if(rev>=16000000){br=5;}
   else if(rev>=8000000){br=4;}
   else if(rev>=5000000){br=3;}
-  else if(rev>=2000000){br=2;}
-  else if(rev>=1000000){br=1;}
+  else if(rev>=2500000){br=2;}
+  else if(rev>=750000){br=1;}
   else{br=0;}
   // SV: baseline from model, or triggered by revenue >= $2M
   if(sv===0 && rev>=2000000){sv=1;r.push("sv_rev");}
@@ -626,8 +626,8 @@ function showCustomPlan(booths, revenue, s){
   if(revenue>=16000000){sugBR=5;}
   else if(revenue>=8000000){sugBR=4;}
   else if(revenue>=5000000){sugBR=3;}
-  else if(revenue>=2000000){sugBR=2;}
-  else if(revenue>=1000000){sugBR=1;}
+  else if(revenue>=2500000){sugBR=2;}
+  else if(revenue>=750000){sugBR=1;}
   else{sugBR=0;}
   // SV revenue trigger
   if(sugSV===0 && revenue>=2000000) sugSV=1;
@@ -1048,9 +1048,9 @@ function calculate(){
   if(ar.amount>=16000000){brBandLabel="$16M+";}
   else if(ar.amount>=8000000){brBandLabel="$8M–$16M";}
   else if(ar.amount>=5000000){brBandLabel="$5M–$8M";}
-  else if(ar.amount>=2000000){brBandLabel="$2M–$5M";}
-  else if(ar.amount>=1000000){brBandLabel="$1M–$2M";}
-  else{brBandLabel="under $1M";}
+  else if(ar.amount>=2500000){brBandLabel="$2.5M–$5M";}
+  else if(ar.amount>=750000){brBandLabel="$750K–$2.5M";}
+  else{brBandLabel="under $750K";}
   if(ov.br===0){why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, which does not require back room staffing.");}
   else{why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue, not booth count. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, recommending "+ov.br+" back room role"+(ov.br!==1?"s":"")+".");}
 

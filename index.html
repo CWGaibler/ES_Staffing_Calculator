@@ -890,6 +890,8 @@ function calculate(){
   document.getElementById("deviationReason") && (document.getElementById("deviationReason").value="");
   ["whySection","questionsSection"].forEach(function(id){document.getElementById(id).classList.remove("open");});
   ["whyHeader","questionsHeader"].forEach(function(id){document.getElementById(id).classList.remove("open");});
+  document.getElementById("whyList").innerHTML="";
+  document.getElementById("questionsList").innerHTML="";
 
   var ab=activeBooths(s),ar=activeRevenue(s,ab.count);
 

@@ -959,12 +959,9 @@ function calculate(){
   if(ab.source==="list"){
     box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Exhibitor List Loaded",true);
-  } else if(ab.source==="prior-year"){
-    box3lbl.textContent="Current Year Booth Count";
-    badge("projectedBoothsBadge","Prior Year — No List Loaded",false);
   } else {
     box3lbl.textContent="Current Year Booth Count Projection";
-    badge("projectedBoothsBadge","Projected — No Prior Year",false);
+    badge("projectedBoothsBadge","No List Loaded",false);
   }
   badge("revenueActualsBadge","Prior Year Reference",false);
   badge("sfRevenueBadge","Driving Recommendation",true);

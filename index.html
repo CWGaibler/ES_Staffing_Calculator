@@ -692,6 +692,16 @@ function attachRemoteFormatting(){
 }
 document.addEventListener('DOMContentLoaded', attachRemoteFormatting);
 
+function populateRemoteConsiderations(){
+  var qs=[
+    {i:"\uD83C\uDFD9",t:"Is this show taking place in a grey city? Grey city events may require additional coordination and may affect the feasibility of remote or hybrid staffing."},
+    {i:"\uD83D\uDC65",t:"Are there enough ES resources in the local city, or will staff need to travel to support on-site during peak times?"},
+    {i:"\uD83D\uDCC5",t:"Does the on-site CSM have less than 1 year of tenure with Freeman? Less experienced team members may benefit from more on-site support."},
+    {i:"\uD83D\uDD28",t:"Will Operations be supported by a union lead? Union-led Operations teams may require more active ES coordination on-site."},
+    {i:"\uD83D\uDCE6",t:"Has Freeman produced this event before? New-to-Freeman events may have service needs that are difficult to anticipate and manage remotely."}
+  ];
+  document.getElementById("remoteQuestionsList").innerHTML=qs.map(function(q){return'<div class="q-item"><div class="q-icon">'+q.i+'</div><div class="q-text">'+q.t+'</div></div>';}).join("");
+}
 function determineRemote(){
   var mha=parseInt(document.getElementById("remote-mha").value)||0;
   var freight=parseFormatted("remote-freight");
@@ -709,16 +719,8 @@ function determineRemote(){
   }
   if(result==="full") document.getElementById("remoteResultFull").classList.add("active");
   else document.getElementById("remoteResultHybrid").classList.add("active");
-  var remoteCard=document.getElementById("remoteConsiderCard");
-  remoteCard.style.display="block";
-  var qs=[
-    {i:"\uD83C\uDFD9",t:"Is this show taking place in a grey city? Grey city events may require additional coordination and may affect the feasibility of remote or hybrid staffing."},
-    {i:"\uD83D\uDC65",t:"Are there enough ES resources in the local city, or will staff need to travel to support on-site during peak times?"},
-    {i:"\uD83D\uDCC5",t:"Does the on-site CSM have less than 1 year of tenure with Freeman? Less experienced team members may benefit from more on-site support."},
-    {i:"\uD83D\uDD28",t:"Will Operations be supported by a union lead? Union-led Operations teams may require more active ES coordination on-site."},
-    {i:"\uD83D\uDCE6",t:"Has Freeman produced this event before? New-to-Freeman events may have service needs that are difficult to anticipate and manage remotely."}
-  ];
-  document.getElementById("remoteQuestionsList").innerHTML=qs.map(function(q){return'<div class="q-item"><div class="q-icon">'+q.i+'</div><div class="q-text">'+q.t+'</div></div>';}).join("");
+  populateRemoteConsiderations();
+  document.getElementById("remoteConsiderCard").style.display="block";
   document.getElementById("remotePlanActions").style.display="block";
 }
 function submitRemotePlan(){

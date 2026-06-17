@@ -511,10 +511,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     </div>
     <div class="lc-modal-body">
       <div class="role-def"><div class="role-def-name">Customer-Facing Roles</div><div class="role-def-text">ES team members working directly with exhibitors on the show floor and at the Exhibitor Service Center - answering questions, processing orders, and resolving service issues.</div></div>
-      <div class="role-def"><div class="role-def-name">Back Room Roles</div><div class="role-def-text">ES team members supporting back-of-house operations - coordinating with Operations, billing and auditing freight paperwork and labor tickets, and providing operational support to the customer-facing teams. Typically triggered at 301+ booths or events with a higher revenue threshold.</div></div>
+      <div class="role-def"><div class="role-def-name">Back Room Roles</div><div class="role-def-text">ES team members supporting back-of-house operations - coordinating with Operations, billing and auditing freight paperwork and labor tickets, and providing operational support to the customer-facing teams. Triggered on events when specific revenue thresholds are hit.</div></div>
       <div class="role-def"><div class="role-def-name">Additional Support Roles</div><div class="role-def-text">Flex roles to support both customer-facing and back room needs during peak periods. Included in the model baseline for larger shows (601+ booths) where demand variability is higher.</div></div>
-      <div class="role-def"><div class="role-def-name">Supervisory Roles</div><div class="role-def-text">On-site leadership for the ES team — managing team performance, handling escalations that require leadership intervention, and serving as the primary point of contact for show management. Triggered at 451+ booths or M+ revenue.</div></div>
-      <div class="role-def"><div class="role-def-name">Freight Rigging / Storage Desk Roles</div><div class="role-def-text">Roles dedicated to managing cold storage, access-controlled storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.</div></div>
+      <div class="role-def"><div class="role-def-name">Supervisory Roles</div><div class="role-def-text">On-site leadership for the ES team — managing team performance, handling escalations that require leadership intervention, and serving as the primary point of contact for show management. Triggered at 451+ booths or $2M+ in estimated exhibitor revenue.</div></div>
+      <div class="role-def"><div class="role-def-name">Freight Rigging / Storage Desk Roles</div><div class="role-def-text">Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.</div></div>
     </div>
   </div>
 </div>
@@ -1020,7 +1020,7 @@ function calculate(){
   if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This show has "+ab.count+" booths and a "+revSourceLabel+" of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger.");}
   else if(base.sv>0){why.push("<strong>Supervisory Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.sv+" supervisory role"+(base.sv!==1?"s":"")+" in the baseline. Events of this size require dedicated on-site leadership.");}
   else{why.push("<strong>Supervisory Roles:</strong> This show’s "+ab.count+" booths are below the 451-booth baseline trigger, but the "+revSourceLabel+" of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
-  why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> These roles fall outside the staffing model and are not driven by booth count or revenue. They default to 0. If this show requires cold storage, access/controlled storage, or freight rigging desks, document them as a modification below.");
+  why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
   document.getElementById("whyList").innerHTML=why.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
 
   // Consider these — grey city for ALL shows
@@ -1072,3 +1072,5 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 </body>
 </html>
 
+
+<!-- build:1781692162 -->

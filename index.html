@@ -191,6 +191,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .sf-modify-input{font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:700;padding:5px 6px;border:1.5px solid var(--border);border-radius:5px;outline:none;width:100%;text-align:center;background:var(--surface);color:var(--fb)}
 .sf-modify-input:focus{border-color:var(--mb);background:#fff}
 .sf-modify-input.deviated{color:var(--orange);border-color:var(--orange)}
+.sf-reason-checklist{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.sf-reason-option{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--navy);cursor:pointer;font-family:'Nunito Sans',sans-serif;}
+.sf-reason-option input[type=checkbox]{width:16px;height:16px;accent-color:var(--navy);cursor:pointer;flex-shrink:0;}
 .sf-reason-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
 .btn-submit-deviation{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:800;padding:8px 16px;border-radius:8px;border:none;background:var(--mb);color:#fff;cursor:pointer;margin-top:10px;width:100%}
 .btn-submit-deviation:hover{opacity:.85}
@@ -493,7 +496,15 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
             <div class="sf-modify-role"><label>Freight / Storage</label><div class="sf-model-val">Model: 0</div><input type="number" class="sf-modify-input" id="dev-fr" min="0" max="20" value="0" /></div>
           </div>
           <div class="sf-reason-lbl">Reason for Modification</div>
-          <textarea class="sf-reason-textarea" id="deviationReason" placeholder="Explain why you are modifying the model recommendation. Be specific — this will be recorded in the NSS and used to inform future model updates."></textarea>
+          <div class="sf-reason-checklist" id="deviationChecklist">
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Growth / Sales requirement"> Growth / Sales requirement</label>
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Heavy in specialized billing"> Heavy in specialized billing</label>
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Freeman AV or CDS event requiring more staff"> Freeman AV or CDS event requiring more staff</label>
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Low demand event - does not need as much staff"> Low demand event - does not need as much staff</label>
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Training"> Training</label>
+            <label class="sf-reason-option"><input type="checkbox" name="devReason" value="Other" id="devReasonOther" onclick="toggleOtherText()"> Other</label>
+          </div>
+          <textarea class="sf-reason-textarea" id="deviationReason" placeholder="Please describe your reason..." style="display:none;margin-top:8px;"></textarea>
           <button class="btn-submit-deviation" onclick="submitDeviation()">Finalize Modified Plan &#8594;</button>
         </div>
       </div>
@@ -776,9 +787,20 @@ function agreeWithPlan(){
   banner.style.display="block";
   document.getElementById("deviationPanel").style.display="none";
 }
+function toggleOtherText(){
+  var cb=document.getElementById("devReasonOther");
+  var ta=document.getElementById("deviationReason");
+  ta.style.display=cb.checked?"block":"none";
+  if(!cb.checked) ta.value="";
+}
 function submitDeviation(){
-  var reason=document.getElementById("deviationReason").value.trim();
-  if(!reason){alert("Please provide a reason for your modification before submitting.");return;}
+  var boxes=document.querySelectorAll('input[name="devReason"]:checked');
+  if(boxes.length===0){alert("Please select at least one reason for your modification.");return;}
+  var otherCb=document.getElementById("devReasonOther");
+  var otherText=document.getElementById("deviationReason").value.trim();
+  if(otherCb.checked && !otherText){alert("Please describe your reason in the Other field.");return;}
+  var reasons=Array.from(boxes).map(function(b){return b.value==="Other"?"Other: "+otherText:b.value;});
+  var reason=reasons.join("; ");
   var cf=parseInt(document.getElementById("dev-cf").value)||0;
   var br=parseInt(document.getElementById("dev-br").value)||0;
   var as_=parseInt(document.getElementById("dev-as").value)||0;

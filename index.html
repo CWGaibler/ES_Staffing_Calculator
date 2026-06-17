@@ -703,10 +703,8 @@ function determineRemote(){
   else{result="hybrid";}
   if(result==="onsite"){
     document.getElementById("remoteResultOnsite").classList.add("active");
-    setTimeout(function(){
-      document.getElementById("recCard").style.display="block";
-      document.getElementById("normalRecSection").style.display="block";
-    },2500);
+    document.getElementById("remoteConsiderCard").style.display="block";
+    document.getElementById("remotePlanActions").style.display="block";
     return;
   }
   if(result==="full") document.getElementById("remoteResultFull").classList.add("active");

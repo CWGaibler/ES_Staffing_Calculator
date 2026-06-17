@@ -166,6 +166,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .sf-consider-item{display:flex;gap:8px;margin-bottom:7px;font-size:13px;color:var(--fb);line-height:1.45}
 .sf-consider-item:last-child{margin-bottom:0}
 .sf-consider-icon{font-size:13px;flex-shrink:0;margin-top:2px}
+.q-item{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}
+.q-item:last-child{margin-bottom:0}
+.q-icon{font-size:13px;flex-shrink:0;margin-top:2px;line-height:1.45}
+.q-text{font-size:13px;color:var(--fb);line-height:1.45}
 
 /* DECISION SECTION */
 .sf-decision-section{padding:16px 14px;border-top:2px solid var(--border);background:var(--white)}
@@ -235,7 +239,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .m-cancel:hover{border-color:var(--fb)}
 .m-submit{font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:700;padding:10px 24px;border-radius:999px;border:none;background:var(--green);color:#fff;cursor:pointer}
 .m-submit:hover{opacity:.85}
-.btn-agree{background:var(--green);color:#fff;border:none;padding:9px 20px;border-radius:999px;font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:800;cursor:pointer;transition:opacity .15s}
+.btn-agree{background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:800;cursor:pointer;transition:opacity .15s}
 .btn-agree:hover{opacity:.85}
 .btn-deviate{background:var(--orange);color:#fff;border:none;padding:9px 20px;border-radius:999px;font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:800;cursor:pointer;transition:opacity .15s}
 .btn-deviate:hover{opacity:.85}
@@ -430,7 +434,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="number" id="remote-revenue" min="0" max="9999999" value="0" /></div></div>
         </div>
         <button class="flow-btn flow-btn-primary" onclick="determineRemote()" style="margin-bottom:14px;">Determine Staffing Approach &#8594;</button>
-        <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the Remote Staffing SOP for next steps including exhibitor communications, Delivery coordination, and service plan setup.</p></div>
+        <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the Remote Staffing SOP for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
         <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
         <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Proceeding to the standard ES Staffing Model recommendation below...</p></div>
         <div class="collapsible-card" id="remoteConsiderCard" style="display:none;">
@@ -438,8 +442,13 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
         </div>
         <div id="remotePlanActions" style="display:none;">
-          <div class="deviation-reason" style="margin-bottom:10px;"><label>Notes or Rationale (optional)</label><textarea class="sf-reason-textarea" id="remotePlanNotes" placeholder="Add any notes about this staffing approach, grey city considerations, staff availability, or other factors that informed your decision."></textarea></div>
-          <button class="btn-agree" onclick="submitRemotePlan()">&#10003; Confirm &amp; Submit This Approach</button>
+          <div class="sf-decision-section" style="border-top:none;padding:0;">
+            <div class="sf-decision-lbl">Notes or Rationale (optional)</div>
+            <textarea class="sf-reason-textarea" id="remotePlanNotes" style="margin-bottom:10px;" placeholder="Add any notes about this staffing approach, grey city considerations, staff availability, or other factors that informed your decision."></textarea>
+            <div class="sf-decision-btns">
+              <button class="btn-agree" onclick="submitRemotePlan()">&#10003; Confirm &amp; Submit This Approach</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -686,7 +695,7 @@ function determineRemote(){
     {i:"\uD83C\uDFD9",t:"Is this show taking place in a grey city? Grey city events may require additional coordination and may affect the feasibility of remote or hybrid staffing."},
     {i:"\uD83D\uDC65",t:"Are there enough ES resources in the local city, or will staff need to travel to support on-site during peak times?"},
     {i:"\uD83D\uDCC5",t:"Does the on-site CSM have less than 1 year of tenure with Freeman? Less experienced team members may benefit from more on-site support."},
-    {i:"\uD83D\uDD28",t:"Will Delivery be supported by a union lead? Union-led Delivery teams may require more active ES coordination on-site."},
+    {i:"\uD83D\uDD28",t:"Will Operations be supported by a union lead? Union-led Operations teams may require more active ES coordination on-site."},
     {i:"\uD83D\uDCE6",t:"Has Freeman produced this event before? New-to-Freeman events may have service needs that are difficult to anticipate and manage remotely."}
   ];
   document.getElementById("remoteQuestionsList").innerHTML=qs.map(function(q){return'<div class="q-item"><div class="q-icon">'+q.i+'</div><div class="q-text">'+q.t+'</div></div>';}).join("");
@@ -1077,3 +1086,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 <!-- build:1781692285 -->
 <!-- build:1781692606 -->
 <!-- build:1781692790 -->
+<!-- build:1781693414 -->

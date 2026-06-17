@@ -957,7 +957,7 @@ function calculate(){
   document.getElementById("currentBoothsVal").textContent=s.pyBooths?s.pyBooths.toLocaleString():"N/A";
   document.getElementById("projectedBoothsVal").textContent=s.projectedBooths.toLocaleString();
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
-  document.getElementById("sfRevenueVal").textContent=ff(s.sfRevenue);
+  document.getElementById("sfRevenueVal").textContent=ff(ar.amount);
   badge("currentBoothsBadge","Prior Year Reference",false);
   // Box 3: dynamic label and badge based on booth source
   var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
@@ -1021,10 +1021,10 @@ function calculate(){
   var revSourceLabel, revSourceDetail;
   if(ar.source==="history"){
     revSourceLabel="history-based estimate";
-    revSourceDetail="Prior year revenue of "+ff(s.pyRevenue)+" ÷ "+s.pyBooths.toLocaleString()+" prior year booths = "+ff(ar.perBooth)+" per booth × "+ab.count.toLocaleString()+" booths = "+ff(ar.amount)+".";
+    revSourceDetail="Prior year revenue of "+ff(s.pyRevenue)+" ÷ "+s.pyBooths.toLocaleString()+" prior year booths = "+ff(ar.perBooth)+" per booth × "+ab.count.toLocaleString()+" booths = "+ff(ar.amount)+". For reference, Salesforce projects "+ff(s.sfRevenue)+" for this show.";
   } else {
     revSourceLabel="Salesforce projection";
-    revSourceDetail="No prior year data available. Using Salesforce projection of "+ff(ar.amount)+".";
+    revSourceDetail="No prior year data is available for this show. Revenue projection is based on the Salesforce forecast of "+ff(ar.amount)+".";
   }
 
   // Booth source explanation

@@ -735,7 +735,7 @@ function determineRemote(){
 }
 function submitRemotePlan(){
   var s=SHOWS[currentJob];
-  var notes=document.getElementById("remotePlanNotes").value.trim();
+  var notes="";
   var resultEl=document.querySelector(".remote-result.active");
   var resultType=resultEl?resultEl.querySelector("h3").textContent.trim():"Remote";
   var now=new Date();

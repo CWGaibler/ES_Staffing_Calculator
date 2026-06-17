@@ -393,9 +393,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div class="el-section-div">Event Scale &amp; Revenue</div>
     <div class="four-grid">
       <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booths</div><div class="sf-data-card-val" id="currentBoothsVal">—</div><div><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Projected Booths</div><div class="sf-data-card-val" id="projectedBoothsVal">—</div><div><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Salesforce Projection</div><div class="sf-data-card-val" id="sfRevenueVal">—</div><div><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exhibitor Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Booth Count</div><div class="sf-data-card-val" id="projectedBoothsVal">—</div><div><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Exh. Revenue Projection</div><div class="sf-data-card-val" id="sfRevenueVal">—</div><div><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
     </div>
 
     <!-- 751+ CUSTOM PLAN -->
@@ -921,10 +921,10 @@ function calculate(){
   // Box 3: dynamic label and badge based on booth source
   var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
   if(ab.source==="list"){
-    box3lbl.textContent="Current Booths (TSS)";
+    box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Exhibitor List Loaded",true);
   } else {
-    box3lbl.textContent="Projected Booths";
+    box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Projected — No List",false);
   }
   badge("revenueActualsBadge","Prior Year Reference",false);
@@ -1075,3 +1075,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 
 <!-- build:1781692162 -->
 <!-- build:1781692285 -->
+<!-- build:1781692606 -->

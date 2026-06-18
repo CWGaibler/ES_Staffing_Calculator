@@ -625,24 +625,35 @@ function showCustomPlan(booths, revenue, s){
   document.getElementById("questionsHeader").style.display="none";
   document.getElementById("customBoothCount").textContent=booths.toLocaleString();
 
-  // Run model rules to suggest a starting plan
-  // CF: ceil(booths/150) — same rule as normal model, no ceiling
-  var sugCF=Math.ceil(booths/150);
-  // AS: 1 if booths >= 601
-  var sugAS=booths>=601?1:0;
-  // SV: 1 if booths >= 451 (revenue trigger checked below)
-  var sugSV=booths>=451?1:0;
-  var sugBR=0;
+  // ── CUSTOM PLAN RULES (751+ booths) ─────────────────────────────────────
+  // CF: 1 per 200 booths (wider ratio than normal model's 1:150)
+  var sugCF=Math.ceil(booths/200);
 
-  // BR driven by revenue band
+  // BR: revenue band + ES Hot Shot at 1000+ + revenue scaling above $16M
+  var sugBR=0;
   if(revenue>=16000000){sugBR=5;}
   else if(revenue>=8000000){sugBR=4;}
   else if(revenue>=5000000){sugBR=3;}
   else if(revenue>=2500000){sugBR=2;}
   else if(revenue>=750000){sugBR=1;}
   else{sugBR=0;}
-  // SV revenue trigger
-  if(sugSV===0 && revenue>=2000000) sugSV=1;
+  // ES Hot Shot: dedicated service-request follow-up role at 1000+ booths
+  if(booths>=1000){sugBR+=1;}
+  // Additional BR for very high revenue events
+  if(revenue>=25000000){sugBR+=2;}
+  else if(revenue>=16000000){sugBR+=1;}
+
+  // AS: scales with booth count
+  var sugAS=0;
+  if(booths>=2400){sugAS=4;}
+  else if(booths>=1800){sugAS=3;}
+  else if(booths>=1200){sugAS=2;}
+  else if(booths>=601){sugAS=1;}
+
+  // SV: 1 at 451+ booths or $2M+ revenue; 2 at 1200+ booths
+  var sugSV=0;
+  if(booths>=1200){sugSV=2;}
+  else if(booths>=451||revenue>=2000000){sugSV=1;}
 
   document.getElementById("custom-cf").value=sugCF;
   document.getElementById("custom-br").value=sugBR;
@@ -1132,4 +1143,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 </html>
 
 
-<!-- build:1781799540 -->
+<!-- build:1781803161 -->

@@ -266,9 +266,55 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .chip-stage{background:transparent;color:var(--fb);border:1.5px solid var(--border);}
 .chip-amber{background:rgba(255,181,0,0.15);color:#7a5c00;border:1.5px solid rgba(255,181,0,0.5);}
 
+
+/* AUTH GATE */
+#authGate{position:fixed;inset:0;background:#001F5F;z-index:9999;display:flex;align-items:center;justify-content:center;}
+#authCard{background:#fff;border-radius:12px;padding:36px 32px;max-width:400px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.3);text-align:center;}
+#authCard img{height:32px;margin-bottom:20px;}
+#authCard h2{font-size:17px;font-weight:800;color:#001F5F;margin:0 0 6px;}
+#authCard p{font-size:13px;color:#666;margin:0 0 20px;}
+#authInput{width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #ccc;border-radius:8px;font-size:15px;font-family:'Nunito Sans',sans-serif;outline:none;margin-bottom:12px;}
+#authInput:focus{border-color:#001F5F;}
+#authBtn{width:100%;padding:11px;background:#001F5F;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:800;font-family:'Nunito Sans',sans-serif;cursor:pointer;}
+#authBtn:hover{opacity:.87;}
+#authErr{color:#FB471F;font-size:12px;margin-top:8px;display:none;}
 </style>
 </head>
 <body>
+<div id="authGate">
+  <div id="authCard">
+    <h2>ES Staffing Calculator</h2>
+    <p>Enter the access passphrase to continue.</p>
+    <input id="authInput" type="password" placeholder="Passphrase" onkeydown="if(event.key==='Enter')checkAuth()"/>
+    <button id="authBtn" onclick="checkAuth()">Unlock →</button>
+    <div id="authErr">Incorrect passphrase. Please try again.</div>
+  </div>
+</div>
+<script>
+(function(){
+  if(sessionStorage.getItem('essc_auth_v1')==='1'){
+    document.addEventListener('DOMContentLoaded',function(){
+      var g=document.getElementById('authGate');if(g)g.style.display='none';
+    });
+  }
+})();
+function checkAuth(){
+  var val=document.getElementById('authInput').value;
+  var err=document.getElementById('authErr');
+  err.style.display='none';
+  crypto.subtle.digest('SHA-256',new TextEncoder().encode(val)).then(function(buf){
+    var hex=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    if(hex==='d3b273609d1c1a9078841d8fcd4a911dfbf30fbe7058fa71dde85addeacd7212'){
+      sessionStorage.setItem('essc_auth_v1','1');
+      document.getElementById('authGate').style.display='none';
+    } else {
+      err.style.display='block';
+      document.getElementById('authInput').value='';
+    }
+  });
+}
+</script>
+
 <header class="header">
   <div class="hdr-row1">
     <div class="hdr-left">
@@ -1607,4 +1653,4 @@ document.getElementById("jobInput").addEventListener("keydown",function(e){if(e.
 </body>
 </html>
 
-<!-- build:1781797466 -->
+<!-- build:1781798204 -->

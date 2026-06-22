@@ -902,8 +902,36 @@ function toggleClearBtn(){
   var dd = document.getElementById('searchDropdown');
   if (!val) { closeDropdown(); _searchSelectedJob = null; return; }
 
-  // Pure digits → job number mode, no dropdown
-  if (/^\d+$/.test(val)) { closeDropdown(); _searchSelectedJob = null; return; }
+  // Pure digits → job number partial match dropdown
+  if (/^\d+$/.test(val)) {
+    _searchSelectedJob = null;
+    _ddActiveIdx = -1;
+
+    // Exact match — fire immediately, no dropdown needed
+    if (SHOWS[val]) { closeDropdown(); return; }
+
+    // Partial match — find job numbers that start with typed digits
+    var keys = Object.keys(SHOWS);
+    var matches = [];
+    for (var i = 0; i < keys.length && matches.length < 8; i++) {
+      if (keys[i].indexOf(val) === 0) matches.push(keys[i]);
+    }
+
+    if (matches.length === 0) {
+      dd.innerHTML = '<div class="search-dd-none">No job numbers starting with "' + val + '"</div>';
+    } else {
+      dd.innerHTML = matches.map(function(jobNum) {
+        var s = SHOWS[jobNum];
+        var city = s.city ? ' \u00b7 ' + s.city : '';
+        return '<div class="search-dd-item" data-job="' + jobNum + '" onmousedown="selectDropdownItem(\'' + jobNum + '\')">' +
+          '<span class="search-dd-name">' + s.name + '</span>' +
+          '<span class="search-dd-meta">' + jobNum + city + '</span>' +
+          '</div>';
+      }).join('');
+    }
+    dd.classList.add('open');
+    return;
+  }
 
   // Name search mode
   _searchSelectedJob = null;

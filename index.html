@@ -1138,7 +1138,7 @@ function calculate(){
   var metaHtml=
     '<span>'+(s.facility||s.city)+', '+s.city+'</span>'+
     '<span style="color:var(--border);margin:0 6px">|</span>'+
-    '<span>Producing Branch: '+((s.producingBranch||s.region).replace(/^\\d+\\s*-\\s*/,''))+'</span>'+
+    '<span>Producing Branch: '+((s.producingBranch||s.region).replace(/^\d+\s*-\s*/,''))+'</span>'+
     (growthMeta ? '<span style="color:var(--border);margin:0 6px">|</span><span>'+growthMeta.replace(' \u00b7 ','')+'</span>' : '');
 
   document.getElementById('showInfoCard').innerHTML=

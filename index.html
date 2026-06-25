@@ -442,6 +442,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     </div>
 
     <!-- REMOTE ELIGIBILITY -->
+    <div class="el-section-div" id="remoteEligibilityHeader" style="display:none;">Staffing Recommendation <button class="role-info-btn" onclick="document.getElementById('roleModal').classList.add('open')" title="What do these roles mean?">i</button></div>
     <div class="flow-card flow-card-remote" id="remoteEligibilityCard">
       <div class="flow-card-hdr">
         <div class="flow-badge flow-badge-remote">&#128269; Small Event — Remote Eligibility Check</div>
@@ -631,6 +632,8 @@ function showOnlyFlow(flowId){
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("remoteEligibilityCard").classList.remove("active");
+  document.getElementById("remoteEligibilityHeader").style.display="none";
+  document.getElementById("remoteEligibilityHeader").style.display="none";
   if(flowId) document.getElementById(flowId).classList.add("active");
 }
 function showNormalFlow(){
@@ -724,6 +727,7 @@ function submitCustomPlan(){
 // ── REMOTE ELIGIBILITY ───────────────────────────────────────────────────────
 function showRemoteEligibility(booths){
   showOnlyFlow("remoteEligibilityCard");
+  document.getElementById("remoteEligibilityHeader").style.display="flex";
   document.getElementById("remoteBoothCount").textContent=booths;
   var s=SHOWS[currentJob];
   if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0).toLocaleString("en-US");}

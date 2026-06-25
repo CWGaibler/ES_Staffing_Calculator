@@ -100,7 +100,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .sf-calc-full{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;border-top:4px solid var(--mb)}
 
 /* CUSTOM PLAN CARD (751+) */
-.flow-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;border-top:4px solid var(--orange);display:none}
+.flow-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;border-top:4px solid var(--mb);display:none}
 .flow-card.active{display:block;animation:fadeUp .3s ease}
 .flow-card-hdr{padding:12px 16px;border-bottom:1px solid var(--border-lt);display:flex;align-items:center;gap:8px}
 .flow-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
@@ -116,6 +116,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .dev-role input[type="number"]:focus{border-color:var(--mb)}
 .dev-role input[type="number"].deviated{color:var(--orange);border-color:var(--orange)}
 .dev-role-freight{border-color:rgba(0,189,246,.3)!important;background:rgba(0,189,246,.03)!important}
+.dev-role-active{border-color:rgba(0,189,246,.4);background:rgba(0,189,246,.05)}
 .deviation-reason{margin-bottom:14px}
 .deviation-reason label{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .sf-reason-textarea{font-family:'Nunito Sans',sans-serif;font-size:14px;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;outline:none;width:100%;resize:vertical;min-height:72px;background:var(--surface);color:var(--fb);transition:border-color .2s}
@@ -260,6 +261,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 /* REMOTE CONSIDERATIONS COLLAPSIBLE */
 #remoteConsiderCard{margin-top:10px}
 #remotePlanActions{margin-top:14px}
+.remote-choice-btn{padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;}
+.remote-choice-btn.selected{border-color:var(--mb);background:rgba(0,31,95,.07);color:var(--mb);}
+.remote-choice-btn:hover{border-color:var(--mb);color:var(--mb);}
 
 @media(max-width:640px){
   .main{padding:20px 14px 60px}
@@ -384,20 +388,19 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="hdr-title">ES Staffing Calculator</div>
     </div>
     <div class="hdr-right">
-      <div class="hdr-badge">Team Operations</div>
     </div>
   </div>
 </header>
 <div class="main">
   <div class="page-hdr">
-    <div class="page-sub">Enter a job number to generate a staffing recommendation based on the <a href="https://freemanco.sharepoint.com/teams/CustomerExperienceOrg/SitePages/Exhibitor_Services_Staffing.aspx" target="_blank" style="color:var(--mb);font-weight:700;text-decoration:underline;text-underline-offset:2px;">ES Staffing Model</a>.</div>
+    <div class="page-sub">Enter an event number or event name to generate a staffing recommendation based on the <a href="https://freemanco.sharepoint.com/teams/CustomerExperienceOrg/SitePages/Exhibitor_Services_Staffing.aspx" target="_blank" style="color:var(--mb);font-weight:700;text-decoration:underline;text-underline-offset:2px;">ES Staffing Model</a>.</div>
   </div>
 
   <div class="el-section-div">Find a Show</div>
     <div class="input-card">
     <div class="input-row">
       <div class="input-group" style="position:relative;">
-        <input type="text" id="jobInput" placeholder="Job number or event name" oninput="toggleClearBtn()" autocomplete="off" />
+        <input type="text" id="jobInput" placeholder="Event number or event name" oninput="toggleClearBtn()" autocomplete="off" />
         <button id="clearBtn" onclick="clearJobInput()" title="Clear" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:#E2E5EF;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;color:#7A8099;line-height:0;padding:0;display:flex;align-items:center;justify-content:center;">&#215;</button>
         <div class="search-dropdown" id="searchDropdown"></div>
       </div>
@@ -450,6 +453,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="text" id="remote-revenue" value="0" inputmode="numeric" style="text-align:right;" /></div></div>
         </div>
         <button class="flow-btn flow-btn-primary" onclick="determineRemote()" style="margin-bottom:14px;">Determine Staffing Approach &#8594;</button>
+        <div id="remoteWhySection" style="display:none;margin-bottom:10px;padding:10px 14px;background:var(--surface);border-radius:8px;border:1px solid var(--border-lt);font-size:14px;color:var(--fb);line-height:1.6;"></div>
         <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the “Remote Events” section in the Preparing for an Event chapter of the Exhibitor Services Manual for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
         <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
         <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Follow the next steps in the Preparing for an Event chapter of the Exhibitor Services Manual for an on-site staffed event.</p></div>
@@ -459,9 +463,18 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         </div>
         <div id="remotePlanActions" style="display:none;">
           <div class="sf-decision-section" style="border-top:none;padding:0;">
-            <div>
-              <button class="sf-btn-agree" style="flex:none;" onclick="submitRemotePlan()">&#10003; Confirm Staffing Approach</button>
+            <div class="sf-decision-lbl">Your Staffing Decision</div>
+            <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">The model recommendation is pre-selected below. If you need to override it, select a different approach and provide your reason.</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+              <button class="remote-choice-btn" data-val="full" onclick="selectRemoteChoice(this)">&#128222; Fully Remote</button>
+              <button class="remote-choice-btn" data-val="hybrid" onclick="selectRemoteChoice(this)">&#9202; Partially On-Site</button>
+              <button class="remote-choice-btn" data-val="onsite" onclick="selectRemoteChoice(this)">&#127970; Fully On-Site</button>
             </div>
+            <div id="remoteOverrideReason" style="display:none;margin-bottom:12px;">
+              <div class="sf-reason-lbl" style="margin-bottom:6px;">Reason for Override</div>
+              <textarea class="sf-reason-textarea" id="remoteOverrideText" placeholder="Why are you choosing a different approach than the model recommends?"></textarea>
+            </div>
+            <button class="sf-btn-agree" style="flex:none;" onclick="submitRemotePlan()">&#10003; Confirm Staffing Approach</button>
           </div>
         </div>
       </div>
@@ -668,6 +681,17 @@ function showCustomPlan(booths, revenue, s){
   document.getElementById("custom-as").value=sugAS;
   document.getElementById("custom-sv").value=sugSV;
   document.getElementById("custom-fr").value=0;
+
+  // Update model-val labels and active styling
+  var roleVals={cf:sugCF,br:sugBR,as:sugAS,sv:sugSV,fr:0};
+  ["cf","br","as","sv","fr"].forEach(function(r){
+    var card=document.getElementById("custom-"+r).closest(".dev-role");
+    var mv=card.querySelector(".model-val");
+    var val=roleVals[r];
+    mv.textContent="Model suggests: "+val;
+    if(val>0){card.classList.add("dev-role-active");}
+    else{card.classList.remove("dev-role-active");}
+  });
 }
 function submitCustomPlan(){
   var reason=document.getElementById("customPlanReason").value.trim();
@@ -743,6 +767,7 @@ function populateRemoteConsiderations(){
   ];
   document.getElementById("remoteQuestionsList").innerHTML=qs.map(function(q){return'<div class="q-item"><div class="q-icon">'+q.i+'</div><div class="q-text">'+q.t+'</div></div>';}).join("");
 }
+var _remoteModelResult=null;
 function determineRemote(){
   var mha=parseInt(document.getElementById("remote-mha").value)||0;
   var freight=parseFormatted("remote-freight");
@@ -752,24 +777,58 @@ function determineRemote(){
   if(mha<=10&&freight<=10000&&revenue<=30000){result="full";}
   else if(mha>20||freight>20000||revenue>75000){result="onsite";}
   else{result="hybrid";}
+  _remoteModelResult=result;
+
+  // Build "why" explanation
+  var reasons=[];
+  if(mha>20) reasons.push("MHAs ("+mha+") exceed the 20 MHA on-site threshold");
+  else if(mha>10) reasons.push("MHAs ("+mha+") fall in the hybrid range (11\u201320)");
+  if(freight>20000) reasons.push("freight weight ("+freight.toLocaleString()+" lbs) exceeds the 20,000 lb on-site threshold");
+  else if(freight>10000) reasons.push("freight weight ("+freight.toLocaleString()+" lbs) falls in the hybrid range (10,001\u201320,000 lbs)");
+  if(revenue>75000) reasons.push("estimated revenue ($"+revenue.toLocaleString()+") exceeds the $75,000 on-site threshold");
+  else if(revenue>30000) reasons.push("estimated revenue ($"+revenue.toLocaleString()+") falls in the hybrid range ($30,001\u2013$75,000)");
+  var whyEl=document.getElementById("remoteWhySection");
+  if(reasons.length===0){
+    whyEl.innerHTML="<strong>Why Fully Remote:</strong> All three inputs are within fully remote thresholds (MHAs \u226410, freight \u226410,000 lbs, revenue \u2264$30,000).";
+  } else {
+    whyEl.innerHTML="<strong>Why this result:</strong> The recommendation is based on "+reasons.join(" and ")+".";
+  }
+  whyEl.style.display="block";
+
   if(result==="onsite"){
     document.getElementById("remoteResultOnsite").classList.add("active");
-    populateRemoteConsiderations();
-    document.getElementById("remoteConsiderCard").style.display="block";
-    document.getElementById("remotePlanActions").style.display="block";
-    return;
+  } else if(result==="full"){
+    document.getElementById("remoteResultFull").classList.add("active");
+  } else {
+    document.getElementById("remoteResultHybrid").classList.add("active");
   }
-  if(result==="full") document.getElementById("remoteResultFull").classList.add("active");
-  else document.getElementById("remoteResultHybrid").classList.add("active");
   populateRemoteConsiderations();
   document.getElementById("remoteConsiderCard").style.display="block";
   document.getElementById("remotePlanActions").style.display="block";
+  // Set recommended option in selector
+  document.querySelectorAll(".remote-choice-btn").forEach(function(b){
+    b.classList.toggle("selected",b.dataset.val===result);
+  });
+  document.getElementById("remoteOverrideReason").style.display="none";
+  document.getElementById("remoteOverrideText").value="";
+}
+function selectRemoteChoice(btn){
+  document.querySelectorAll(".remote-choice-btn").forEach(function(b){b.classList.remove("selected");});
+  btn.classList.add("selected");
+  var isOverride=_remoteModelResult&&btn.dataset.val!==_remoteModelResult;
+  document.getElementById("remoteOverrideReason").style.display=isOverride?"block":"none";
 }
 function submitRemotePlan(){
   var s=SHOWS[currentJob];
   var notes="";
-  var resultEl=document.querySelector(".remote-result.active");
-  var resultType=resultEl?resultEl.querySelector("h3").textContent.trim():"Remote";
+  var selectedBtn=document.querySelector(".remote-choice-btn.selected");
+  var resultVal=selectedBtn?selectedBtn.dataset.val:_remoteModelResult;
+  var resultMap={full:"\uD83D\uDCDE Fully Remote",hybrid:"\u23F2 Partially On-Site (Hybrid)",onsite:"\uD83C\uDFD8 Fully On-Site"};
+  var resultType=resultMap[resultVal]||"Remote";
+  var overrideText=document.getElementById("remoteOverrideText").value.trim();
+  if(selectedBtn&&_remoteModelResult&&selectedBtn.dataset.val!==_remoteModelResult&&!overrideText){
+    alert("Please provide a reason for overriding the model recommendation.");return;
+  }
   var now=new Date();
   var ds=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"});
   var banner=document.getElementById("confirmBanner");
@@ -908,7 +967,7 @@ function toggleClearBtn(){
     _ddActiveIdx = -1;
 
     // Exact match — fire immediately, no dropdown needed
-    if (SHOWS[val]) { closeDropdown(); return; }
+    if (SHOWS[val]) { closeDropdown(); calculate(); return; }
 
     // Partial match — find job numbers that start with typed digits
     var keys = Object.keys(SHOWS);
@@ -986,11 +1045,11 @@ function clearJobInput(){
 
 function calculate(){
   var raw=document.getElementById("jobInput").value.trim();
-  if(!raw){alert("Please enter a job number or event name.");return;}
+  if(!raw){alert("Please enter an event number or event name.");return;}
 
   var jobNum = _searchSelectedJob || raw;
   var s=SHOWS[jobNum];
-  if(!s){alert("Job number not found in the NSS.\n\nPlease verify the job number and try again.");return;}
+  if(!s){alert("Event number not found in the NSS.\n\nPlease verify the event number and try again.");return;}
   closeDropdown();
   raw = jobNum;
 
@@ -1062,7 +1121,7 @@ function calculate(){
   var metaHtml=
     '<span>'+(s.facility||s.city)+', '+s.city+'</span>'+
     '<span style="color:var(--border);margin:0 6px">|</span>'+
-    '<span>'+(s.producingBranch||s.region)+'</span>'+
+    '<span>Producing Branch: '+((s.producingBranch||s.region).replace(/^\\d+\\s*-\\s*/,''))+'</span>'+
     (growthMeta ? '<span style="color:var(--border);margin:0 6px">|</span><span>'+growthMeta.replace(' \u00b7 ','')+'</span>' : '');
 
   document.getElementById('showInfoCard').innerHTML=

@@ -966,8 +966,17 @@ function toggleClearBtn(){
     _searchSelectedJob = null;
     _ddActiveIdx = -1;
 
-    // Exact match — fire immediately, no dropdown needed
-    if (SHOWS[val]) { closeDropdown(); calculate(); return; }
+    // Exact match — show as single dropdown item; let user confirm by clicking or pressing Enter
+    if (SHOWS[val]) {
+      var s = SHOWS[val];
+      var city = s.city ? ' · ' + s.city : '';
+      dd.innerHTML = '<div class="search-dd-item" data-job="' + val + '" onmousedown="selectDropdownItem(\'' + val + '\')">' +
+        '<span class="search-dd-name">' + s.name + '</span>' +
+        '<span class="search-dd-meta">' + val + city + '</span>' +
+        '</div>';
+      dd.classList.add('open');
+      return;
+    }
 
     // Partial match — find job numbers that start with typed digits
     var keys = Object.keys(SHOWS);

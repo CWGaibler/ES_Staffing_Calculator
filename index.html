@@ -465,14 +465,15 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the &#8220;Remote Events&#8221; section in the Preparing for an Event chapter of the Exhibitor Services Manual for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
           <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
           <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Follow the next steps in the Preparing for an Event chapter of the Exhibitor Services Manual for an on-site staffed event.</p></div>
+        </div>
 
-          <button class="sf-collapsible-btn" onclick="toggleSection('remoteWhyBody',this)" id="remoteWhyHeader">Why This Result <span class="sf-chev">&#9660;</span></button>
-          <div class="sf-collapsible-body" id="remoteWhyBody"><div id="remoteWhySection" style="padding-top:4px;font-size:14px;line-height:1.6;"></div></div>
+      <button class="sf-collapsible-btn" onclick="toggleSection('remoteWhyBody',this)" id="remoteWhyHeader">Why This Result <span class="sf-chev">&#9660;</span></button>
+      <div class="sf-collapsible-body" id="remoteWhyBody"><div id="remoteWhySection" style="padding-top:4px;font-size:14px;line-height:1.6;"></div></div>
 
-          <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Consider These Before Deciding <span class="sf-chev">&#9660;</span></button>
-          <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
+      <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Consider These Before Deciding <span class="sf-chev">&#9660;</span></button>
+      <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
 
-          <div class="sf-decision-section" id="remotePlanActions" style="display:none;">
+      <div class="sf-decision-section" id="remotePlanActions" style="display:none;">
             <div class="sf-decision-lbl">Your Staffing Decision</div>
             <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">Review the recommendation above. You can agree with the model&#8217;s suggestion or document a modification with your reasoning. Once you confirm, you&#8217;ll be directed to the NSS to record your decision.</div>
             <div class="sf-decision-btns">
@@ -500,9 +501,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
               <textarea class="sf-reason-textarea" id="remoteDeviationReason" placeholder="Please describe your reason..." style="display:none;margin-top:8px;"></textarea>
               <button class="btn-submit-deviation" onclick="submitRemoteDeviation()">Finalize Modified Plan &#8594;</button>
             </div>
-          </div>
+      </div>
 
-        </div>
       </div>
     </div>
 
@@ -1415,9 +1415,9 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-26 12:03 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-26 12:28 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
-<!-- build: 2026-06-26T12:03:13Z -->
+<!-- build: 2026-06-26T12:28:01Z -->
 </body>
 </html>
 

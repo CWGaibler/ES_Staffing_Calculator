@@ -442,42 +442,70 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     </div>
 
     <!-- REMOTE ELIGIBILITY -->
-    <div class="el-section-div" id="remoteEligibilityHeader" style="display:none;">Staffing Recommendation <button class="role-info-btn" onclick="document.getElementById('roleModal').classList.add('open')" title="What do these roles mean?">i</button></div>
+    <div class="el-section-div" id="remoteEligibilityHeader" style="display:none;">Event Scale &amp; Revenue Review</div>
     <div class="flow-card flow-card-remote" id="remoteEligibilityCard">
       <div class="flow-card-hdr">
         <div class="flow-badge flow-badge-remote">&#128269; Small Event — Remote Eligibility Check</div>
       </div>
       <div class="flow-card-body">
         <div class="flow-card-desc">This show has <strong id="remoteBoothCount">0</strong> booths. Events at this size may be eligible for fully remote, hybrid, or fully on-site staffing. Answer the three questions below to receive a recommendation.</div>
-        <div class="flow-inputs">
+        <div class="flow-inputs" id="remoteInputsGroup">
           <div class="flow-input-group"><label>Expected Outbound MHAs</label><div class="flow-input-wrapper"><input type="number" id="remote-mha" min="0" max="999" value="0" /><span class="flow-input-affix suffix">MHAs</span></div></div>
           <div class="flow-input-group"><label>Expected Exhibitor Freight Weight</label><div class="flow-input-wrapper"><input type="text" id="remote-freight" value="0" inputmode="numeric" style="text-align:right;" /><span class="flow-input-affix suffix">lbs</span></div></div>
           <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="text" id="remote-revenue" value="0" inputmode="numeric" style="text-align:right;" /></div></div>
         </div>
-        <button class="flow-btn flow-btn-primary" onclick="determineRemote()" style="margin-bottom:14px;">Determine Staffing Approach &#8594;</button>
-        <div id="remoteWhySection" style="display:none;margin-bottom:10px;padding:10px 14px;background:var(--surface);border-radius:8px;border:1px solid var(--border-lt);font-size:14px;color:var(--fb);line-height:1.6;"></div>
+        <button class="flow-btn flow-btn-primary" id="remoteDetermineBtn" onclick="determineRemote()" style="margin-bottom:4px;">Determine Staffing Approach &#8594;</button>
         <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the “Remote Events” section in the Preparing for an Event chapter of the Exhibitor Services Manual for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
         <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
         <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Follow the next steps in the Preparing for an Event chapter of the Exhibitor Services Manual for an on-site staffed event.</p></div>
-        <div class="collapsible-card" id="remoteConsiderCard" style="display:none;">
-          <div class="sf-collapsible-btn" style="cursor:default;">Additional Considerations Before Finalizing</div>
-          <div class="sf-collapsible-body open" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
-        </div>
-        <div id="remotePlanActions" style="display:none;">
-          <div class="sf-decision-section" style="border-top:none;padding:0;">
+              </div>
+    </div>
+
+    <!-- REMOTE STAFFING RECOMMENDATION -->
+    <div id="remoteRecSection" style="display:none;">
+      <div class="el-section-div" style="margin-top:8px;">Staffing Recommendation <button class="role-info-btn" onclick="document.getElementById('roleModal').classList.add('open')" title="What do these roles mean?">i</button></div>
+      <div class="flow-card">
+        <div class="flow-card-body">
+          <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the &#8220;Remote Events&#8221; section in the Preparing for an Event chapter of the Exhibitor Services Manual for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
+          <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
+          <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Follow the next steps in the Preparing for an Event chapter of the Exhibitor Services Manual for an on-site staffed event.</p></div>
+
+          <button class="sf-collapsible-btn" onclick="toggleSection('remoteWhyBody',this)" id="remoteWhyHeader">Why This Result <span class="sf-chev">&#9660;</span></button>
+          <div class="sf-collapsible-body" id="remoteWhyBody"><div id="remoteWhySection" style="padding-top:4px;font-size:14px;line-height:1.6;"></div></div>
+
+          <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Additional Considerations Before Finalizing <span class="sf-chev">&#9660;</span></button>
+          <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
+
+          <div class="sf-decision-section" id="remotePlanActions" style="display:none;">
             <div class="sf-decision-lbl">Your Staffing Decision</div>
-            <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">The model recommendation is pre-selected below. If you need to override it, select a different approach and provide your reason.</div>
-            <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-              <button class="remote-choice-btn" data-val="full" onclick="selectRemoteChoice(this)">&#128222; Fully Remote</button>
-              <button class="remote-choice-btn" data-val="hybrid" onclick="selectRemoteChoice(this)">&#9202; Partially On-Site</button>
-              <button class="remote-choice-btn" data-val="onsite" onclick="selectRemoteChoice(this)">&#127970; Fully On-Site</button>
+            <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">Review the recommendation above. You can agree with the model&#8217;s suggestion or document a modification with your reasoning. Once you confirm, you&#8217;ll be directed to the NSS to record your decision.</div>
+            <div class="sf-decision-btns">
+              <button class="sf-btn-agree" onclick="agreeWithRemotePlan()">&#10003;&nbsp; I Agree With This Plan</button>
+              <button class="sf-btn-modify" onclick="showRemoteDeviation()">&#8856;&nbsp; I Need to Modify This Plan</button>
             </div>
-            <div id="remoteOverrideReason" style="display:none;margin-bottom:12px;">
-              <div class="sf-reason-lbl" style="margin-bottom:6px;">Reason for Override</div>
-              <textarea class="sf-reason-textarea" id="remoteOverrideText" placeholder="Why are you choosing a different approach than the model recommends?"></textarea>
+            <div class="sf-modify-panel" id="remoteDeviationPanel">
+              <div class="sf-modify-hdr">Document Your Modification</div>
+              <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">The model&#8217;s recommendation is shown above. Select a different staffing approach below and provide your reason for overriding.</div>
+              <div class="sf-reason-lbl">Select Staffing Approach</div>
+              <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+                <button class="remote-choice-btn" data-val="full" onclick="selectRemoteChoice(this)">&#128222; Fully Remote</button>
+                <button class="remote-choice-btn" data-val="hybrid" onclick="selectRemoteChoice(this)">&#9202; Partially On-Site</button>
+                <button class="remote-choice-btn" data-val="onsite" onclick="selectRemoteChoice(this)">&#127970; Fully On-Site</button>
+              </div>
+              <div class="sf-reason-lbl">Reason for Modification</div>
+              <div class="sf-reason-checklist" id="remoteDeviationChecklist">
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Growth / Sales requirement"> Growth / Sales requirement</label>
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Heavy in specialized billing"> Heavy in specialized billing</label>
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Freeman AV event requiring more staff"> Freeman AV event requiring more staff</label>
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Low demand event - does not need as much staff"> Low demand event - does not need as much staff</label>
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Training"> Training</label>
+                <label class="sf-reason-option"><input type="checkbox" name="remoteDevReason" value="Other" id="remoteDevReasonOther" onclick="toggleRemoteOtherText()"> Other</label>
+              </div>
+              <textarea class="sf-reason-textarea" id="remoteDeviationReason" placeholder="Please describe your reason..." style="display:none;margin-top:8px;"></textarea>
+              <button class="btn-submit-deviation" onclick="submitRemoteDeviation()">Finalize Modified Plan &#8594;</button>
             </div>
-            <button class="sf-btn-agree" style="flex:none;" onclick="submitRemotePlan()">&#10003; Confirm Staffing Approach</button>
           </div>
+
         </div>
       </div>
     </div>
@@ -734,8 +762,29 @@ function showRemoteEligibility(booths){
   var s=SHOWS[currentJob];
   if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0).toLocaleString("en-US");}
   ["remoteResultFull","remoteResultHybrid","remoteResultOnsite"].forEach(function(id){document.getElementById(id).classList.remove("active");});
-  document.getElementById("remoteConsiderCard").style.display="none";
+  // Reset rec section
+  document.getElementById("remoteRecSection").style.display="none";
   document.getElementById("remotePlanActions").style.display="none";
+  document.getElementById("remoteDeviationPanel").style.display="none";
+  document.getElementById("remoteDeviationPanel").classList.remove("open");
+  // Uncheck all reason checkboxes
+  document.querySelectorAll("input[name='remoteDevReason']").forEach(function(cb){cb.checked=false;});
+  document.getElementById("remoteDeviationReason").style.display="none";
+  document.getElementById("remoteDeviationReason").value="";
+  // Reset collapsibles
+  ["remoteWhyBody","remoteQuestionsSection"].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.classList.remove("open");
+  });
+  var wh=document.getElementById("remoteWhyHeader");if(wh)wh.classList.remove("open");
+  var qh=document.getElementById("remoteQuestionsHeader");if(qh)qh.classList.remove("open");
+  // Unlock inputs
+  ["remote-mha","remote-freight","remote-revenue"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.disabled=false;el.style.opacity="";}
+  });
+  var btn=document.getElementById("remoteDetermineBtn");
+  if(btn){btn.disabled=false;btn.style.opacity="";btn.style.cursor="";}
+  _remoteModelResult=null;
 }
 function fmtThousands(val){
   var n=parseInt(String(val).replace(/[^0-9]/g,''))||0;
@@ -813,14 +862,20 @@ function determineRemote(){
     document.getElementById("remoteResultHybrid").classList.add("active");
   }
   populateRemoteConsiderations();
-  document.getElementById("remoteConsiderCard").style.display="block";
+  // Lock inputs and button
+  ["remote-mha","remote-freight","remote-revenue"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.disabled=true;el.style.opacity="0.6";}
+  });
+  var btn=document.getElementById("remoteDetermineBtn");
+  if(btn){btn.disabled=true;btn.style.opacity="0.5";btn.style.cursor="default";}
+  // Show staffing recommendation section
+  document.getElementById("remoteRecSection").style.display="block";
   document.getElementById("remotePlanActions").style.display="block";
   // Set recommended option in selector
   document.querySelectorAll(".remote-choice-btn").forEach(function(b){
     b.classList.toggle("selected",b.dataset.val===result);
   });
-  document.getElementById("remoteOverrideReason").style.display="none";
-  document.getElementById("remoteOverrideText").value="";
 }
 function selectRemoteChoice(btn){
   document.querySelectorAll(".remote-choice-btn").forEach(function(b){b.classList.remove("selected");});
@@ -828,17 +883,10 @@ function selectRemoteChoice(btn){
   var isOverride=_remoteModelResult&&btn.dataset.val!==_remoteModelResult;
   document.getElementById("remoteOverrideReason").style.display=isOverride?"block":"none";
 }
-function submitRemotePlan(){
-  var s=SHOWS[currentJob];
-  var notes="";
-  var selectedBtn=document.querySelector(".remote-choice-btn.selected");
-  var resultVal=selectedBtn?selectedBtn.dataset.val:_remoteModelResult;
+function agreeWithRemotePlan(){
+  var s=SHOWS[currentJob];if(!s)return;
   var resultMap={full:"\uD83D\uDCDE Fully Remote",hybrid:"\u23F2 Partially On-Site (Hybrid)",onsite:"\uD83C\uDFD8 Fully On-Site"};
-  var resultType=resultMap[resultVal]||"Remote";
-  var overrideText=document.getElementById("remoteOverrideText").value.trim();
-  if(selectedBtn&&_remoteModelResult&&selectedBtn.dataset.val!==_remoteModelResult&&!overrideText){
-    alert("Please provide a reason for overriding the model recommendation.");return;
-  }
+  var resultType=resultMap[_remoteModelResult]||"Remote";
   var now=new Date();
   var ds=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"});
   var banner=document.getElementById("confirmBanner");
@@ -847,6 +895,45 @@ function submitRemotePlan(){
   document.getElementById("cbBody").innerHTML="<strong>"+s.name+"</strong> \u2014 Staffing approach: <strong>"+resultType+"</strong>. Use the button below to open the NSS and record this approach.";
   document.getElementById("cbSummary").innerHTML='<div class="cb-role" style="grid-column:1/-1;text-align:left;padding:8px 12px;"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7A8099;margin-bottom:4px;">Determined staffing approach</div><div style="font-size:17px;font-weight:800;color:#001F5F;">'+resultType+'</div></div>';
   document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Small event remote eligibility determination"
+    +"<br><a class=\"btn-open-nss\" href=\"https://app.smartsheet.com/sheets/2gG6m5j4V639GvH7FjqJWG2VMjW2M7fXjJ9xFPW1?view=grid\" target=\"_blank\">"
+    +"<svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
+    +"Open NSS to Record Decision \u2192</a>";
+  banner.style.display="block";
+  document.getElementById("remoteDeviationPanel").style.display="none";
+}
+function showRemoteDeviation(){
+  var panel=document.getElementById("remoteDeviationPanel");
+  panel.classList.add("open");
+  panel.style.display="block";
+}
+function toggleRemoteOtherText(){
+  var cb=document.getElementById("remoteDevReasonOther");
+  var ta=document.getElementById("remoteDeviationReason");
+  ta.style.display=cb.checked?"block":"none";
+  if(!cb.checked) ta.value="";
+}
+function submitRemoteDeviation(){
+  var boxes=document.querySelectorAll('input[name="remoteDevReason"]:checked');
+  if(boxes.length===0){alert("Please select at least one reason for your modification.");return;}
+  var otherCb=document.getElementById("remoteDevReasonOther");
+  var otherText=document.getElementById("remoteDeviationReason").value.trim();
+  if(otherCb.checked&&!otherText){alert("Please describe your reason in the Other field.");return;}
+  var reasons=Array.from(boxes).map(function(b){return b.value==="Other"?"Other: "+otherText:b.value;});
+  var reason=reasons.join("; ");
+  var selectedBtn=document.querySelector(".remote-choice-btn.selected");
+  var resultVal=selectedBtn?selectedBtn.dataset.val:_remoteModelResult;
+  var resultMap={full:"\uD83D\uDCDE Fully Remote",hybrid:"\u23F2 Partially On-Site (Hybrid)",onsite:"\uD83C\uDFD8 Fully On-Site"};
+  var resultType=resultMap[resultVal]||"Remote";
+  var modelType=resultMap[_remoteModelResult]||"Remote";
+  var s=SHOWS[currentJob];
+  var now=new Date();
+  var ds=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  var banner=document.getElementById("confirmBanner");
+  banner.className="confirm-banner deviated";
+  document.getElementById("cbTitle").textContent="\u26A0 Modified Plan Confirmed \u2014 Ready to Enter in NSS";
+  document.getElementById("cbBody").innerHTML="Your modified plan for <strong>"+s.name+"</strong> is confirmed. The model recommended <strong>"+modelType+"</strong>. You selected <strong>"+resultType+"</strong>. Use the button below to open the NSS and record your modified plan.<br><br><strong>Reason documented:</strong> "+reason;
+  document.getElementById("cbSummary").innerHTML='<div class="cb-role" style="grid-column:1/-1;text-align:left;padding:8px 12px;"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7A8099;margin-bottom:4px;">Modified staffing approach</div><div style="font-size:17px;font-weight:800;color:#001F5F;">'+resultType+'</div></div>';
+  document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Modification from model recommendation"
     +"<br><a class=\"btn-open-nss\" href=\"https://app.smartsheet.com/sheets/2gG6m5j4V639GvH7FjqJWG2VMjW2M7fXjJ9xFPW1?view=grid\" target=\"_blank\">"
     +"<svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
     +"Open NSS to Record Decision \u2192</a>";
@@ -1331,9 +1418,10 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
   </div>
 </div>
 
-<!-- build: 2026-06-17 15:50:16 UTC -->
+<!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
     <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-18 12:40 UTC</div>
+<!-- build: 2026-06-26T11:16:15Z -->
 </body>
 </html>
 

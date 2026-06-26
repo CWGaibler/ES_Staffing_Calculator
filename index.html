@@ -442,7 +442,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     </div>
 
     <!-- REMOTE ELIGIBILITY -->
-    <div class="el-section-div" id="remoteEligibilityHeader" style="display:none;">Event Scale &amp; Revenue Review</div>
     <div class="flow-card flow-card-remote" id="remoteEligibilityCard">
       <div class="flow-card-hdr">
         <div class="flow-badge flow-badge-remote">&#128269; Small Event — Remote Eligibility Check</div>
@@ -455,10 +454,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <div class="flow-input-group"><label>Expected Exhibitor Revenue</label><div class="flow-input-wrapper"><span class="flow-input-affix">$</span><input type="text" id="remote-revenue" value="0" inputmode="numeric" style="text-align:right;" /></div></div>
         </div>
         <button class="flow-btn flow-btn-primary" id="remoteDetermineBtn" onclick="determineRemote()" style="margin-bottom:4px;">Determine Staffing Approach &#8594;</button>
-        <div class="remote-result remote-result-fully" id="remoteResultFull"><h3>&#128222; Fully Remote</h3><p>Based on your inputs, this event is eligible for <strong>fully remote</strong> staffing. ES will not be on-site but will support customers remotely throughout the event. Follow the “Remote Events” section in the Preparing for an Event chapter of the Exhibitor Services Manual for next steps including exhibitor communications, Operations coordination, and service plan setup.</p></div>
-        <div class="remote-result remote-result-hybrid" id="remoteResultHybrid"><h3>&#9202; Partially On-Site (Hybrid)</h3><p>Based on your inputs, this event is eligible for <strong>partially on-site (hybrid)</strong> staffing. ES will be present during certain peak times and support customers remotely for the remainder. Review the additional considerations below before finalizing this approach.</p></div>
-        <div class="remote-result remote-result-onsite" id="remoteResultOnsite"><h3>&#127970; Fully On-Site</h3><p>Based on your inputs, this event requires <strong>fully on-site</strong> staffing. One or more thresholds exceed remote eligibility criteria. Follow the next steps in the Preparing for an Event chapter of the Exhibitor Services Manual for an on-site staffed event.</p></div>
-              </div>
+      </div>
     </div>
 
     <!-- REMOTE STAFFING RECOMMENDATION -->
@@ -660,8 +656,6 @@ function showOnlyFlow(flowId){
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("remoteEligibilityCard").classList.remove("active");
-  document.getElementById("remoteEligibilityHeader").style.display="none";
-  document.getElementById("remoteEligibilityHeader").style.display="none";
   if(flowId) document.getElementById(flowId).classList.add("active");
 }
 function showNormalFlow(){
@@ -670,7 +664,6 @@ function showNormalFlow(){
   document.getElementById("customPlanCard").classList.remove("active");
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("remoteEligibilityCard").classList.remove("active");
-  document.getElementById("remoteEligibilityHeader").style.display="none";
   document.getElementById("whyHeader").style.display="";
   document.getElementById("questionsHeader").style.display="";
 }
@@ -757,7 +750,6 @@ function submitCustomPlan(){
 // ── REMOTE ELIGIBILITY ───────────────────────────────────────────────────────
 function showRemoteEligibility(booths){
   showOnlyFlow("remoteEligibilityCard");
-  document.getElementById("remoteEligibilityHeader").style.display="flex";
   document.getElementById("remoteBoothCount").textContent=booths;
   var s=SHOWS[currentJob];
   if(s){document.getElementById("remote-revenue").value=Math.round(s.sfRevenue||0).toLocaleString("en-US");}
@@ -1421,7 +1413,8 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
     <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-18 12:40 UTC</div>
-<!-- build: 2026-06-26T11:16:15Z -->
+<!-- build-prev: 2026-06-26T11:16:15Z -->
+<!-- build: 2026-06-26T11:23:49Z -->
 </body>
 </html>
 

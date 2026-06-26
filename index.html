@@ -469,7 +469,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           <button class="sf-collapsible-btn" onclick="toggleSection('remoteWhyBody',this)" id="remoteWhyHeader">Why This Result <span class="sf-chev">&#9660;</span></button>
           <div class="sf-collapsible-body" id="remoteWhyBody"><div id="remoteWhySection" style="padding-top:4px;font-size:14px;line-height:1.6;"></div></div>
 
-          <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Additional Considerations Before Finalizing <span class="sf-chev">&#9660;</span></button>
+          <button class="sf-collapsible-btn" onclick="toggleSection('remoteQuestionsSection',this)" id="remoteQuestionsHeader">Consider These Before Deciding <span class="sf-chev">&#9660;</span></button>
           <div class="sf-collapsible-body" id="remoteQuestionsSection"><div id="remoteQuestionsList" style="padding-top:4px;"></div></div>
 
           <div class="sf-decision-section" id="remotePlanActions" style="display:none;">
@@ -483,10 +483,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
               <div class="sf-modify-hdr">Document Your Modification</div>
               <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">The model&#8217;s recommendation is shown above. Select a different staffing approach below and provide your reason for overriding.</div>
               <div class="sf-reason-lbl">Select Staffing Approach</div>
-              <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-                <button class="remote-choice-btn" data-val="full" onclick="selectRemoteChoice(this)">&#128222; Fully Remote</button>
-                <button class="remote-choice-btn" data-val="hybrid" onclick="selectRemoteChoice(this)">&#9202; Partially On-Site</button>
-                <button class="remote-choice-btn" data-val="onsite" onclick="selectRemoteChoice(this)">&#127970; Fully On-Site</button>
+              <div style="display:flex;gap:10px;margin-bottom:14px;">
+                <button class="remote-choice-btn" data-val="full" onclick="selectRemoteChoice(this)" style="flex:1;">&#128222; Fully Remote</button>
+                <button class="remote-choice-btn" data-val="hybrid" onclick="selectRemoteChoice(this)" style="flex:1;">&#9202; Partially On-Site</button>
+                <button class="remote-choice-btn" data-val="onsite" onclick="selectRemoteChoice(this)" style="flex:1;">&#127970; Fully On-Site</button>
               </div>
               <div class="sf-reason-lbl">Reason for Modification</div>
               <div class="sf-reason-checklist" id="remoteDeviationChecklist">
@@ -522,7 +522,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       </div>
 
       <!-- WHY THESE NUMBERS -->
-      <button class="sf-collapsible-btn" onclick="toggleSection('whySection',this)" id="whyHeader">Why These Numbers <span class="sf-chev">&#9660;</span></button>
+      <button class="sf-collapsible-btn" onclick="toggleSection('whySection',this)" id="whyHeader">Why This Result <span class="sf-chev">&#9660;</span></button>
       <div class="sf-collapsible-body" id="whySection"><div id="whyList" style="padding-top:4px;"></div></div>
 
       <!-- CONSIDER THESE -->
@@ -1416,7 +1416,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
     <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-26 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
-<!-- build: 2026-06-26T11:49:16Z -->
+<!-- build: 2026-06-26T11:56:46Z -->
 </body>
 </html>
 

@@ -656,6 +656,7 @@ function showOnlyFlow(flowId){
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("remoteEligibilityCard").classList.remove("active");
+  document.getElementById("remoteRecSection").style.display="none";
   if(flowId) document.getElementById(flowId).classList.add("active");
 }
 function showNormalFlow(){
@@ -664,6 +665,7 @@ function showNormalFlow(){
   document.getElementById("customPlanCard").classList.remove("active");
   document.getElementById("customPlanHeader").style.display="none";
   document.getElementById("remoteEligibilityCard").classList.remove("active");
+  document.getElementById("remoteRecSection").style.display="none";
   document.getElementById("whyHeader").style.display="";
   document.getElementById("questionsHeader").style.display="";
 }
@@ -1414,7 +1416,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
     <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-06-26 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
-<!-- build: 2026-06-26T11:39:48Z -->
+<!-- build: 2026-06-26T11:43:12Z -->
 </body>
 </html>
 

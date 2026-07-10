@@ -428,13 +428,16 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         <div class="flow-badge flow-badge-custom">&#9888; Custom Plan Required</div>
       </div>
       <div class="flow-card-body">
-        <div class="flow-card-desc">This show has <strong id="customBoothCount">0</strong> booths, which exceeds the 750-booth model ceiling. The ES Staffing Model has provided a suggested starting plan below based on booth count and revenue — but this show requires your review.</div>
-        <div class="custom-roles-grid">
-          <div class="dev-role"><label>Customer-Facing Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-cf" min="0" max="50" value="0" disabled /></div>
-          <div class="dev-role"><label>Back Room Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-br" min="0" max="50" value="0" disabled /></div>
-          <div class="dev-role"><label>Additional Support Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-as" min="0" max="50" value="0" disabled /></div>
-          <div class="dev-role"><label>Supervisory Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-sv" min="0" max="50" value="0" disabled /></div>
-          <div class="dev-role dev-role-freight"><label>Freight Rigging / Storage Desk Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-fr" min="0" max="50" value="0" disabled /></div>
+        <div class="flow-card-desc">This show has <strong id="customBoothCount">0</strong> booths, which exceeds the 750-booth model ceiling. The ES Staffing Model has provided a suggested starting plan below based on booth count and revenue — but this show requires your review and a custom plan.</div>
+        <div class="sf-calc-roles">
+          <div class="sf-role-boxes">
+            <div class="sf-role-box zero" id="block-custom-cf"><div class="sf-role-box-num" id="count-custom-cf">0</div><div class="sf-role-box-lbl" id="label-custom-cf">Customer-Facing Roles</div></div>
+            <div class="sf-role-box zero" id="block-custom-br"><div class="sf-role-box-num" id="count-custom-br">0</div><div class="sf-role-box-lbl" id="label-custom-br">Back Room Roles</div></div>
+            <div class="sf-role-box zero" id="block-custom-as"><div class="sf-role-box-num" id="count-custom-as">0</div><div class="sf-role-box-lbl" id="label-custom-as">Additional Support Roles</div></div>
+            <div class="sf-role-box zero" id="block-custom-sv"><div class="sf-role-box-num" id="count-custom-sv">0</div><div class="sf-role-box-lbl" id="label-custom-sv">Supervisory Roles</div></div>
+            <div class="sf-role-box sf-role-box-freight zero" id="block-custom-fr"><div class="sf-role-box-num" id="count-custom-fr">0</div><div class="sf-role-box-lbl" id="label-custom-fr">Freight Rigging / Storage Desk Roles</div></div>
+          </div>
+          <div class="sf-total-bar"><div class="sf-total-lbl">Total Suggested Staff</div><div class="sf-total-num" id="customTotalCount">0</div></div>
         </div>
       </div>
 
@@ -445,18 +448,17 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="sf-collapsible-body" id="customQuestionsSection"><div id="customQuestionsList" style="padding-top:4px;"></div></div>
 
       <div class="sf-decision-section" id="customDecisionCard">
-        <div class="sf-decision-lbl">Your Staffing Decision</div>
-        <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">Review the model's suggested starting plan above. You can agree with it as-is, or modify the role counts and document your reasoning. Once you confirm, you'll be directed to the NSS to enter your decision.</div>
-        <div class="sf-decision-btns">
-          <button class="sf-btn-agree" onclick="agreeWithCustomPlan()">&#10003;&nbsp; I Agree With This Plan</button>
-          <button class="sf-btn-modify" onclick="showCustomDeviation()">&#8856;&nbsp; I Need to Modify This Plan</button>
+        <div class="sf-decision-lbl">Your Staffing Plan</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">The suggested starting plan above is a floor, not a final answer — adjust any role counts below based on what you know about this show. Once you confirm, you'll be directed to the NSS to enter your decision.</div>
+        <div class="custom-roles-grid">
+          <div class="dev-role"><label>Customer-Facing Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-cf" min="0" max="50" value="0" /></div>
+          <div class="dev-role"><label>Back Room Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-br" min="0" max="50" value="0" /></div>
+          <div class="dev-role"><label>Additional Support Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-as" min="0" max="50" value="0" /></div>
+          <div class="dev-role"><label>Supervisory Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-sv" min="0" max="50" value="0" /></div>
+          <div class="dev-role dev-role-freight"><label>Freight Rigging / Storage Desk Roles</label><div class="model-val">Model: N/A</div><input type="number" id="custom-fr" min="0" max="50" value="0" /></div>
         </div>
-        <div class="sf-modify-panel" id="customDeviationPanel">
-          <div class="sf-modify-hdr">Document Your Modified Plan</div>
-          <div style="font-size:14px;color:var(--muted);margin-bottom:10px;">The role fields above are now unlocked — adjust any staffing numbers as needed and provide your rationale below.</div>
-          <div class="deviation-reason"><label>Custom Plan Rationale</label><textarea class="sf-reason-textarea" id="customPlanReason" placeholder="Explain your staffing plan for this show. Include any relevant context about show complexity, historical staffing, special requirements, or other factors that informed your decisions."></textarea></div>
-          <button class="btn-submit-deviation" onclick="submitCustomPlan()">Finalize Modified Plan &#8594;</button>
-        </div>
+        <div class="deviation-reason"><label>Custom Plan Rationale <span style="font-weight:400;text-transform:none;letter-spacing:0;">(required only if your numbers differ from the suggestion above)</span></label><textarea class="sf-reason-textarea" id="customPlanReason" placeholder="Explain your staffing plan for this show. Include any relevant context about show complexity, historical staffing, special requirements, or other factors that informed your decisions."></textarea></div>
+        <button class="btn-submit-deviation" onclick="submitCustomPlan()">Finalize Custom Plan &#8594;</button>
       </div>
     </div>
 
@@ -697,8 +699,7 @@ function showCustomPlan(booths, revenue, s){
   document.getElementById("questionsHeader").style.display="none";
   document.getElementById("customBoothCount").textContent=booths.toLocaleString();
 
-  // Reset decision state on every new job load
-  document.getElementById("customDeviationPanel").style.display="none";
+  // Reset state on every new job load
   document.getElementById("customPlanReason").value="";
   ["customWhySection","customQuestionsSection"].forEach(function(id){document.getElementById(id).classList.remove("open");});
   ["customWhyHeader","customQuestionsHeader"].forEach(function(id){document.getElementById(id).classList.remove("open");});
@@ -731,20 +732,32 @@ function showCustomPlan(booths, revenue, s){
   if(booths>=1200){sugSV=2;}
   else if(booths>=451||revenue>=2000000){sugSV=1;}
 
+  // Shared currentRec object — lets Custom Plan reuse Normal flow's
+  // buildSummaryHTML() and decision-banner logic without forking it.
+  currentRec={cf:sugCF,br:sugBR,as:sugAS,sv:sugSV,fr:0};
+
+  // Static suggestion boxes (read-only, same visual pattern as Normal flow)
+  var sugTotal=sugCF+sugBR+sugAS+sugSV;
+  [{id:"cf",c:sugCF,s:"Customer-Facing<br>Role",p:"Customer-Facing<br>Roles"},
+   {id:"br",c:sugBR,s:"Back Room<br>Role",p:"Back Room<br>Roles"},
+   {id:"as",c:sugAS,s:"Additional Support<br>Role",p:"Additional Support<br>Roles"},
+   {id:"sv",c:sugSV,s:"Supervisory<br>Role",p:"Supervisory<br>Roles"},
+   {id:"fr",c:0,s:"Freight Rigging / Storage Desk Role",p:"Freight Rigging / Storage Desk Roles"}
+  ].forEach(function(r){
+    document.getElementById("count-custom-"+r.id).textContent=r.c;
+    document.getElementById("block-custom-"+r.id).className="sf-role-box "+(r.id==="fr"?"sf-role-box-freight ":"")+(r.c>0?"active-role":"zero");
+    document.getElementById("label-custom-"+r.id).innerHTML=r.c===1?r.s:r.p;
+  });
+  document.getElementById("customTotalCount").textContent=sugTotal;
+
+  // Editable grid — always unlocked, pre-filled with the suggestion
   document.getElementById("custom-cf").value=sugCF;
   document.getElementById("custom-br").value=sugBR;
   document.getElementById("custom-as").value=sugAS;
   document.getElementById("custom-sv").value=sugSV;
   document.getElementById("custom-fr").value=0;
-  ["custom-cf","custom-br","custom-as","custom-sv","custom-fr"].forEach(function(id){
-    document.getElementById(id).disabled=true;
-  });
 
-  // Shared currentRec object — lets Custom Plan reuse Normal flow's
-  // buildSummaryHTML() and decision-banner logic without forking it.
-  currentRec={cf:sugCF,br:sugBR,as:sugAS,sv:sugSV,fr:0};
-
-  // Update model-val labels and active styling
+  // Update model-val labels and active styling on the editable grid
   var roleVals={cf:sugCF,br:sugBR,as:sugAS,sv:sugSV,fr:0};
   ["cf","br","as","sv","fr"].forEach(function(r){
     var card=document.getElementById("custom-"+r).closest(".dev-role");
@@ -775,7 +788,7 @@ function showCustomPlan(booths, revenue, s){
 
   cwhy.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
 
-  cwhy.push("These starting numbers are a floor, not a final answer — adjust them based on what you know about this specific show.");
+  cwhy.push("These starting numbers are a floor, not a final answer — adjust them below based on what you know about this specific show.");
 
   document.getElementById("customWhyList").innerHTML=cwhy.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
 
@@ -793,52 +806,30 @@ function showCustomPlan(booths, revenue, s){
   ];
   document.getElementById("customQuestionsList").innerHTML=cqs.map(function(q){return'<div class="sf-consider-item"><div class="sf-consider-icon">'+q.i+'</div><div>'+q.t+'</div></div>';}).join("");
 }
-function agreeWithCustomPlan(){
-  var s=SHOWS[currentJob];if(!s)return;
-  // Re-lock inputs to the suggested values in case Modify was opened and then abandoned
-  ["cf","br","as","sv","fr"].forEach(function(r){
-    var el=document.getElementById("custom-"+r);
-    el.value=currentRec[r];
-    el.disabled=true;
-  });
-  document.getElementById("customDeviationPanel").style.display="none";
-  var now=new Date();
-  var ds=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  var banner=document.getElementById("confirmBanner");
-  banner.className="confirm-banner agreed";
-  document.getElementById("cbTitle").textContent="\u2705 Custom Plan Confirmed \u2014 Ready to Enter in NSS";
-  document.getElementById("cbBody").innerHTML="You have agreed with the model's suggested starting plan for <strong>"+s.name+"</strong>, which has "+s.currentBooths.toLocaleString()+" booths and requires a custom staffing plan. Use the button below to open the NSS and record this staffing plan.";
-  document.getElementById("cbSummary").innerHTML=buildSummaryHTML(currentRec.cf,currentRec.br,currentRec.as,currentRec.sv,currentRec.fr,false);
-  document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Custom plan (751+ booths) \u00B7 Model suggestion accepted"
-    +"<br><a class=\"btn-open-nss\" href=\"https://app.smartsheet.com/sheets/2gG6m5j4V639GvH7FjqJWG2VMjW2M7fXjJ9xFPW1?view=grid\" target=\"_blank\">"
-    +"<svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
-    +"Open NSS to Record Decision \u2192</a>";
-  banner.style.display="block";
-}
-function showCustomDeviation(){
-  document.getElementById("customDeviationPanel").style.display="block";
-  document.getElementById("confirmBanner").style.display="none";
-  ["custom-cf","custom-br","custom-as","custom-sv","custom-fr"].forEach(function(id){
-    document.getElementById(id).disabled=false;
-  });
-}
 function submitCustomPlan(){
-  var reason=document.getElementById("customPlanReason").value.trim();
-  if(!reason){alert("Please provide a rationale for your custom staffing plan before submitting.");return;}
   var cf=parseInt(document.getElementById("custom-cf").value)||0;
   var br=parseInt(document.getElementById("custom-br").value)||0;
   var as_=parseInt(document.getElementById("custom-as").value)||0;
   var sv=parseInt(document.getElementById("custom-sv").value)||0;
   var fr=parseInt(document.getElementById("custom-fr").value)||0;
+  var reason=document.getElementById("customPlanReason").value.trim();
+
+  var matchesSuggestion=(cf===currentRec.cf && br===currentRec.br && as_===currentRec.as && sv===currentRec.sv && fr===currentRec.fr);
+  if(!matchesSuggestion && !reason){alert("Please provide a rationale — your numbers differ from the suggested starting plan.");return;}
+
   var s=SHOWS[currentJob];
   var now=new Date();
   var ds=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"});
   var banner=document.getElementById("confirmBanner");
-  banner.className="confirm-banner deviated";
+  banner.className="confirm-banner "+(matchesSuggestion?"agreed":"deviated");
   document.getElementById("cbTitle").textContent="\u2705 Custom Plan Confirmed \u2014 Ready to Enter in NSS";
-  document.getElementById("cbBody").innerHTML="Your modified plan for <strong>"+s.name+"</strong> is confirmed. "+s.currentBooths.toLocaleString()+" booths required a custom staffing plan; the model suggested CF:"+currentRec.cf+" / BR:"+currentRec.br+" / AS:"+currentRec.as+" / SV:"+currentRec.sv+" / Freight:"+currentRec.fr+" as a starting point. Use the button below to open the NSS and record your modified plan.<br><br><strong>Rationale documented:</strong> "+reason;
-  document.getElementById("cbSummary").innerHTML=buildSummaryHTML(cf,br,as_,sv,fr,true);
-  document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Custom plan (751+ booths) \u00B7 Modified from suggestion"
+  if(matchesSuggestion){
+    document.getElementById("cbBody").innerHTML="You have agreed with the model's suggested starting plan for <strong>"+s.name+"</strong>, which has "+s.currentBooths.toLocaleString()+" booths and requires a custom staffing plan. Use the button below to open the NSS and record this staffing plan.";
+  } else {
+    document.getElementById("cbBody").innerHTML="Your modified plan for <strong>"+s.name+"</strong> is confirmed. "+s.currentBooths.toLocaleString()+" booths required a custom staffing plan; the model suggested CF:"+currentRec.cf+" / BR:"+currentRec.br+" / AS:"+currentRec.as+" / SV:"+currentRec.sv+" / Freight:"+currentRec.fr+" as a starting point. Use the button below to open the NSS and record your modified plan.<br><br><strong>Rationale documented:</strong> "+reason;
+  }
+  document.getElementById("cbSummary").innerHTML=buildSummaryHTML(cf,br,as_,sv,fr,!matchesSuggestion);
+  document.getElementById("cbMeta").innerHTML="Confirmed: "+ds+" \u00B7 Job #"+currentJob+" \u00B7 Custom plan (751+ booths) \u00B7 "+(matchesSuggestion?"Model recommendation accepted":"Modification from model")
     +"<br><a class=\"btn-open-nss\" href=\"https://app.smartsheet.com/sheets/2gG6m5j4V639GvH7FjqJWG2VMjW2M7fXjJ9xFPW1?view=grid\" target=\"_blank\">"
     +"<svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M11 3h6v6M10 10L17 3M8 5H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
     +"Open NSS to Record Decision \u2192</a>";
@@ -1511,7 +1502,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-10 17:18 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-10 17:35 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

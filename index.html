@@ -640,10 +640,16 @@ function getRow(b){for(var i=0;i<MODEL.length;i++){if(b>=MODEL[i].min&&b<=MODEL[
 function activeBooths(s){
   var cur=s.currentBooths||0, proj=s.projectedBooths||0, py=s.pyBooths||0;
   if(s.exhibitorList && cur>0){
-    return{count:cur,source:"list"};
+    if(py>0 && cur<py*0.8){
+      return{count:py,source:"prior-year-override",cur:cur,py:py};
+    }
+    if(py>0 && cur>py*1.5){
+      return{count:cur,source:"list",cur:cur,py:py,highVariance:true};
+    }
+    return{count:cur,source:"list",cur:cur,py:py};
   }
-  if(py>0){return{count:py,source:"prior-year"};}
-  return{count:proj,source:"projected"};
+  if(py>0){return{count:py,source:"prior-year",cur:cur,py:py};}
+  return{count:proj,source:"projected",cur:cur,py:py};
 }
 function activeRevenue(s,boothCount){
   var sfRev=s.sfRevenue||0;
@@ -1335,7 +1341,7 @@ function calculate(){
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
   document.getElementById("sfRevenueVal").textContent=ff(ar.amount);
   // Box 1 and Box 3 badges depend on booth source
-  if(ab.source==="prior-year"){
+  if(ab.source==="prior-year" || ab.source==="prior-year-override"){
     badge("currentBoothsBadge","Driving Recommendation",true);
   } else {
     badge("currentBoothsBadge","Prior Year Reference",false);
@@ -1345,6 +1351,9 @@ function calculate(){
   if(ab.source==="list"){
     box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Exhibitor List Loaded",true);
+  } else if(ab.source==="prior-year-override"){
+    box3lbl.textContent="Current Year Booth Count";
+    badge("projectedBoothsBadge","List Below Threshold — Using Prior Year",false);
   } else {
     box3lbl.textContent="Current Year Booth Count Projection";
     badge("projectedBoothsBadge","No List Loaded",false);
@@ -1398,10 +1407,17 @@ function calculate(){
 
   // Booth source explanation
   var boothSourceLabel;
-  if(ab.source==="list"){
-    boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded and within 20% of last year’s "+s.pyBooths.toLocaleString()+" booths.";
+  if(ab.source==="list" && ab.highVariance){
+    boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded and is more than 50% higher than last year’s "+ab.py.toLocaleString()+" booths. Confirm the exhibitor list is accurate before finalizing.";
+  } else if(ab.source==="list" && ab.py){
+    boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded and booth count is within the expected range of last year’s "+ab.py.toLocaleString()+" booths (no more than 20% below, no more than 50% above).";
+  } else if(ab.source==="list"){
+    boothSourceLabel="Current Booths (TSS) of "+ab.count.toLocaleString()+" — exhibitor list is loaded.";
+  } else if(ab.source==="prior-year-override"){
+    boothSourceLabel="Prior Year Booths of "+ab.count.toLocaleString()+" used instead of the currently loaded "+ab.cur.toLocaleString()+" booths — current count is more than 20% below last year’s total.";
   } else if(ab.source==="prior-year"){
-    boothSourceLabel="Prior Year Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded yet. Prior year booth count is used as the most reliable available reference."+(s.currentBooths>0?" (Current TSS count of "+s.currentBooths.toLocaleString()+" is outside 20% of prior year and may not reflect a fully loaded list.)":"");
+    var pyOutside=(ab.cur>0 && ab.py>0 && (ab.cur<ab.py*0.8 || ab.cur>ab.py*1.5));
+    boothSourceLabel="Prior Year Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded yet. Prior year booth count is used as the most reliable available reference."+(pyOutside?" (Current TSS count of "+ab.cur.toLocaleString()+" is outside the expected range of prior year and may not reflect a fully loaded list.)":"");
   } else {
     boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded and no prior year data is available for this show.";
   }
@@ -1502,7 +1518,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 16:53 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 21:32 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

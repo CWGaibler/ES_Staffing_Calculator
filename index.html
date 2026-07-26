@@ -1337,7 +1337,8 @@ function calculate(){
 
   // Four data indicators
   document.getElementById("currentBoothsVal").textContent=s.pyBooths?s.pyBooths.toLocaleString():"N/A";
-  document.getElementById("projectedBoothsVal").textContent=ab.count.toLocaleString();
+  var box3val=(s.exhibitorList && s.currentBooths>0)?s.currentBooths:ab.count;
+  document.getElementById("projectedBoothsVal").textContent=box3val.toLocaleString();
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
   document.getElementById("sfRevenueVal").textContent=ff(ar.amount);
   // Box 1 and Box 3 badges depend on booth source
@@ -1350,10 +1351,10 @@ function calculate(){
   var box3lbl=document.querySelector('[id="projectedBoothsVal"]').closest('.sf-data-card').querySelector('.sf-data-card-lbl');
   if(ab.source==="list"){
     box3lbl.textContent="Current Year Booth Count";
-    badge("projectedBoothsBadge","Exhibitor List Loaded",true);
+    badge("projectedBoothsBadge","Driving Recommendation",true);
   } else if(ab.source==="prior-year-override"){
     box3lbl.textContent="Current Year Booth Count";
-    badge("projectedBoothsBadge","List Below Threshold — Using Prior Year",false);
+    badge("projectedBoothsBadge","Potentially Incomplete List",false);
   } else {
     box3lbl.textContent="Current Year Booth Count Projection";
     badge("projectedBoothsBadge","No List Loaded",false);
@@ -1518,7 +1519,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 21:32 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 21:50 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

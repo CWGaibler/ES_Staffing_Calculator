@@ -333,10 +333,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div id="auth-card">
       <img src="https://cwgaibler.github.io/ES_Command_Center/Freemanlogo_primarystandard_RGB.png" alt="Freeman" onerror="this.style.display='none'">
       <h2>ES Staffing Calculator</h2>
-      <p>This tool contains confidential Freeman operational data.<br>Enter your access passphrase to continue.</p>
-      <input id="auth-input" type="password" placeholder="Passphrase" autocomplete="off" />
+      <p>This tool contains confidential Freeman operational data.<br>Enter your access password to continue.</p>
+      <input id="auth-input" type="password" placeholder="Password" autocomplete="off" />
       <button id="auth-btn">Access Calculator</button>
-      <div id="auth-error">Incorrect passphrase. Please try again.</div>
+      <div id="auth-error">Incorrect password. Please try again.</div>
       <div id="auth-notice">For access, contact your ES Regional Director.</div>
     </div>
   </div>
@@ -369,7 +369,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
           } else {
             input.classList.add('error');
             errEl.style.display = 'block';
-            errEl.textContent = 'Incorrect passphrase. Please try again.';
+            errEl.textContent = 'Incorrect password. Please try again.';
             setTimeout(function(){ input.classList.remove('error'); }, 1200);
           }
         });
@@ -1502,7 +1502,7 @@ document.getElementById("jobInput").addEventListener("blur", function(){ setTime
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 16:35 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-26 16:53 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

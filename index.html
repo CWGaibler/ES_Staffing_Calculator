@@ -1758,6 +1758,13 @@ function rptResetScopeForPersona(key){
   }
 }
 
+function rptSortedRegionKeys(){
+  return Object.keys(RPT_REGION_DATA).sort(function(a,b){ return a.localeCompare(b); });
+}
+function rptSortedBranchKeys(regionObj){
+  return Object.keys(regionObj.branches).sort(function(a,b){ return a.localeCompare(b); });
+}
+
 function rptRenderPills(){
   var p = RPT_PERSONAS[rptCurrentPersonaKey];
   var bar = document.getElementById("rpt-pill-bar");
@@ -1778,10 +1785,10 @@ function rptRenderPills(){
       d.textContent = pl.label;
       d.onclick = function(){
         if (pl.level==="enterprise"){ rptScope = {level:"enterprise",region:null,branch:null}; rptRender(); return; }
-        if (pl.level==="region"){ rptScope = {level:"region", region:rptScope.region||Object.keys(RPT_REGION_DATA)[0], branch:null}; rptRender(); return; }
+        if (pl.level==="region"){ rptScope = {level:"region", region:rptScope.region||rptSortedRegionKeys()[0], branch:null}; rptRender(); return; }
         if (pl.level==="branch"){
-          var firstRegion = rptScope.region || Object.keys(RPT_REGION_DATA)[0];
-          var firstBranch = Object.keys(RPT_REGION_DATA[firstRegion].branches)[0];
+          var firstRegion = rptScope.region || rptSortedRegionKeys()[0];
+          var firstBranch = rptSortedBranchKeys(RPT_REGION_DATA[firstRegion])[0];
           rptScope = {level:"branch", region:firstRegion, branch:firstBranch}; rptRender(); return;
         }
       };
@@ -1790,7 +1797,7 @@ function rptRenderPills(){
     if (rptScope.level === "region"){
       var sel = document.createElement("select");
       sel.className = "scope-select";
-      Object.keys(RPT_REGION_DATA).forEach(function(r){
+      rptSortedRegionKeys().forEach(function(r){
         var o = document.createElement("option"); o.value=r; o.textContent=r;
         if (r===rptScope.region) o.selected = true;
         sel.appendChild(o);
@@ -1801,9 +1808,9 @@ function rptRenderPills(){
     if (rptScope.level === "branch"){
       var sel2 = document.createElement("select");
       sel2.className = "scope-select";
-      Object.keys(RPT_REGION_DATA).forEach(function(r){
+      rptSortedRegionKeys().forEach(function(r){
         var grp = document.createElement("optgroup"); grp.label = r;
-        Object.keys(RPT_REGION_DATA[r].branches).forEach(function(b){
+        rptSortedBranchKeys(RPT_REGION_DATA[r]).forEach(function(b){
           var o = document.createElement("option"); o.value = r + "||" + b; o.textContent = b;
           if (r===rptScope.region && b===rptScope.branch) o.selected = true;
           grp.appendChild(o);
@@ -1816,7 +1823,7 @@ function rptRenderPills(){
   }
 
   if (p.tier === "rd"){
-    var regions = Array.isArray(p.region) ? p.region : [p.region];
+    var regions = (Array.isArray(p.region) ? p.region.slice() : [p.region]).sort(function(a,b){ return a.localeCompare(b); });
     if (regions.length > 1){
       var regionPicker = document.createElement("select");
       regionPicker.className = "scope-select";
@@ -1842,7 +1849,7 @@ function rptRenderPills(){
     sel3.className = "scope-select";
     var optAll = document.createElement("option"); optAll.value=""; optAll.textContent="All Branches";
     sel3.appendChild(optAll);
-    Object.keys(RPT_REGION_DATA[rptScope.region].branches).forEach(function(b){
+    rptSortedBranchKeys(RPT_REGION_DATA[rptScope.region]).forEach(function(b){
       var o = document.createElement("option"); o.value=b; o.textContent=b;
       if (rptScope.branch===b) o.selected=true;
       sel3.appendChild(o);
@@ -1860,7 +1867,7 @@ function rptRenderPills(){
     if (branches.length > 1){
       var branchPicker = document.createElement("select");
       branchPicker.className = "scope-select";
-      branches.forEach(function(b){
+      branches.slice().sort(function(a,b){ return a.localeCompare(b); }).forEach(function(b){
         var o = document.createElement("option"); o.value=b; o.textContent=b;
         if (b===rptScope.branch) o.selected = true;
         branchPicker.appendChild(o);
@@ -1902,7 +1909,7 @@ function rptRenderComparisonPanel(){
   if (rptScope.level === "enterprise"){
     var rows = Object.keys(RPT_REGION_DATA)
       .map(function(name){ return [name, RPT_REGION_DATA[name]]; })
-      .sort(function(a,b){ return b[1].adherence - a[1].adherence; })
+      .sort(function(a,b){ return a[0].localeCompare(b[0]); })
       .map(function(pair){
         var name = pair[0], r = pair[1];
         return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + r.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + r.adherence + '%</div></div>';
@@ -1918,7 +1925,7 @@ function rptRenderComparisonPanel(){
     var region = RPT_REGION_DATA[rptScope.region];
     var branchRows = Object.keys(region.branches)
       .map(function(name){ return [name, region.branches[name]]; })
-      .sort(function(a,b){ return b[1].adherence - a[1].adherence; })
+      .sort(function(a,b){ return a[0].localeCompare(b[0]); })
       .map(function(pair){
         var name = pair[0], br = pair[1];
         return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + br.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + br.adherence + '%</div></div>';

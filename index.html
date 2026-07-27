@@ -16,19 +16,20 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 /* HEADER */
 .header{background:var(--fb);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,31,95,0.18)}
-.hdr-row1{display:flex;align-items:center;height:66px;padding:0 24px;flex-shrink:0}
+.hdr-row1{display:flex;align-items:center;height:66px;padding:0 24px;flex-shrink:0;position:relative}
 .hdr-left{display:flex;align-items:center;gap:14px;flex:1}
 .hdr-logo{height:18px}
 .hdr-divider{width:2px;height:18px;background:rgba(255,255,255,.15)}
 .hdr-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em;white-space:nowrap}
 .hdr-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex:1}
+.hdr-row1 .hdr-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center}
 .hdr-badge{background:rgba(0,189,246,.15);border:1px solid var(--mb);color:var(--mb);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
 
 /* MAIN */
 .main{width:100%;padding:28px 32px 80px;box-sizing:border-box}
 
 /* PAGE HEADER */
-.page-hdr{margin-bottom:20px}
+.page-hdr{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .page-title{font-size:22px;font-weight:800;color:var(--fb)}
 .page-sub{font-size:17px;color:var(--muted);margin-top:4px}
 
@@ -277,32 +278,34 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 }
 
 /* ── Events Lens-style show identity card ── */
-.hdr-row2{display:flex;align-items:stretch;height:44px;padding:0 24px;border-top:1px solid rgba(255,255,255,.08);}
-.tn-item{display:flex;align-items:center;padding:0 16px;color:rgba(255,255,255,.65);font-size:13px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;}
+.hdr-row2{display:flex;align-items:stretch;justify-content:center;height:44px;padding:0 8px;}
+.tn-item{position:relative;display:flex;align-items:center;gap:5px;padding:0 14px;color:rgba(255,255,255,.65);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;user-select:none;}
+.tn-item:hover{color:#fff;}
 .tn-item.tn-active{color:var(--mb);border-bottom-color:var(--mb);}
-.hdr-center-pills{display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:20px;}
-.rpt-scope-pill{font-size:13px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;}
-.rpt-scope-pill.active{background:rgba(0,189,246,.18);border-color:var(--mb);color:var(--mb);}
-.rpt-scope-pill.fixed{cursor:default;}
-.rpt-scope-select{font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;}
-.rpt-scope-select option{color:#111;}
+.scope-pills{display:flex;align-items:center;gap:6px;position:relative;}
+.scope-dropdowns{position:absolute;left:100%;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;white-space:nowrap;margin-left:8px;}
+.scope-pill{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;}
+.scope-pill.active{background:rgba(0,189,246,.18);border-color:var(--mb);color:var(--mb);}
+.scope-pill.fixed{cursor:default;}
+.scope-select{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;}
+.scope-select option{background:#001F5F;color:#fff;}
 .rpt-identity{display:flex;align-items:center;gap:10px;}
 .rpt-user-name{font-size:13px;font-weight:700;color:#fff;}
-.rpt-avatar-wrap{position:relative;width:34px;height:34px;flex-shrink:0;}
-.rpt-avatar{width:34px;height:34px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.hdr-avatar-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
+.hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
 #rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;background:transparent;}
 .rpt-dummy-banner{background:#3C3489;color:#fff;font-size:12px;font-weight:800;text-align:center;padding:7px;letter-spacing:.02em;margin:-28px -32px 22px;}
+.rpt-export-btn{font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;flex-shrink:0;}
+.rpt-export-btn:hover{border-color:var(--mb);color:var(--mb);}
 .rpt-kpi-strip{display:flex;gap:14px;margin-bottom:22px;}
-.rpt-kpi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 22px;flex:1;}
+.rpt-kpi-card{background:var(--white);border:2.5px solid var(--mb);border-radius:10px;padding:14px 22px;flex:1;}
 .rpt-kpi-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
 .rpt-kpi-val{font-size:34px;font-weight:900;line-height:1;color:var(--fb);}
 .rpt-kpi-delta{font-size:12px;font-weight:700;margin-top:8px;color:var(--muted);}
 .rpt-kpi-delta.up{color:var(--green);}
-.rpt-scope-banner{font-size:12.5px;font-weight:700;color:var(--muted);margin:-8px 0 16px;}
 .rpt-grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
-.rpt-panel{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px;}
-.rpt-panel-title{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;color:var(--fb);}
-.rpt-panel-sub{font-size:12px;font-weight:700;color:var(--muted);}
+.rpt-panel-col{display:flex;flex-direction:column;min-height:0;}
+.rpt-panel{background:var(--white);border:1px solid var(--border);border-radius:10px;border-top:4px solid var(--mb);padding:18px;flex:1;}
 .rpt-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .rpt-bar-lbl{width:120px;font-size:12.5px;font-weight:700;flex-shrink:0;color:var(--fb);}
 .rpt-bar-track{flex:1;height:16px;background:var(--fb-xlt);border-radius:4px;overflow:hidden;position:relative;}
@@ -331,6 +334,16 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 
     /* AUTH GATE */
+    #auth-identity-label { text-align: left; font-size: 12.5px; font-weight: 700; color: #001F5F; margin-bottom: 6px; }
+    #auth-identity-select {
+      width: 100%; box-sizing: border-box;
+      border: 1.5px solid #E2E5EF; border-radius: 8px;
+      padding: 11px 14px; font-size: 15px; font-family: inherit;
+      color: #001F5F; outline: none; margin-bottom: 16px;
+      background: #fff; cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    #auth-identity-select:focus { border-color: #00BDF6; }
     #auth-gate {
       position: fixed; inset: 0; z-index: 99999;
       background: #001F5F;
@@ -375,7 +388,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div id="auth-card">
       <img src="https://cwgaibler.github.io/ES_Command_Center/Freemanlogo_primarystandard_RGB.png" alt="Freeman" onerror="this.style.display='none'">
       <h2>ES Staffing Calculator</h2>
-      <p>This tool contains confidential Freeman operational data.<br>Enter your access password to continue.</p>
+      <p>This tool contains confidential Freeman operational data.<br>Select your name and enter your access password to continue.</p>
+      <div id="auth-identity-label">Who's logging in? (used for the Reporting proof-of-concept only)</div>
+      <select id="auth-identity-select">
+        <option value="Craig Gaibler">Craig Gaibler</option>
+        <option value="Nesana Wieger">Nesana Wieger</option>
+        <option value="Leslie Davis">Leslie Davis (RD, NW/SoCal)</option>
+        <option value="Niall M.">Niall M. (Manager, San Francisco)</option>
+      </select>
       <input id="auth-input" type="password" placeholder="Password" autocomplete="off" />
       <button id="auth-btn">Access Calculator</button>
       <div id="auth-error">Incorrect password. Please try again.</div>
@@ -386,6 +406,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
   <script>
     (function() {
       var SESSION_KEY = 'essc_auth_v1';
+      var IDENTITY_KEY = 'essc_identity_v1';
       var HASH = 'd3b273609d1c1a9078841d8fcd4a911dfbf30fbe7058fa71dde85addeacd7212';
       function sha256(str) {
         return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
@@ -403,11 +424,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         var val = document.getElementById('auth-input').value;
         var input = document.getElementById('auth-input');
         var errEl = document.getElementById('auth-error');
+        var identity = document.getElementById('auth-identity-select').value;
         if (!val) return;
         sha256(val).then(function(h) {
           if (h === HASH) {
             sessionStorage.setItem(SESSION_KEY, HASH);
+            sessionStorage.setItem(IDENTITY_KEY, identity);
             unlock();
+            if (typeof applyStoredIdentity === 'function') applyStoredIdentity();
           } else {
             input.classList.add('error');
             errEl.style.display = 'block';
@@ -429,19 +453,22 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="hdr-divider"></div>
       <div class="hdr-title">ES Staffing Calculator</div>
     </div>
-    <div class="hdr-right" id="hdr-right-reporting" style="display:none;">
-      <div class="hdr-center-pills" id="rpt-pill-bar"></div>
-      <div class="rpt-identity">
+    <div class="hdr-center" id="hdr-center-reporting" style="display:none;">
+      <div class="scope-pills" id="rpt-pill-bar"></div>
+      <div class="scope-dropdowns" id="rpt-scope-dropdowns"></div>
+    </div>
+    <div class="hdr-right">
+      <div class="rpt-identity" id="rpt-identity-wrap" style="display:none;">
         <span class="rpt-user-name" id="rpt-user-name">Craig Gaibler</span>
-        <div class="rpt-avatar-wrap">
-          <div class="rpt-avatar" id="rpt-avatar">CG</div>
-          <select id="rpt-identity-select">
-            <option value="Craig Gaibler">Craig Gaibler</option>
-            <option value="Nesana Wieger">Nesana Wieger</option>
-            <option value="Leslie Davis">Leslie Davis (RD, NW/SoCal)</option>
-            <option value="Niall M.">Niall M. (Manager, San Francisco)</option>
-          </select>
-        </div>
+      </div>
+      <div class="hdr-avatar-wrap">
+        <div class="hdr-avatar" id="rpt-avatar">CG</div>
+        <select id="rpt-identity-select">
+          <option value="Craig Gaibler">Craig Gaibler</option>
+          <option value="Nesana Wieger">Nesana Wieger</option>
+          <option value="Leslie Davis">Leslie Davis (RD, NW/SoCal)</option>
+          <option value="Niall M.">Niall M. (Manager, San Francisco)</option>
+        </select>
       </div>
     </div>
   </div>
@@ -661,16 +688,21 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="page-title">Staffing Model Adherence</div>
       <div class="page-sub">Sourced from the weekly NSS refresh &middot; last updated Jul 26, 2026 &middot; dummy data</div>
     </div>
-    <button class="calc-btn" style="cursor:default;opacity:.6;" disabled>Download as Excel</button>
+    <button class="rpt-export-btn" style="cursor:default;opacity:.6;" disabled>Download as Excel</button>
   </div>
 
-  <div class="rpt-scope-banner" id="rpt-scope-banner"></div>
-
+  <div class="el-section-div">By the Numbers</div>
   <div class="rpt-kpi-strip" id="rpt-kpi-strip"></div>
 
-  <div class="rpt-grid-2" id="rpt-main-grid">
-    <div class="rpt-panel" id="rpt-comparison-panel"></div>
-    <div class="rpt-panel" id="rpt-reason-panel"></div>
+  <div class="rpt-grid-2">
+    <div class="rpt-panel-col">
+      <div class="el-section-div" id="rpt-comparison-label"></div>
+      <div class="rpt-panel" id="rpt-comparison-panel"></div>
+    </div>
+    <div class="rpt-panel-col">
+      <div class="el-section-div" id="rpt-reason-label"></div>
+      <div class="rpt-panel" id="rpt-reason-panel"></div>
+    </div>
   </div>
 </div>
 
@@ -1577,19 +1609,22 @@ function showAppTab(tab){
   var rpt = document.getElementById('page-reporting');
   var tnCalc = document.getElementById('tn-calculator');
   var tnRpt = document.getElementById('tn-reporting');
-  var hdrRight = document.getElementById('hdr-right-reporting');
+  var hdrCenter = document.getElementById('hdr-center-reporting');
+  var identityWrap = document.getElementById('rpt-identity-wrap');
   if (tab === 'calculator'){
     calc.style.display = '';
     rpt.style.display = 'none';
     tnCalc.classList.add('tn-active');
     tnRpt.classList.remove('tn-active');
-    hdrRight.style.display = 'none';
+    hdrCenter.style.display = 'none';
+    identityWrap.style.display = 'none';
   } else {
     calc.style.display = 'none';
     rpt.style.display = '';
     tnCalc.classList.remove('tn-active');
     tnRpt.classList.add('tn-active');
-    hdrRight.style.display = 'flex';
+    hdrCenter.style.display = 'flex';
+    identityWrap.style.display = 'flex';
     rptRender();
   }
 }
@@ -1655,7 +1690,9 @@ function rptResetScopeForPersona(key){
 function rptRenderPills(){
   var p = RPT_PERSONAS[rptCurrentPersonaKey];
   var bar = document.getElementById("rpt-pill-bar");
+  var dd = document.getElementById("rpt-scope-dropdowns");
   bar.innerHTML = "";
+  dd.innerHTML = "";
 
   if (p.tier === "exec"){
     var pills = [
@@ -1664,8 +1701,9 @@ function rptRenderPills(){
       { label:"Branch", level:"branch" }
     ];
     pills.forEach(function(pl){
-      var d = document.createElement("div");
-      d.className = "rpt-scope-pill" + (rptScope.level===pl.level ? " active" : "");
+      var d = document.createElement("button");
+      d.type = "button";
+      d.className = "scope-pill" + (rptScope.level===pl.level ? " active" : "");
       d.textContent = pl.label;
       d.onclick = function(){
         if (pl.level==="enterprise"){ rptScope = {level:"enterprise",region:null,branch:null}; rptRender(); return; }
@@ -1680,18 +1718,18 @@ function rptRenderPills(){
     });
     if (rptScope.level === "region"){
       var sel = document.createElement("select");
-      sel.className = "rpt-scope-select";
+      sel.className = "scope-select";
       Object.keys(RPT_REGION_DATA).forEach(function(r){
         var o = document.createElement("option"); o.value=r; o.textContent=r;
         if (r===rptScope.region) o.selected = true;
         sel.appendChild(o);
       });
       sel.onchange = function(e){ rptScope.region = e.target.value; rptRender(); };
-      bar.appendChild(sel);
+      dd.appendChild(sel);
     }
     if (rptScope.level === "branch"){
       var sel2 = document.createElement("select");
-      sel2.className = "rpt-scope-select";
+      sel2.className = "scope-select";
       Object.keys(RPT_REGION_DATA).forEach(function(r){
         var grp = document.createElement("optgroup"); grp.label = r;
         Object.keys(RPT_REGION_DATA[r].branches).forEach(function(b){
@@ -1702,18 +1740,19 @@ function rptRenderPills(){
         sel2.appendChild(grp);
       });
       sel2.onchange = function(e){ var parts = e.target.value.split("||"); rptScope.region=parts[0]; rptScope.branch=parts[1]; rptRender(); };
-      bar.appendChild(sel2);
+      dd.appendChild(sel2);
     }
   }
 
   if (p.tier === "rd"){
-    var regionPill = document.createElement("div");
-    regionPill.className = "rpt-scope-pill active fixed";
+    var regionPill = document.createElement("button");
+    regionPill.type = "button";
+    regionPill.className = "scope-pill active fixed";
     regionPill.textContent = p.region + " Region";
     bar.appendChild(regionPill);
 
     var sel3 = document.createElement("select");
-    sel3.className = "rpt-scope-select";
+    sel3.className = "scope-select";
     var optAll = document.createElement("option"); optAll.value=""; optAll.textContent="All Branches";
     sel3.appendChild(optAll);
     Object.keys(RPT_REGION_DATA[p.region].branches).forEach(function(b){
@@ -1726,12 +1765,13 @@ function rptRenderPills(){
       rptScope.level = rptScope.branch ? "branch" : "region";
       rptRender();
     };
-    bar.appendChild(sel3);
+    dd.appendChild(sel3);
   }
 
   if (p.tier === "branch"){
-    var branchPill = document.createElement("div");
-    branchPill.className = "rpt-scope-pill active fixed";
+    var branchPill = document.createElement("button");
+    branchPill.type = "button";
+    branchPill.className = "scope-pill active fixed";
     branchPill.textContent = p.branch;
     bar.appendChild(branchPill);
   }
@@ -1764,8 +1804,8 @@ function rptRenderComparisonPanel(){
         var name = pair[0], r = pair[1];
         return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + r.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + r.adherence + '%</div></div>';
       }).join("");
+    document.getElementById("rpt-comparison-label").textContent = "Region vs Enterprise Average — Executive View";
     panel.innerHTML =
-      '<div class="rpt-panel-title">Region vs Enterprise Average <span class="rpt-panel-sub">Executive View</span></div>' +
       rows +
       '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). Select the Region pill above to drill into a region\'s branches.</div>';
     return;
@@ -1780,8 +1820,8 @@ function rptRenderComparisonPanel(){
         var name = pair[0], br = pair[1];
         return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + br.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + region.adherence + '%"></div></div><div class="rpt-bar-val">' + br.adherence + '%</div></div>';
       }).join("");
+    document.getElementById("rpt-comparison-label").textContent = "Branch Comparison — " + rptScope.region + " Branches";
     panel.innerHTML =
-      '<div class="rpt-panel-title">Branch Comparison <span class="rpt-panel-sub">' + rptScope.region + ' Branches</span></div>' +
       '<div class="rpt-bar-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-lt)"><div class="rpt-bar-lbl" style="font-weight:800">' + rptScope.region + ' (Region)</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + region.adherence + '%;background:var(--fb)"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + region.adherence + '%</div></div>' +
       branchRows +
       '<div class="rpt-note">Top row: this region\'s aggregate vs. the enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%) — the only cross-region reference a regional director sees. Rows below: this region\'s own branches compared directly against one another (dashed mark = this region\'s average, ' + region.adherence + '%). Other regions are never shown by name at this level.</div>';
@@ -1790,8 +1830,8 @@ function rptRenderComparisonPanel(){
 
   var region2 = RPT_REGION_DATA[rptScope.region];
   var branch = region2.branches[rptScope.branch];
+  document.getElementById("rpt-comparison-label").textContent = "Adherence vs Enterprise Average — " + rptScope.branch;
   panel.innerHTML =
-    '<div class="rpt-panel-title">Adherence vs Enterprise Average <span class="rpt-panel-sub">' + rptScope.branch + '</span></div>' +
     '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + rptScope.branch + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + branch.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + branch.adherence + '%</div></div>' +
     '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). This is the only comparison a branch-level view shows — no other branch or region is visible here.</div>';
 }
@@ -1812,32 +1852,32 @@ function rptRenderReasonPanel(){
     return '<div class="rpt-pie-legend-row"><span class="rpt-pie-dot" style="background:' + seg.color + '"></span><span class="rpt-pie-legend-lbl">' + seg.name + '</span><span class="rpt-pie-legend-val">' + count + '</span><span class="rpt-pie-legend-pct">' + seg.pct + '%</span></div>';
   }).join("");
 
+  document.getElementById("rpt-reason-label").textContent = "Reason Themes — of " + d.deviations + " deviations, " + d.label;
   panel.innerHTML =
-    '<div class="rpt-panel-title">Reason Themes <span class="rpt-panel-sub">of ' + d.deviations + ' deviations &middot; ' + d.label + '</span></div>' +
     '<div class="rpt-pie-wrap"><div class="rpt-pie" style="background:conic-gradient(' + stops + ')"></div><div class="rpt-pie-legend">' + legendRows + '</div></div>' +
     '<div class="rpt-note">"Other" carries a free-text note in NSS — not themed here without manual review. Reason mix shown is applied proportionally at region/branch scope for concept purposes.</div>';
 }
 
-function rptRenderScopeBanner(){
-  var p = RPT_PERSONAS[rptCurrentPersonaKey];
-  var el = document.getElementById("rpt-scope-banner");
-  if (p.tier === "exec"){
-    el.textContent = "Viewing: " + rptCurrentScopeData().label + " — enterprise-tier view, unrestricted drill-down.";
-  } else if (p.tier === "rd"){
-    el.textContent = rptScope.level === "branch"
-      ? ("Viewing: " + rptScope.branch + " (within " + p.region + ") — regional director view.")
-      : ("Viewing: " + p.region + " Region — regional director view. Other regions are never visible here.");
-  } else {
-    el.textContent = "Viewing: " + p.branch + " — branch-level view. No comparisons shown except vs. the enterprise average.";
-  }
-}
-
 function rptRender(){
   rptRenderPills();
-  rptRenderScopeBanner();
   rptRenderKpis();
   rptRenderComparisonPanel();
   rptRenderReasonPanel();
+}
+
+function applyStoredIdentity(){
+  var idSel = document.getElementById('rpt-identity-select');
+  var storedIdentity = sessionStorage.getItem('essc_identity_v1');
+  if (storedIdentity && RPT_PERSONAS[storedIdentity]) {
+    rptCurrentPersonaKey = storedIdentity;
+  }
+  var p = RPT_PERSONAS[rptCurrentPersonaKey];
+  document.getElementById('rpt-user-name').textContent = rptCurrentPersonaKey;
+  document.getElementById('rpt-avatar').textContent = p.initials;
+  if (idSel) idSel.value = rptCurrentPersonaKey;
+  rptResetScopeForPersona(rptCurrentPersonaKey);
+  var rptPage = document.getElementById('page-reporting');
+  if (rptPage && rptPage.style.display !== 'none') rptRender();
 }
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -1852,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', function(){
       rptRender();
     });
   }
-  rptResetScopeForPersona(rptCurrentPersonaKey);
+  applyStoredIdentity();
 });
 </script>
 <!-- ROLE DEFINITIONS MODAL -->
@@ -1889,7 +1929,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-27 12:29 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-27 12:57 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

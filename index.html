@@ -1904,13 +1904,13 @@ function rptRenderPills(){
 
   if (p.tier === "branch"){
     var branches = Array.isArray(p.branch) ? p.branch : [p.branch];
-    var branchPill = document.createElement("button");
-    branchPill.type = "button";
-    branchPill.className = "scope-pill active fixed";
-    branchPill.textContent = rptScope.branch;
-    bar.appendChild(branchPill);
-
     if (branches.length > 1){
+      var branchPill = document.createElement("button");
+      branchPill.type = "button";
+      branchPill.className = "scope-pill active fixed";
+      branchPill.textContent = "Branch";
+      bar.appendChild(branchPill);
+
       var branchSwitch = document.createElement("select");
       branchSwitch.className = "scope-select";
       branches.slice().sort(function(a,b){ return a.localeCompare(b); }).forEach(function(b){

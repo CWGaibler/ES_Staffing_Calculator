@@ -1824,25 +1824,25 @@ function rptRenderPills(){
 
   if (p.tier === "rd"){
     var regions = (Array.isArray(p.region) ? p.region.slice() : [p.region]).sort(function(a,b){ return a.localeCompare(b); });
+    var regionPill = document.createElement("button");
+    regionPill.type = "button";
+    regionPill.className = "scope-pill active fixed";
+    regionPill.textContent = rptScope.region + " Region";
+    bar.appendChild(regionPill);
+
     if (regions.length > 1){
-      var regionPicker = document.createElement("select");
-      regionPicker.className = "scope-select";
+      var regionSwitch = document.createElement("select");
+      regionSwitch.className = "scope-select";
       regions.forEach(function(r){
         var o = document.createElement("option"); o.value=r; o.textContent=r+" Region";
         if (r===rptScope.region) o.selected = true;
-        regionPicker.appendChild(o);
+        regionSwitch.appendChild(o);
       });
-      regionPicker.onchange = function(e){
+      regionSwitch.onchange = function(e){
         rptScope = { level:"region", region:e.target.value, branch:null };
         rptRender();
       };
-      bar.appendChild(regionPicker);
-    } else {
-      var regionPill = document.createElement("button");
-      regionPill.type = "button";
-      regionPill.className = "scope-pill active fixed";
-      regionPill.textContent = regions[0] + " Region";
-      bar.appendChild(regionPill);
+      dd.appendChild(regionSwitch);
     }
 
     var sel3 = document.createElement("select");
@@ -1864,25 +1864,25 @@ function rptRenderPills(){
 
   if (p.tier === "branch"){
     var branches = Array.isArray(p.branch) ? p.branch : [p.branch];
+    var branchPill = document.createElement("button");
+    branchPill.type = "button";
+    branchPill.className = "scope-pill active fixed";
+    branchPill.textContent = rptScope.branch;
+    bar.appendChild(branchPill);
+
     if (branches.length > 1){
-      var branchPicker = document.createElement("select");
-      branchPicker.className = "scope-select";
+      var branchSwitch = document.createElement("select");
+      branchSwitch.className = "scope-select";
       branches.slice().sort(function(a,b){ return a.localeCompare(b); }).forEach(function(b){
         var o = document.createElement("option"); o.value=b; o.textContent=b;
         if (b===rptScope.branch) o.selected = true;
-        branchPicker.appendChild(o);
+        branchSwitch.appendChild(o);
       });
-      branchPicker.onchange = function(e){
+      branchSwitch.onchange = function(e){
         rptScope.branch = e.target.value;
         rptRender();
       };
-      bar.appendChild(branchPicker);
-    } else {
-      var branchPill = document.createElement("button");
-      branchPill.type = "button";
-      branchPill.className = "scope-pill active fixed";
-      branchPill.textContent = branches[0];
-      bar.appendChild(branchPill);
+      dd.appendChild(branchSwitch);
     }
   }
 }

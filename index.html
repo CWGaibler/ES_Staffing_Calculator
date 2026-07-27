@@ -90,7 +90,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 /* DATA CARDS (4-grid) */
 .four-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.sf-data-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 12px}
+.sf-data-card{background:var(--white);border:1px solid var(--border);border-top:4px solid var(--mb);border-radius:10px;padding:16px 12px}
 .sf-data-card-lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px}
 .sf-data-card-val{font-size:20px;font-weight:800;color:var(--fb);line-height:1.1}
 .sf-data-card-badge{display:inline-block;font-size:14px;font-weight:700;margin-top:3px;padding:2px 10px;border-radius:999px}
@@ -289,8 +289,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .scope-pill.fixed{cursor:default;}
 .scope-select{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;}
 .scope-select option{background:#001F5F;color:#fff;}
-.rpt-identity{display:flex;align-items:center;gap:10px;}
-.rpt-user-name{font-size:13px;font-weight:700;color:#fff;}
 .hdr-avatar-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
 .hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
 #rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;background:transparent;}
@@ -389,12 +387,36 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <img src="https://cwgaibler.github.io/ES_Command_Center/Freemanlogo_primarystandard_RGB.png" alt="Freeman" onerror="this.style.display='none'">
       <h2>ES Staffing Calculator</h2>
       <p>This tool contains confidential Freeman operational data.<br>Select your name and enter your access password to continue.</p>
-      <div id="auth-identity-label">Who's logging in? (used for the Reporting proof-of-concept only)</div>
       <select id="auth-identity-select">
-        <option value="Craig Gaibler">Craig Gaibler</option>
-        <option value="Nesana Wieger">Nesana Wieger</option>
-        <option value="Leslie Davis">Leslie Davis (RD, NW/SoCal)</option>
-        <option value="Niall M.">Niall M. (Manager, San Francisco)</option>
+  <option value="Anne Wolkenhauer">Anne Wolkenhauer</option>
+  <option value="Cassandra Karns">Cassandra Karns</option>
+  <option value="Chenille Book">Chenille Book</option>
+  <option value="Cory Marin">Cory Marin</option>
+  <option value="Craig Gaibler">Craig Gaibler</option>
+  <option value="Deborah Ritter">Deborah Ritter</option>
+  <option value="Ellen Crowley">Ellen Crowley</option>
+  <option value="Emily Dodd">Emily Dodd</option>
+  <option value="Erica Cochran">Erica Cochran</option>
+  <option value="Gina Alberto">Gina Alberto</option>
+  <option value="Jessica Montoro">Jessica Montoro</option>
+  <option value="Joan Davis">Joan Davis</option>
+  <option value="Joanne Peau">Joanne Peau</option>
+  <option value="Jose Medina">Jose Medina</option>
+  <option value="Laura Ewell">Laura Ewell</option>
+  <option value="Leslie Davis">Leslie Davis</option>
+  <option value="Lisa Park">Lisa Park</option>
+  <option value="Lisette Bergeron">Lisette Bergeron</option>
+  <option value="Lubi Garza">Lubi Garza</option>
+  <option value="Lymari Colon">Lymari Colon</option>
+  <option value="Mary Ligammari">Mary Ligammari</option>
+  <option value="Maud Langlois">Maud Langlois</option>
+  <option value="Nesana Wieger">Nesana Wieger</option>
+  <option value="Niall McCarthy">Niall McCarthy</option>
+  <option value="Nicole Hanna">Nicole Hanna</option>
+  <option value="Regina Serigne">Regina Serigne</option>
+  <option value="T Lam">T Lam</option>
+  <option value="Tiffany Jarrett">Tiffany Jarrett</option>
+  <option value="Tricia Orme">Tricia Orme</option>
       </select>
       <input id="auth-input" type="password" placeholder="Password" autocomplete="off" />
       <button id="auth-btn">Access Calculator</button>
@@ -458,16 +480,38 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="scope-dropdowns" id="rpt-scope-dropdowns"></div>
     </div>
     <div class="hdr-right">
-      <div class="rpt-identity" id="rpt-identity-wrap" style="display:none;">
-        <span class="rpt-user-name" id="rpt-user-name">Craig Gaibler</span>
-      </div>
       <div class="hdr-avatar-wrap">
         <div class="hdr-avatar" id="rpt-avatar">CG</div>
         <select id="rpt-identity-select">
-          <option value="Craig Gaibler">Craig Gaibler</option>
-          <option value="Nesana Wieger">Nesana Wieger</option>
-          <option value="Leslie Davis">Leslie Davis (RD, NW/SoCal)</option>
-          <option value="Niall M.">Niall M. (Manager, San Francisco)</option>
+  <option value="Anne Wolkenhauer">Anne Wolkenhauer</option>
+  <option value="Cassandra Karns">Cassandra Karns</option>
+  <option value="Chenille Book">Chenille Book</option>
+  <option value="Cory Marin">Cory Marin</option>
+  <option value="Craig Gaibler">Craig Gaibler</option>
+  <option value="Deborah Ritter">Deborah Ritter</option>
+  <option value="Ellen Crowley">Ellen Crowley</option>
+  <option value="Emily Dodd">Emily Dodd</option>
+  <option value="Erica Cochran">Erica Cochran</option>
+  <option value="Gina Alberto">Gina Alberto</option>
+  <option value="Jessica Montoro">Jessica Montoro</option>
+  <option value="Joan Davis">Joan Davis</option>
+  <option value="Joanne Peau">Joanne Peau</option>
+  <option value="Jose Medina">Jose Medina</option>
+  <option value="Laura Ewell">Laura Ewell</option>
+  <option value="Leslie Davis">Leslie Davis</option>
+  <option value="Lisa Park">Lisa Park</option>
+  <option value="Lisette Bergeron">Lisette Bergeron</option>
+  <option value="Lubi Garza">Lubi Garza</option>
+  <option value="Lymari Colon">Lymari Colon</option>
+  <option value="Mary Ligammari">Mary Ligammari</option>
+  <option value="Maud Langlois">Maud Langlois</option>
+  <option value="Nesana Wieger">Nesana Wieger</option>
+  <option value="Niall McCarthy">Niall McCarthy</option>
+  <option value="Nicole Hanna">Nicole Hanna</option>
+  <option value="Regina Serigne">Regina Serigne</option>
+  <option value="T Lam">T Lam</option>
+  <option value="Tiffany Jarrett">Tiffany Jarrett</option>
+  <option value="Tricia Orme">Tricia Orme</option>
         </select>
       </div>
     </div>
@@ -499,7 +543,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div id="showInfoCard"></div>
 
     <!-- DATA CARDS -->
-    <div class="el-section-div">Event Scale &amp; Revenue</div>
+    <div class="el-section-div">By the Numbers</div>
     <div class="four-grid">
       <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booth Count</div><div class="sf-data-card-val" id="currentBoothsVal">—</div><div><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
       <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exh. Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
@@ -1610,21 +1654,18 @@ function showAppTab(tab){
   var tnCalc = document.getElementById('tn-calculator');
   var tnRpt = document.getElementById('tn-reporting');
   var hdrCenter = document.getElementById('hdr-center-reporting');
-  var identityWrap = document.getElementById('rpt-identity-wrap');
   if (tab === 'calculator'){
     calc.style.display = '';
     rpt.style.display = 'none';
     tnCalc.classList.add('tn-active');
     tnRpt.classList.remove('tn-active');
     hdrCenter.style.display = 'none';
-    identityWrap.style.display = 'none';
   } else {
     calc.style.display = 'none';
     rpt.style.display = '';
     tnCalc.classList.remove('tn-active');
     tnRpt.classList.add('tn-active');
     hdrCenter.style.display = 'flex';
-    identityWrap.style.display = 'flex';
     rptRender();
   }
 }
@@ -1672,10 +1713,35 @@ var RPT_REASON_SPLIT = [
   { name:"Other",                        pct:11, color:"var(--muted)" }
 ];
 var RPT_PERSONAS = {
-  "Craig Gaibler":   { tier:"exec",   initials:"CG" },
-  "Nesana Wieger":   { tier:"exec",   initials:"NW" },
-  "Leslie Davis":    { tier:"rd",     initials:"LD", region:"NW/SoCal" },
-  "Niall M.":        { tier:"branch", initials:"NM", region:"NW/SoCal", branch:"San Francisco" }
+  "Craig Gaibler": { tier:"exec", initials:"CG" },
+  "Nesana Wieger": { tier:"exec", initials:"NW" },
+  "Erica Cochran": { tier:"exec", initials:"EC" },
+  "Deborah Ritter": { tier:"rd", initials:"DR", region:"Northeast" },
+  "Ellen Crowley": { tier:"rd", initials:"EC", region:["North Central","Las Vegas"] },
+  "Leslie Davis": { tier:"rd", initials:"LD", region:"NW/SoCal" },
+  "Lisette Bergeron": { tier:"rd", initials:"LB", region:"Southeast" },
+  "Lubi Garza": { tier:"rd", initials:"LG", region:"South Central" },
+  "Maud Langlois": { tier:"rd", initials:"ML", region:"Canada" },
+  "Cory Marin": { tier:"branch", initials:"CM", region:"Las Vegas", branch:"Las Vegas" },
+  "Joan Davis": { tier:"branch", initials:"JD", region:"South Central", branch:"Houston" },
+  "Jose Medina": { tier:"branch", initials:"JM", region:"Southeast", branch:["Orlando","New Orleans"] },
+  "Laura Ewell": { tier:"branch", initials:"LE", region:"Northeast", branch:"Boston" },
+  "Mary Ligammari": { tier:"branch", initials:"ML", region:"North Central", branch:"Chicago" },
+  "Nicole Hanna": { tier:"branch", initials:"NH", region:"NW/SoCal", branch:"Anaheim" },
+  "T Lam": { tier:"branch", initials:"TL", region:"NW/SoCal", branch:["Denver","Reno"] },
+  "Tricia Orme": { tier:"branch", initials:"TO", region:"Southeast", branch:["Atlanta","Nashville"] },
+  "Anne Wolkenhauer": { tier:"branch", initials:"AW", region:"Southeast", branch:"Atlanta" },
+  "Cassandra Karns": { tier:"branch", initials:"CK", region:"Northeast", branch:"Boston" },
+  "Chenille Book": { tier:"branch", initials:"CB", region:"Las Vegas", branch:"Las Vegas" },
+  "Emily Dodd": { tier:"branch", initials:"ED", region:"Las Vegas", branch:"Las Vegas" },
+  "Gina Alberto": { tier:"branch", initials:"GA", region:"Northeast", branch:"New York" },
+  "Jessica Montoro": { tier:"branch", initials:"JM", region:"Las Vegas", branch:"Las Vegas" },
+  "Joanne Peau": { tier:"branch", initials:"JP", region:"NW/SoCal", branch:"Anaheim" },
+  "Lisa Park": { tier:"branch", initials:"LP", region:"Las Vegas", branch:"Las Vegas" },
+  "Lymari Colon": { tier:"branch", initials:"LC", region:"Southeast", branch:"Orlando" },
+  "Niall McCarthy": { tier:"branch", initials:"NM", region:"NW/SoCal", branch:"Anaheim" },
+  "Regina Serigne": { tier:"branch", initials:"RS", region:"Southeast", branch:"New Orleans" },
+  "Tiffany Jarrett": { tier:"branch", initials:"TJ", region:"South Central", branch:"Dallas" }
 };
 var rptCurrentPersonaKey = "Craig Gaibler";
 var rptScope = {};
@@ -1683,8 +1749,14 @@ var rptScope = {};
 function rptResetScopeForPersona(key){
   var p = RPT_PERSONAS[key];
   if (p.tier === "exec")   rptScope = { level:"enterprise", region:null, branch:null };
-  if (p.tier === "rd")     rptScope = { level:"region", region:p.region, branch:null };
-  if (p.tier === "branch") rptScope = { level:"branch", region:p.region, branch:p.branch };
+  if (p.tier === "rd"){
+    var defaultRegion = Array.isArray(p.region) ? p.region[0] : p.region;
+    rptScope = { level:"region", region:defaultRegion, branch:null };
+  }
+  if (p.tier === "branch"){
+    var defaultBranch = Array.isArray(p.branch) ? p.branch[0] : p.branch;
+    rptScope = { level:"branch", region:p.region, branch:defaultBranch };
+  }
 }
 
 function rptRenderPills(){
@@ -1745,17 +1817,33 @@ function rptRenderPills(){
   }
 
   if (p.tier === "rd"){
-    var regionPill = document.createElement("button");
-    regionPill.type = "button";
-    regionPill.className = "scope-pill active fixed";
-    regionPill.textContent = p.region + " Region";
-    bar.appendChild(regionPill);
+    var regions = Array.isArray(p.region) ? p.region : [p.region];
+    if (regions.length > 1){
+      var regionPicker = document.createElement("select");
+      regionPicker.className = "scope-select";
+      regions.forEach(function(r){
+        var o = document.createElement("option"); o.value=r; o.textContent=r+" Region";
+        if (r===rptScope.region) o.selected = true;
+        regionPicker.appendChild(o);
+      });
+      regionPicker.onchange = function(e){
+        rptScope = { level:"region", region:e.target.value, branch:null };
+        rptRender();
+      };
+      bar.appendChild(regionPicker);
+    } else {
+      var regionPill = document.createElement("button");
+      regionPill.type = "button";
+      regionPill.className = "scope-pill active fixed";
+      regionPill.textContent = regions[0] + " Region";
+      bar.appendChild(regionPill);
+    }
 
     var sel3 = document.createElement("select");
     sel3.className = "scope-select";
     var optAll = document.createElement("option"); optAll.value=""; optAll.textContent="All Branches";
     sel3.appendChild(optAll);
-    Object.keys(RPT_REGION_DATA[p.region].branches).forEach(function(b){
+    Object.keys(RPT_REGION_DATA[rptScope.region].branches).forEach(function(b){
       var o = document.createElement("option"); o.value=b; o.textContent=b;
       if (rptScope.branch===b) o.selected=true;
       sel3.appendChild(o);
@@ -1769,11 +1857,27 @@ function rptRenderPills(){
   }
 
   if (p.tier === "branch"){
-    var branchPill = document.createElement("button");
-    branchPill.type = "button";
-    branchPill.className = "scope-pill active fixed";
-    branchPill.textContent = p.branch;
-    bar.appendChild(branchPill);
+    var branches = Array.isArray(p.branch) ? p.branch : [p.branch];
+    if (branches.length > 1){
+      var branchPicker = document.createElement("select");
+      branchPicker.className = "scope-select";
+      branches.forEach(function(b){
+        var o = document.createElement("option"); o.value=b; o.textContent=b;
+        if (b===rptScope.branch) o.selected = true;
+        branchPicker.appendChild(o);
+      });
+      branchPicker.onchange = function(e){
+        rptScope.branch = e.target.value;
+        rptRender();
+      };
+      bar.appendChild(branchPicker);
+    } else {
+      var branchPill = document.createElement("button");
+      branchPill.type = "button";
+      branchPill.className = "scope-pill active fixed";
+      branchPill.textContent = branches[0];
+      bar.appendChild(branchPill);
+    }
   }
 }
 
@@ -1872,7 +1976,6 @@ function applyStoredIdentity(){
     rptCurrentPersonaKey = storedIdentity;
   }
   var p = RPT_PERSONAS[rptCurrentPersonaKey];
-  document.getElementById('rpt-user-name').textContent = rptCurrentPersonaKey;
   document.getElementById('rpt-avatar').textContent = p.initials;
   if (idSel) idSel.value = rptCurrentPersonaKey;
   rptResetScopeForPersona(rptCurrentPersonaKey);
@@ -1886,8 +1989,7 @@ document.addEventListener('DOMContentLoaded', function(){
     idSel.addEventListener('change', function(e){
       rptCurrentPersonaKey = e.target.value;
       var p = RPT_PERSONAS[rptCurrentPersonaKey];
-      document.getElementById('rpt-user-name').textContent = rptCurrentPersonaKey;
-      document.getElementById('rpt-avatar').textContent = p.initials;
+          document.getElementById('rpt-avatar').textContent = p.initials;
       rptResetScopeForPersona(rptCurrentPersonaKey);
       rptRender();
     });
@@ -1929,7 +2031,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-27 12:57 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-27 15:16 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

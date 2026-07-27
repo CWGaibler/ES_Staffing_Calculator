@@ -729,7 +729,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
   <div class="rpt-dummy-banner">PROOF OF CONCEPT — every number on this page is placeholder/dummy data, not connected to NSS. This page exists to show people leaders how the reporting could work.</div>
   <div class="page-hdr">
     <div>
-      <div class="page-title">Staffing Model Adherence</div>
       <div class="page-sub">Sourced from the weekly NSS refresh &middot; last updated Jul 26, 2026 &middot; dummy data</div>
     </div>
     <button class="rpt-export-btn" style="cursor:default;opacity:.6;" disabled>Download as Excel</button>
@@ -1908,7 +1907,7 @@ function rptRenderComparisonPanel(){
         var name = pair[0], r = pair[1];
         return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + r.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + r.adherence + '%</div></div>';
       }).join("");
-    document.getElementById("rpt-comparison-label").textContent = "Region vs Enterprise Average — Executive View";
+    document.getElementById("rpt-comparison-label").textContent = "Enterprise View";
     panel.innerHTML =
       rows +
       '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). Select the Region pill above to drill into a region\'s branches.</div>';
@@ -1922,19 +1921,19 @@ function rptRenderComparisonPanel(){
       .sort(function(a,b){ return b[1].adherence - a[1].adherence; })
       .map(function(pair){
         var name = pair[0], br = pair[1];
-        return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + br.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + region.adherence + '%"></div></div><div class="rpt-bar-val">' + br.adherence + '%</div></div>';
+        return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + br.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + br.adherence + '%</div></div>';
       }).join("");
-    document.getElementById("rpt-comparison-label").textContent = "Branch Comparison — " + rptScope.region + " Branches";
+    document.getElementById("rpt-comparison-label").textContent = "Regional View — " + rptScope.region + " Region";
     panel.innerHTML =
       '<div class="rpt-bar-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-lt)"><div class="rpt-bar-lbl" style="font-weight:800">' + rptScope.region + ' (Region)</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + region.adherence + '%;background:var(--fb)"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + region.adherence + '%</div></div>' +
       branchRows +
-      '<div class="rpt-note">Top row: this region\'s aggregate vs. the enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%) — the only cross-region reference a regional director sees. Rows below: this region\'s own branches compared directly against one another (dashed mark = this region\'s average, ' + region.adherence + '%). Other regions are never shown by name at this level.</div>';
+      '<div class="rpt-note">Top row: this region\'s aggregate vs. the enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%). Rows below: this region\'s own branches, each measured against that same enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%) so the reference line stays consistent throughout this panel. Other regions are never shown by name at this level.</div>';
     return;
   }
 
   var region2 = RPT_REGION_DATA[rptScope.region];
   var branch = region2.branches[rptScope.branch];
-  document.getElementById("rpt-comparison-label").textContent = "Adherence vs Enterprise Average — " + rptScope.branch;
+  document.getElementById("rpt-comparison-label").textContent = "Branch View — " + rptScope.branch + " Branch";
   panel.innerHTML =
     '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + rptScope.branch + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + branch.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + branch.adherence + '%</div></div>' +
     '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). This is the only comparison a branch-level view shows — no other branch or region is visible here.</div>';

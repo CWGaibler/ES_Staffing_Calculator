@@ -38,7 +38,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .el-section-div::after{content:"";flex:1;height:1px;background:var(--border)}
 
 /* INPUT CARD */
-.input-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;max-height:200px;opacity:1;overflow:hidden;transition:max-height .28s ease,opacity .2s ease,padding .28s ease,margin .28s ease,border-width .28s ease;}
+.input-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;max-height:200px;opacity:1;transition:max-height .28s ease,opacity .2s ease,padding .28s ease,margin .28s ease,border-width .28s ease;}
 .input-card-label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:10px}
 .input-row{display:flex;gap:16px;align-items:flex-end}
 .input-group{flex:1}
@@ -46,7 +46,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 /* STICKY SEARCH ZONE — pinned below header; search box collapses on scroll (matches ES Command Center Lens pages) */
 .calc-sticky{position:sticky;top:var(--hdr-h,110px);z-index:90;background:var(--surface)}
-.calc-sticky.search-hidden .input-card{max-height:0;opacity:0;padding-top:0;padding-bottom:0;margin-bottom:0;border-width:0}
+.calc-sticky.search-hidden .input-card{max-height:0;opacity:0;padding-top:0;padding-bottom:0;margin-bottom:0;border-width:0;overflow:hidden}
 .input-group input[type="text"],.input-group input[type="number"]{width:100%;height:40px;padding:0 40px 0 18px;border:1.5px solid var(--border);border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:17px;font-weight:700;color:var(--fb);background:var(--surface);outline:none;transition:border-color .2s}
 .input-group input:focus{border-color:var(--mb);background:#fff}
 .input-group input::placeholder{color:var(--muted);font-weight:400}

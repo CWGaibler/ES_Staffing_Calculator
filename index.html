@@ -291,7 +291,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .scope-select option{background:#001F5F;color:#fff;}
 .hdr-avatar-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
 .hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
-#rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;background:transparent;}
+#rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:default;border:none;background:transparent;pointer-events:none;}
 .rpt-dummy-banner{background:#3C3489;color:#fff;font-size:12px;font-weight:800;text-align:center;padding:7px;letter-spacing:.02em;margin:-28px -32px 22px;}
 .rpt-export-btn{font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;flex-shrink:0;}
 .rpt-export-btn:hover{border-color:var(--mb);color:var(--mb);}
@@ -1976,23 +1976,13 @@ function applyStoredIdentity(){
   }
   var p = RPT_PERSONAS[rptCurrentPersonaKey];
   document.getElementById('rpt-avatar').textContent = p.initials;
-  if (idSel) idSel.value = rptCurrentPersonaKey;
+  if (idSel) { idSel.value = rptCurrentPersonaKey; idSel.disabled = true; }
   rptResetScopeForPersona(rptCurrentPersonaKey);
   var rptPage = document.getElementById('page-reporting');
   if (rptPage && rptPage.style.display !== 'none') rptRender();
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-  var idSel = document.getElementById('rpt-identity-select');
-  if (idSel){
-    idSel.addEventListener('change', function(e){
-      rptCurrentPersonaKey = e.target.value;
-      var p = RPT_PERSONAS[rptCurrentPersonaKey];
-          document.getElementById('rpt-avatar').textContent = p.initials;
-      rptResetScopeForPersona(rptCurrentPersonaKey);
-      rptRender();
-    });
-  }
   applyStoredIdentity();
 });
 

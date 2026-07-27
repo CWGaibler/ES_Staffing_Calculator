@@ -1824,42 +1824,82 @@ function rptRenderPills(){
 
   if (p.tier === "rd"){
     var regions = (Array.isArray(p.region) ? p.region.slice() : [p.region]).sort(function(a,b){ return a.localeCompare(b); });
-    var regionPill = document.createElement("button");
-    regionPill.type = "button";
-    regionPill.className = "scope-pill active fixed";
-    regionPill.textContent = rptScope.region + " Region";
-    bar.appendChild(regionPill);
+    var allBranchOptions = [];
+    regions.forEach(function(r){
+      rptSortedBranchKeys(RPT_REGION_DATA[r]).forEach(function(b){
+        allBranchOptions.push({ region:r, branch:b });
+      });
+    });
 
-    if (regions.length > 1){
-      var regionSwitch = document.createElement("select");
-      regionSwitch.className = "scope-select";
+    var regionBtn = document.createElement("button");
+    regionBtn.type = "button";
+    regionBtn.className = "scope-pill" + (rptScope.level==="region" ? " active" : "");
+    regionBtn.textContent = "Region";
+    regionBtn.onclick = function(){
+      rptScope.level = "region";
+      if (!rptScope.region || regions.indexOf(rptScope.region) === -1) rptScope.region = regions[0];
+      rptScope.branch = null;
+      rptRender();
+    };
+    bar.appendChild(regionBtn);
+
+    var branchBtn = document.createElement("button");
+    branchBtn.type = "button";
+    branchBtn.className = "scope-pill" + (rptScope.level==="branch" ? " active" : "");
+    branchBtn.textContent = "Branch";
+    branchBtn.onclick = function(){
+      rptScope.level = "branch";
+      var validCombo = allBranchOptions.some(function(o){ return o.region===rptScope.region && o.branch===rptScope.branch; });
+      if (!validCombo){
+        rptScope.region = allBranchOptions[0].region;
+        rptScope.branch = allBranchOptions[0].branch;
+      }
+      rptRender();
+    };
+    bar.appendChild(branchBtn);
+
+    if (rptScope.level === "region" && regions.length > 1){
+      var regionSel = document.createElement("select");
+      regionSel.className = "scope-select";
       regions.forEach(function(r){
         var o = document.createElement("option"); o.value=r; o.textContent=r+" Region";
         if (r===rptScope.region) o.selected = true;
-        regionSwitch.appendChild(o);
+        regionSel.appendChild(o);
       });
-      regionSwitch.onchange = function(e){
-        rptScope = { level:"region", region:e.target.value, branch:null };
+      regionSel.onchange = function(e){
+        rptScope.region = e.target.value;
         rptRender();
       };
-      dd.appendChild(regionSwitch);
+      dd.appendChild(regionSel);
     }
 
-    var sel3 = document.createElement("select");
-    sel3.className = "scope-select";
-    var optAll = document.createElement("option"); optAll.value=""; optAll.textContent="All Branches";
-    sel3.appendChild(optAll);
-    rptSortedBranchKeys(RPT_REGION_DATA[rptScope.region]).forEach(function(b){
-      var o = document.createElement("option"); o.value=b; o.textContent=b;
-      if (rptScope.branch===b) o.selected=true;
-      sel3.appendChild(o);
-    });
-    sel3.onchange = function(e){
-      rptScope.branch = e.target.value || null;
-      rptScope.level = rptScope.branch ? "branch" : "region";
-      rptRender();
-    };
-    dd.appendChild(sel3);
+    if (rptScope.level === "branch" && allBranchOptions.length > 1){
+      var branchSel = document.createElement("select");
+      branchSel.className = "scope-select";
+      if (regions.length > 1){
+        regions.forEach(function(r){
+          var grp = document.createElement("optgroup"); grp.label = r;
+          allBranchOptions.filter(function(o){ return o.region===r; }).forEach(function(o){
+            var opt = document.createElement("option"); opt.value = r + "||" + o.branch; opt.textContent = o.branch;
+            if (r===rptScope.region && o.branch===rptScope.branch) opt.selected = true;
+            grp.appendChild(opt);
+          });
+          branchSel.appendChild(grp);
+        });
+      } else {
+        allBranchOptions.forEach(function(o){
+          var opt = document.createElement("option"); opt.value = o.region + "||" + o.branch; opt.textContent = o.branch;
+          if (o.branch===rptScope.branch) opt.selected = true;
+          branchSel.appendChild(opt);
+        });
+      }
+      branchSel.onchange = function(e){
+        var parts = e.target.value.split("||");
+        rptScope.region = parts[0]; rptScope.branch = parts[1];
+        rptRender();
+      };
+      dd.appendChild(branchSel);
+    }
   }
 
   if (p.tier === "branch"){

@@ -278,7 +278,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 }
 
 /* ── Events Lens-style show identity card ── */
-.hdr-row2{display:flex;align-items:stretch;justify-content:center;height:44px;padding:0 8px;}
+.hdr-row2{display:flex;align-items:stretch;justify-content:flex-start;height:44px;padding:0 24px;}
 .tn-item{position:relative;display:flex;align-items:center;gap:5px;padding:0 14px;color:rgba(255,255,255,.65);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;user-select:none;}
 .tn-item:hover{color:#fff;}
 .tn-item.tn-active{color:var(--mb);border-bottom-color:var(--mb);}
@@ -287,8 +287,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .scope-pill{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;}
 .scope-pill.active{background:rgba(0,189,246,.18);border-color:var(--mb);color:var(--mb);}
 .scope-pill.fixed{cursor:default;}
-.scope-select{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;}
-.scope-select option{background:#001F5F;color:#fff;}
+.scope-select{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 10px;border-radius:999px;border:1.5px solid var(--mb);background:rgba(0,189,246,.12);color:var(--mb);cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2300BDF6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
 .hdr-avatar-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
 .hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
 #rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:default;border:none;background:transparent;pointer-events:none;}
@@ -303,14 +302,15 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .rpt-kpi-delta.up{color:var(--green);}
 .rpt-grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
 .rpt-panel-col{display:flex;flex-direction:column;min-height:0;}
-.rpt-panel{background:var(--white);border:1px solid var(--border);border-radius:10px;border-top:4px solid var(--mb);padding:18px;flex:1;}
+.rpt-panel{background:var(--white);border:1px solid var(--border);border-radius:10px;border-top:4px solid var(--mb);padding:18px;flex:1;display:flex;flex-direction:column;}
 .rpt-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .rpt-bar-lbl{width:120px;font-size:12.5px;font-weight:700;flex-shrink:0;color:var(--fb);}
 .rpt-bar-track{flex:1;height:16px;background:var(--fb-xlt);border-radius:4px;overflow:hidden;position:relative;}
-.rpt-bar-fill{height:100%;border-radius:4px;background:var(--mb);}
+.rpt-bar-fill{height:100%;border-radius:4px;background:var(--mb);transition:width .7s cubic-bezier(.16,1,.3,1);}
 .rpt-bar-fill.ref{background:var(--muted);opacity:.4;position:absolute;top:0;height:100%;width:2px;}
 .rpt-bar-val{width:40px;text-align:right;font-size:12.5px;font-weight:800;flex-shrink:0;color:var(--fb);}
-.rpt-pie-wrap{display:flex;align-items:center;gap:22px;}
+.rpt-pie-wrap{display:flex;align-items:center;gap:22px;opacity:0;transform:scale(.92);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1);}
+.rpt-pie-wrap.rpt-in{opacity:1;transform:scale(1);}
 .rpt-pie{width:132px;height:132px;border-radius:50%;flex-shrink:0;}
 .rpt-pie-legend{flex:1;display:flex;flex-direction:column;gap:9px;}
 .rpt-pie-legend-row{display:flex;align-items:center;gap:9px;font-size:12.5px;}
@@ -318,7 +318,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .rpt-pie-legend-lbl{flex:1;font-weight:700;color:var(--fb);}
 .rpt-pie-legend-val{font-weight:800;color:var(--fb);}
 .rpt-pie-legend-pct{width:38px;text-align:right;color:var(--muted);font-size:11.5px;}
-.rpt-note{background:var(--fb-xlt);border:1px dashed var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted);margin-top:10px;}
+.rpt-note{background:var(--fb-xlt);border:1px dashed var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted);margin-top:auto;flex-shrink:0;}
 
 .el-id-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;}
 .el-id-card-bar{height:4px;background:var(--mb);}
@@ -1943,6 +1943,28 @@ function rptRenderKpis(){
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Adherence Rate</div><div class="rpt-kpi-val">' + d.adherence + '%</div><div class="rpt-kpi-delta up">+3 pts vs last month</div></div>';
 }
 
+function rptAnimateBars(panel){
+  var fills = panel.querySelectorAll('.rpt-bar-fill:not(.ref)');
+  var targets = [];
+  fills.forEach(function(el){ targets.push(el.style.width); el.style.width = '0%'; });
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      fills.forEach(function(el, i){ el.style.width = targets[i]; });
+    });
+  });
+}
+
+function rptAnimatePie(panel){
+  var wrap = panel.querySelector('.rpt-pie-wrap');
+  if (!wrap) return;
+  wrap.classList.remove('rpt-in');
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      wrap.classList.add('rpt-in');
+    });
+  });
+}
+
 function rptRenderComparisonPanel(){
   var panel = document.getElementById("rpt-comparison-panel");
 
@@ -1958,6 +1980,7 @@ function rptRenderComparisonPanel(){
     panel.innerHTML =
       rows +
       '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). Select the Region pill above to drill into a region\'s branches.</div>';
+    rptAnimateBars(panel);
     return;
   }
 
@@ -1975,6 +1998,7 @@ function rptRenderComparisonPanel(){
       '<div class="rpt-bar-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-lt)"><div class="rpt-bar-lbl" style="font-weight:800">' + rptScope.region + ' (Region)</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + region.adherence + '%;background:var(--fb)"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + region.adherence + '%</div></div>' +
       branchRows +
       '<div class="rpt-note">Top row: this region\'s aggregate vs. the enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%). Rows below: this region\'s own branches, each measured against that same enterprise average (dashed, ' + RPT_ENTERPRISE.adherence + '%) so the reference line stays consistent throughout this panel. Other regions are never shown by name at this level.</div>';
+    rptAnimateBars(panel);
     return;
   }
 
@@ -1984,6 +2008,7 @@ function rptRenderComparisonPanel(){
   panel.innerHTML =
     '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + rptScope.branch + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + branch.adherence + '%"></div><div class="rpt-bar-fill ref" style="left:' + RPT_ENTERPRISE.adherence + '%"></div></div><div class="rpt-bar-val">' + branch.adherence + '%</div></div>' +
     '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). This is the only comparison a branch-level view shows — no other branch or region is visible here.</div>';
+  rptAnimateBars(panel);
 }
 
 function rptRenderReasonPanel(){
@@ -2006,6 +2031,7 @@ function rptRenderReasonPanel(){
   panel.innerHTML =
     '<div class="rpt-pie-wrap"><div class="rpt-pie" style="background:conic-gradient(' + stops + ')"></div><div class="rpt-pie-legend">' + legendRows + '</div></div>' +
     '<div class="rpt-note">"Other" carries a free-text note in NSS — not themed here without manual review. Reason mix shown is applied proportionally at region/branch scope for concept purposes.</div>';
+  rptAnimatePie(panel);
 }
 
 function rptRender(){
@@ -2068,7 +2094,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 15:49 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 16:52 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

@@ -306,12 +306,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .rpt-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .rpt-bar-lbl{width:120px;font-size:12.5px;font-weight:700;flex-shrink:0;color:var(--fb);}
 .rpt-bar-track{flex:1;height:16px;background:var(--fb-xlt);border-radius:4px;overflow:hidden;position:relative;}
-.rpt-bar-fill{height:100%;border-radius:4px;background:var(--mb);transition:width .7s cubic-bezier(.16,1,.3,1);}
+.rpt-bar-fill{height:100%;border-radius:4px;background:var(--mb);transition:width 1.05s cubic-bezier(.16,1,.3,1);}
 .rpt-bar-fill.ref{background:var(--muted);opacity:.4;position:absolute;top:0;height:100%;width:2px;}
 .rpt-bar-val{width:40px;text-align:right;font-size:12.5px;font-weight:800;flex-shrink:0;color:var(--fb);}
-.rpt-pie-wrap{display:flex;align-items:center;gap:22px;opacity:0;transform:scale(.92);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1);}
-.rpt-pie-wrap.rpt-in{opacity:1;transform:scale(1);}
-.rpt-pie{width:132px;height:132px;border-radius:50%;flex-shrink:0;}
+.rpt-pie-wrap{display:flex;align-items:center;gap:22px;}
+.rpt-pie{width:132px;height:132px;flex-shrink:0;}
 .rpt-pie-legend{flex:1;display:flex;flex-direction:column;gap:9px;}
 .rpt-pie-legend-row{display:flex;align-items:center;gap:9px;font-size:12.5px;}
 .rpt-pie-dot{width:10px;height:10px;border-radius:2.5px;flex-shrink:0;}
@@ -1955,14 +1954,33 @@ function rptAnimateBars(panel){
 }
 
 function rptAnimatePie(panel){
-  var wrap = panel.querySelector('.rpt-pie-wrap');
-  if (!wrap) return;
-  wrap.classList.remove('rpt-in');
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      wrap.classList.add('rpt-in');
-    });
+  var segs = panel.querySelectorAll('.rpt-pie-seg');
+  if (!segs.length) return;
+  var r = 45;
+  var C = 2 * Math.PI * r;
+  var duration = 1400;
+  segs.forEach(function(el){
+    var start = parseFloat(el.getAttribute('data-start'));
+    el.style.strokeDashoffset = String(-(C * start / 100));
+    el.style.strokeDasharray = '0 ' + C;
   });
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  var t0 = null;
+  function frame(ts){
+    if (t0 === null) t0 = ts;
+    var elapsed = ts - t0;
+    var raw = Math.min(elapsed / duration, 1);
+    var progress = easeOutCubic(raw) * 100;
+    segs.forEach(function(el){
+      var start = parseFloat(el.getAttribute('data-start'));
+      var seg = parseFloat(el.getAttribute('data-seg'));
+      var revealed = Math.max(0, Math.min(progress - start, seg));
+      var len = C * revealed / 100;
+      el.style.strokeDasharray = len + ' ' + (C - len);
+    });
+    if (raw < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 function rptRenderComparisonPanel(){
@@ -2016,11 +2034,15 @@ function rptRenderReasonPanel(){
   var panel = document.getElementById("rpt-reason-panel");
 
   var cum = 0;
-  var stops = RPT_REASON_SPLIT.map(function(seg){
+  var segs = RPT_REASON_SPLIT.map(function(seg){
     var start = cum;
     cum += seg.pct;
-    return seg.color + ' ' + start + '% ' + cum + '%';
-  }).join(", ");
+    return { color: seg.color, start: start, pct: seg.pct };
+  });
+  var pieCircles = segs.map(function(s){
+    return '<circle class="rpt-pie-seg" data-start="' + s.start + '" data-seg="' + s.pct + '" cx="60" cy="60" r="45" fill="none" stroke="' + s.color + '" stroke-width="20"></circle>';
+  }).join("");
+  var pieSvg = '<svg class="rpt-pie" viewBox="0 0 120 120"><g transform="rotate(-90 60 60)"><circle cx="60" cy="60" r="45" fill="none" stroke="#F4F6FC" stroke-width="20"></circle>' + pieCircles + '</g></svg>';
 
   var legendRows = RPT_REASON_SPLIT.map(function(seg){
     var count = Math.round(d.deviations * seg.pct / 100);
@@ -2029,7 +2051,7 @@ function rptRenderReasonPanel(){
 
   document.getElementById("rpt-reason-label").textContent = "Reason Themes — of " + d.deviations + " deviations, " + d.label;
   panel.innerHTML =
-    '<div class="rpt-pie-wrap"><div class="rpt-pie" style="background:conic-gradient(' + stops + ')"></div><div class="rpt-pie-legend">' + legendRows + '</div></div>' +
+    '<div class="rpt-pie-wrap">' + pieSvg + '<div class="rpt-pie-legend">' + legendRows + '</div></div>' +
     '<div class="rpt-note">"Other" carries a free-text note in NSS — not themed here without manual review. Reason mix shown is applied proportionally at region/branch scope for concept purposes.</div>';
   rptAnimatePie(panel);
 }
@@ -2094,7 +2116,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 16:52 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 17:04 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

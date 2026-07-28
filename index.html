@@ -1528,7 +1528,7 @@ function calculate(){
     showCustomPlan(ab.count, rev, s);
     return;
   }
-  if(ab.count<=50){
+  if(ab.count<=50 && rev<750000){
     showRemoteEligibility(ab.count);
     return;
   }
@@ -1579,6 +1579,9 @@ function calculate(){
 
   why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);
   why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
+  if(ab.count<=50){
+    why.push("<strong>Why This Isn't the Small-Event Flow:</strong> This show has "+ab.count+" booths, which would normally route to the Remote Eligibility screen. But its "+revSourceLabel+" of "+ff(ar.amount)+" is at or above the $750K threshold, so it's routed here instead — a show this small can still carry enough exhibitor revenue to require back room (and possibly supervisory) support that the Remote Eligibility screen doesn't surface.");
+  }
   why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"–"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
 
   // BR — revenue band
@@ -2117,7 +2120,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 17:13 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 21:18 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

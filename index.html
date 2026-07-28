@@ -723,9 +723,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
   </div>
 </div>
 
-<!-- REPORTING PAGE (PROOF OF CONCEPT — DUMMY DATA) -->
+<!-- REPORTING PAGE (COMPUTED FROM DEMO SHOW DATA — NOT LIVE NSS) -->
 <div class="main" id="page-reporting" style="display:none;">
-  <div class="rpt-dummy-banner">PROOF OF CONCEPT — every number on this page is placeholder/dummy data, not connected to NSS. This page exists to show people leaders how the reporting could work.</div>
+  <div class="rpt-dummy-banner">DEMO DATA — every number on this page is computed live from the fictional show dataset above (standardModel/customReason fields), the same way it will run once wired to a real NSS-fed data source. Not connected to live NSS data yet.</div>
   <div class="page-hdr">
     <div>
       <div class="page-sub">Sourced from the weekly NSS refresh &middot; last updated Jul 26, 2026 &middot; dummy data</div>
@@ -1671,48 +1671,114 @@ function showAppTab(tab){
   }
 }
 
-var RPT_REGION_DATA = {
-  "Southeast":      { adherence:84, documented:96, deviations:15, branches:{
-    "Atlanta":       { adherence:88, documented:24, deviations:3 },
-    "Nashville":     { adherence:85, documented:24, deviations:4 },
-    "Orlando":       { adherence:81, documented:24, deviations:5 },
-    "New Orleans":   { adherence:79, documented:24, deviations:5 }
-  }},
-  "Northeast":      { adherence:80, documented:72, deviations:14, branches:{
-    "Boston":            { adherence:82, documented:24, deviations:4 },
-    "New York":          { adherence:79, documented:24, deviations:5 },
-    "Washington D.C.":   { adherence:78, documented:24, deviations:5 }
-  }},
-  "South Central":  { adherence:76, documented:72, deviations:17, branches:{
-    "Dallas":       { adherence:78, documented:24, deviations:5 },
-    "Houston":      { adherence:75, documented:24, deviations:6 },
-    "San Antonio":  { adherence:74, documented:24, deviations:6 }
-  }},
-  "NW/SoCal":       { adherence:74, documented:96, deviations:25, branches:{
-    "San Francisco": { adherence:76, documented:24, deviations:6 },
-    "Anaheim":       { adherence:75, documented:24, deviations:6 },
-    "Denver":        { adherence:73, documented:24, deviations:6 },
-    "Reno":          { adherence:72, documented:24, deviations:7 }
-  }},
-  "North Central":  { adherence:71, documented:48, deviations:14, branches:{
-    "Chicago":       { adherence:73, documented:24, deviations:6 },
-    "Des Moines":    { adherence:68, documented:24, deviations:8 }
-  }},
-  "Las Vegas":      { adherence:69, documented:24, deviations:7, branches:{
-    "Las Vegas":     { adherence:69, documented:24, deviations:7 }
-  }},
-  "Canada":         { adherence:66, documented:24, deviations:8, branches:{
-    "Toronto":       { adherence:66, documented:24, deviations:8 }
-  }}
-};
-var RPT_ENTERPRISE = { adherence:78, documented:410, deviations:92 };
-var RPT_REASON_SPLIT = [
-  { name:"Growth / Sales Requirement",   pct:34, color:"var(--fb)"   },
-  { name:"Low Demand Event",             pct:26, color:"var(--mb)"  },
-  { name:"Heavy Specialized Billing",    pct:16, color:"var(--green)" },
-  { name:"Training",                     pct:13, color:"var(--gold)" },
-  { name:"Other",                        pct:11, color:"var(--muted)" }
+// ── REPORTING AGGREGATION — computed live from SHOWS (standardModel/customReason) ──
+var RPT_REASON_CATEGORIES = [
+  { key:"Growth / Sales Requirement", color:"var(--fb)"    },
+  { key:"Low Demand Event",           color:"var(--mb)"    },
+  { key:"Heavy Specialized Billing",  color:"var(--green)" },
+  { key:"Training",                   color:"var(--gold)"  },
+  { key:"Other",                      color:"var(--muted)" }
 ];
+function rptCategorizeReason(raw){
+  var s = (raw||"").trim().toLowerCase();
+  if(s==="growth / sales requirement") return "Growth / Sales Requirement";
+  if(s==="low demand event - does not need as much staff") return "Low Demand Event";
+  if(s==="heavy in specialized billing") return "Heavy Specialized Billing";
+  if(s==="training") return "Training";
+  return "Other";
+}
+function rptBranchNameFromProducingBranch(pb){
+  var m = /^\d+\s*-\s*(.+)$/.exec(pb||"");
+  return m ? m[1].trim() : (pb||"").trim();
+}
+function rptRegionBucket(region){
+  if(region==="Northwest" || region==="SoCal") return "NW/SoCal";
+  return region;
+}
+function rptEmptyNode(){ return { documented:0, deviations:0, reasonCounts:{} }; }
+function rptAddReasons(node, raw){
+  (raw||"").split("\n").map(function(x){return x.trim();}).filter(Boolean).forEach(function(r){
+    var cat = rptCategorizeReason(r);
+    node.reasonCounts[cat] = (node.reasonCounts[cat]||0) + 1;
+  });
+}
+function rptFinalize(node){
+  var adherence = node.documented>0 ? Math.round((node.documented-node.deviations)/node.documented*100) : 0;
+  var reasons = RPT_REASON_CATEGORIES.map(function(c){
+    var count = node.reasonCounts[c.key]||0;
+    var pct = node.deviations>0 ? Math.round(count/node.deviations*100) : 0;
+    return { name:c.key, color:c.color, count:count, pct:pct };
+  });
+  return { adherence:adherence, documented:node.documented, deviations:node.deviations, reasons:reasons };
+}
+function rptBuildAggregates(){
+  var branchNodes = {};
+  Object.keys(SHOWS).forEach(function(k){
+    var s = SHOWS[k];
+    var sm = s.standardModel;
+    if(sm!=="Yes" && sm!=="No") return; // blank = no decision logged yet — invisible to this report, not a deviation
+    var region = rptRegionBucket(s.region);
+    var branch = rptBranchNameFromProducingBranch(s.producingBranch);
+    var bk = region + "||" + branch;
+    if(!branchNodes[bk]) branchNodes[bk] = rptEmptyNode();
+    var node = branchNodes[bk];
+    node.documented++;
+    if(sm==="No"){
+      node.deviations++;
+      rptAddReasons(node, s.customReason);
+    }
+  });
+  var regionData = {};
+  Object.keys(branchNodes).forEach(function(bk){
+    var parts = bk.split("||"), region = parts[0], branch = parts[1];
+    if(!regionData[region]) regionData[region] = { node: rptEmptyNode(), branches:{} };
+    var bNode = branchNodes[bk];
+    regionData[region].branches[branch] = rptFinalize(bNode);
+    regionData[region].node.documented += bNode.documented;
+    regionData[region].node.deviations += bNode.deviations;
+    Object.keys(bNode.reasonCounts).forEach(function(cat){
+      regionData[region].node.reasonCounts[cat] = (regionData[region].node.reasonCounts[cat]||0) + bNode.reasonCounts[cat];
+    });
+  });
+  var finalRegionData = {};
+  var enterpriseNode = rptEmptyNode();
+  Object.keys(regionData).forEach(function(region){
+    var rd = regionData[region];
+    finalRegionData[region] = Object.assign(rptFinalize(rd.node), { branches: rd.branches });
+    enterpriseNode.documented += rd.node.documented;
+    enterpriseNode.deviations += rd.node.deviations;
+    Object.keys(rd.node.reasonCounts).forEach(function(cat){
+      enterpriseNode.reasonCounts[cat] = (enterpriseNode.reasonCounts[cat]||0) + rd.node.reasonCounts[cat];
+    });
+  });
+  return { regionData: finalRegionData, enterprise: rptFinalize(enterpriseNode) };
+}
+var _rptAgg = rptBuildAggregates();
+var RPT_REGION_DATA = _rptAgg.regionData;
+var RPT_ENTERPRISE = _rptAgg.enterprise;
+
+// Backfill every real region/branch with a zero-state entry so persona lookups
+// (which hardcode specific region/branch assignments) never hit undefined,
+// even if that branch happens to have zero documented shows in this snapshot.
+var RPT_CANONICAL_BRANCHES = {
+  "Southeast":     ["Atlanta","Nashville","Orlando","New Orleans"],
+  "Northeast":     ["Boston","New York","Washington D.C."],
+  "South Central": ["Dallas","Houston","San Antonio"],
+  "NW/SoCal":      ["San Francisco","Anaheim","Denver","Reno"],
+  "North Central": ["Chicago","Des Moines"],
+  "Las Vegas":     ["Las Vegas"],
+  "Canada":        ["Toronto"]
+};
+Object.keys(RPT_CANONICAL_BRANCHES).forEach(function(region){
+  if(!RPT_REGION_DATA[region]){
+    RPT_REGION_DATA[region] = Object.assign(rptFinalize(rptEmptyNode()), { branches:{} });
+  }
+  RPT_CANONICAL_BRANCHES[region].forEach(function(branch){
+    if(!RPT_REGION_DATA[region].branches[branch]){
+      RPT_REGION_DATA[region].branches[branch] = rptFinalize(rptEmptyNode());
+    }
+  });
+});
 var RPT_PERSONAS = {
   "Craig Gaibler": { tier:"exec", initials:"CG" },
   "Nesana Wieger": { tier:"exec", initials:"NW" },
@@ -2036,28 +2102,20 @@ function rptRenderComparisonPanel(){
 function rptRenderReasonPanel(){
   var d = rptCurrentScopeData();
   var panel = document.getElementById("rpt-reason-panel");
-
-  var cum = 0;
-  var segs = RPT_REASON_SPLIT.map(function(seg){
-    var start = cum;
-    cum += seg.pct;
-    return { color: seg.color, start: start, pct: seg.pct };
-  });
-  var pieCircles = segs.map(function(s){
-    return '<circle class="rpt-pie-seg" data-start="' + s.start + '" data-seg="' + s.pct + '" cx="60" cy="60" r="45" fill="none" stroke="' + s.color + '" stroke-width="20"></circle>';
-  }).join("");
-  var pieSvg = '<svg class="rpt-pie" viewBox="0 0 120 120"><g transform="rotate(-90 60 60)"><circle cx="60" cy="60" r="45" fill="none" stroke="#F4F6FC" stroke-width="20"></circle>' + pieCircles + '</g></svg>';
-
-  var legendRows = RPT_REASON_SPLIT.map(function(seg){
-    var count = Math.round(d.deviations * seg.pct / 100);
-    return '<div class="rpt-pie-legend-row"><span class="rpt-pie-dot" style="background:' + seg.color + '"></span><span class="rpt-pie-legend-lbl">' + seg.name + '</span><span class="rpt-pie-legend-val">' + count + '</span><span class="rpt-pie-legend-pct">' + seg.pct + '%</span></div>';
-  }).join("");
-
   document.getElementById("rpt-reason-label").textContent = "Reason Themes — of " + d.deviations + " deviations, " + d.label;
-  panel.innerHTML =
-    '<div class="rpt-pie-wrap">' + pieSvg + '<div class="rpt-pie-legend">' + legendRows + '</div></div>' +
-    '<div class="rpt-note">"Other" carries a free-text note in NSS — not themed here without manual review. Reason mix shown is applied proportionally at region/branch scope for concept purposes.</div>';
-  rptAnimatePie(panel);
+
+  if(d.deviations === 0){
+    panel.innerHTML = '<div class="rpt-note">No logged deviations in this scope — every documented show here was staffed to the standard model.</div>';
+    return;
+  }
+
+  var rows = d.reasons.filter(function(r){ return r.count > 0; }).map(function(seg){
+    return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + seg.name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + seg.pct + '%;background:' + seg.color + '"></div></div><div class="rpt-bar-val">' + seg.count + ' (' + seg.pct + '%)</div></div>';
+  }).join("");
+
+  panel.innerHTML = rows +
+    '<div class="rpt-note">Reflects each show\'s actual logged reason(s) in NSS for this scope. Shows with more than one reason checked count toward each — percentages can total more than 100%.</div>';
+  rptAnimateBars(panel);
 }
 
 function rptRender(){
@@ -2120,7 +2178,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 22:48 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 23:25 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

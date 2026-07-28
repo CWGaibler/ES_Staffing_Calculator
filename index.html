@@ -1673,13 +1673,14 @@ function showAppTab(tab){
 
 // ── REPORTING AGGREGATION — computed live from SHOWS (standardModel/customReason) ──
 var RPT_REASON_CATEGORIES = [
-  { key:"Growth / Sales Requirement", color:"var(--fb)"    },
-  { key:"Low Demand Event",           color:"var(--mb)"    },
-  { key:"Heavy Specialized Billing",  color:"var(--green)" },
-  { key:"Training",                   color:"var(--gold)"  },
-  { key:"Other",                      color:"var(--muted)" }
+  { key:"Growth / Sales Requirement", color:"var(--fb)"     },
+  { key:"Low Demand Event",           color:"var(--mb)"     },
+  { key:"Heavy Specialized Billing",  color:"var(--green)"  },
+  { key:"Training",                   color:"var(--gold)"   },
+  { key:"Other",                      color:"var(--muted)"  },
+  { key:"Multiple Reasons",           color:"var(--orange)" }
 ];
-function rptCategorizeReason(raw){
+function rptCategorizeSingleReason(raw){
   var s = (raw||"").trim().toLowerCase();
   if(s==="growth / sales requirement") return "Growth / Sales Requirement";
   if(s==="low demand event - does not need as much staff") return "Low Demand Event";
@@ -1695,12 +1696,17 @@ function rptRegionBucket(region){
   if(region==="Northwest" || region==="SoCal") return "NW/SoCal";
   return region;
 }
-function rptEmptyNode(){ return { documented:0, deviations:0, reasonCounts:{} }; }
-function rptAddReasons(node, raw){
-  (raw||"").split("\n").map(function(x){return x.trim();}).filter(Boolean).forEach(function(r){
-    var cat = rptCategorizeReason(r);
-    node.reasonCounts[cat] = (node.reasonCounts[cat]||0) + 1;
-  });
+function rptEmptyNode(){ return { documented:0, deviations:0, reasonCounts:{}, multiExamples:[] }; }
+function rptAddReasons(node, raw, jobNum){
+  var parts = (raw||"").split("\n").map(function(x){return x.trim();}).filter(Boolean);
+  var cat;
+  if(parts.length > 1){
+    cat = "Multiple Reasons";
+    node.multiExamples.push(jobNum + ": " + parts.join(" + "));
+  } else {
+    cat = rptCategorizeSingleReason(parts[0]);
+  }
+  node.reasonCounts[cat] = (node.reasonCounts[cat]||0) + 1;
 }
 function rptFinalize(node){
   var adherence = node.documented>0 ? Math.round((node.documented-node.deviations)/node.documented*100) : 0;
@@ -1709,7 +1715,7 @@ function rptFinalize(node){
     var pct = node.deviations>0 ? Math.round(count/node.deviations*100) : 0;
     return { name:c.key, color:c.color, count:count, pct:pct };
   });
-  return { adherence:adherence, documented:node.documented, deviations:node.deviations, reasons:reasons };
+  return { adherence:adherence, documented:node.documented, deviations:node.deviations, reasons:reasons, multiExamples:node.multiExamples.slice() };
 }
 function rptBuildAggregates(){
   var branchNodes = {};
@@ -1725,7 +1731,7 @@ function rptBuildAggregates(){
     node.documented++;
     if(sm==="No"){
       node.deviations++;
-      rptAddReasons(node, s.customReason);
+      rptAddReasons(node, s.customReason, k);
     }
   });
   var regionData = {};
@@ -1736,6 +1742,7 @@ function rptBuildAggregates(){
     regionData[region].branches[branch] = rptFinalize(bNode);
     regionData[region].node.documented += bNode.documented;
     regionData[region].node.deviations += bNode.deviations;
+    regionData[region].node.multiExamples = regionData[region].node.multiExamples.concat(bNode.multiExamples);
     Object.keys(bNode.reasonCounts).forEach(function(cat){
       regionData[region].node.reasonCounts[cat] = (regionData[region].node.reasonCounts[cat]||0) + bNode.reasonCounts[cat];
     });
@@ -1747,6 +1754,7 @@ function rptBuildAggregates(){
     finalRegionData[region] = Object.assign(rptFinalize(rd.node), { branches: rd.branches });
     enterpriseNode.documented += rd.node.documented;
     enterpriseNode.deviations += rd.node.deviations;
+    enterpriseNode.multiExamples = enterpriseNode.multiExamples.concat(rd.node.multiExamples);
     Object.keys(rd.node.reasonCounts).forEach(function(cat){
       enterpriseNode.reasonCounts[cat] = (enterpriseNode.reasonCounts[cat]||0) + rd.node.reasonCounts[cat];
     });
@@ -2109,13 +2117,32 @@ function rptRenderReasonPanel(){
     return;
   }
 
-  var rows = d.reasons.filter(function(r){ return r.count > 0; }).map(function(seg){
-    return '<div class="rpt-bar-row"><div class="rpt-bar-lbl">' + seg.name + '</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + seg.pct + '%;background:' + seg.color + '"></div></div><div class="rpt-bar-val">' + seg.count + ' (' + seg.pct + '%)</div></div>';
+  var cum = 0;
+  var activeReasons = d.reasons.filter(function(r){ return r.count > 0; });
+  var segs = activeReasons.map(function(seg){
+    var start = cum;
+    cum += seg.pct;
+    return { color: seg.color, start: start, pct: seg.pct };
+  });
+  var pieCircles = segs.map(function(s){
+    return '<circle class="rpt-pie-seg" data-start="' + s.start + '" data-seg="' + s.pct + '" cx="60" cy="60" r="45" fill="none" stroke="' + s.color + '" stroke-width="20"></circle>';
+  }).join("");
+  var pieSvg = '<svg class="rpt-pie" viewBox="0 0 120 120"><g transform="rotate(-90 60 60)"><circle cx="60" cy="60" r="45" fill="none" stroke="#F4F6FC" stroke-width="20"></circle>' + pieCircles + '</g></svg>';
+
+  var legendRows = activeReasons.map(function(seg){
+    return '<div class="rpt-pie-legend-row"><span class="rpt-pie-dot" style="background:' + seg.color + '"></span><span class="rpt-pie-legend-lbl">' + seg.name + '</span><span class="rpt-pie-legend-val">' + seg.count + '</span><span class="rpt-pie-legend-pct">' + seg.pct + '%</span></div>';
   }).join("");
 
-  panel.innerHTML = rows +
-    '<div class="rpt-note">Reflects each show\'s actual logged reason(s) in NSS for this scope. Shows with more than one reason checked count toward each — percentages can total more than 100%.</div>';
-  rptAnimateBars(panel);
+  var multiNote = "";
+  if(d.multiExamples.length){
+    var shown = d.multiExamples.slice(0, 5);
+    var extra = d.multiExamples.length - shown.length;
+    multiNote = " Multiple-reason shows in this scope: " + shown.join("; ") + (extra > 0 ? "; +" + extra + " more" : "") + ".";
+  }
+  panel.innerHTML =
+    '<div class="rpt-pie-wrap">' + pieSvg + '<div class="rpt-pie-legend">' + legendRows + '</div></div>' +
+    '<div class="rpt-note">Reflects each show\'s actual logged reason(s) in NSS for this scope. Shows with more than one reason checked are grouped under "Multiple Reasons" rather than split across categories.' + multiNote + '</div>';
+  rptAnimatePie(panel);
 }
 
 function rptRender(){
@@ -2178,7 +2205,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 23:25 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 23:29 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

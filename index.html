@@ -1996,6 +1996,7 @@ function rptRenderComparisonPanel(){
       }).join("");
     document.getElementById("rpt-comparison-label").textContent = "Enterprise View";
     panel.innerHTML =
+      '<div class="rpt-bar-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-lt)"><div class="rpt-bar-lbl" style="font-weight:800">Enterprise-Wide</div><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:' + RPT_ENTERPRISE.adherence + '%;background:var(--fb)"></div></div><div class="rpt-bar-val">' + RPT_ENTERPRISE.adherence + '%</div></div>' +
       rows +
       '<div class="rpt-note">Dashed reference marks the enterprise average (' + RPT_ENTERPRISE.adherence + '%). Select the Region pill above to drill into a region\'s branches.</div>';
     rptAnimateBars(panel);
@@ -2116,7 +2117,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 17:04 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-28 17:13 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

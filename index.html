@@ -90,10 +90,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 /* DATA CARDS (4-grid) */
 .four-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.sf-data-card{background:var(--white);border:2.5px solid var(--mb);border-radius:10px;padding:16px 12px;display:flex;flex-direction:column;justify-content:space-between}
+.sf-data-card{background:var(--white);border:2.5px solid var(--mb);border-radius:10px;padding:16px 12px;display:flex;flex-direction:column}
 .sf-data-card-lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px}
 .sf-data-card-val{font-size:20px;font-weight:800;color:var(--fb);line-height:1.1}
 .sf-data-card-badge{display:inline-block;font-size:14px;font-weight:700;margin-top:3px;padding:2px 10px;border-radius:999px}
+.sf-data-card-badge-wrap{margin-top:auto;padding-top:6px}
 .badge-active{background:rgba(66,187,55,.12);color:#1A6B35;border:1px solid rgba(66,187,55,.3)}
 .badge-inactive{background:rgba(173,177,177,.1);color:#666;border:1px solid rgba(173,177,177,.3)}
 
@@ -550,10 +551,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <!-- DATA CARDS -->
     <div class="el-section-div">By the Numbers</div>
     <div class="four-grid">
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booth Count</div><div class="sf-data-card-val" id="currentBoothsVal">—</div><div><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exh. Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Booth Count</div><div class="sf-data-card-val" id="projectedBoothsVal">—</div><div><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Exh. Revenue Projection</div><div class="sf-data-card-val" id="sfRevenueVal">—</div><div><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booth Count</div><div class="sf-data-card-val" id="currentBoothsVal">—</div><div class="sf-data-card-badge-wrap"><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exh. Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div class="sf-data-card-badge-wrap"><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Booth Count</div><div class="sf-data-card-val" id="projectedBoothsVal">—</div><div class="sf-data-card-badge-wrap"><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Exh. Revenue Projection</div><div class="sf-data-card-val" id="sfRevenueVal">—</div><div class="sf-data-card-badge-wrap"><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
     </div>
 
     <!-- 751+ CUSTOM PLAN -->
@@ -2196,7 +2197,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-29 03:13 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-29 03:17 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

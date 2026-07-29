@@ -387,6 +387,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <h2>ES Staffing Calculator</h2>
       <p>This tool contains confidential Freeman operational data.<br>Select your name and enter your access password to continue.</p>
       <select id="auth-identity-select">
+  <option value="" disabled selected>Select your name</option>
   <option value="Anne Wolkenhauer">Anne Wolkenhauer</option>
   <option value="Cassandra Karns">Cassandra Karns</option>
   <option value="Chenille Book">Chenille Book</option>
@@ -446,6 +447,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
         var input = document.getElementById('auth-input');
         var errEl = document.getElementById('auth-error');
         var identity = document.getElementById('auth-identity-select').value;
+        if (!identity) {
+          errEl.style.display = 'block';
+          errEl.textContent = 'Please select your name.';
+          return;
+        }
         if (!val) return;
         sha256(val).then(function(h) {
           if (h === HASH) {
@@ -1849,7 +1855,7 @@ function rptRenderPills(){
 
   if (p.tier === "exec"){
     var pills = [
-      { label:"Enterprise-Wide", level:"enterprise" },
+      { label:"Enterprise", level:"enterprise" },
       { label:"Region", level:"region" },
       { label:"Branch", level:"branch" }
     ];
@@ -1883,14 +1889,17 @@ function rptRenderPills(){
     if (rptScope.level === "branch"){
       var sel2 = document.createElement("select");
       sel2.className = "scope-select";
+      var allBranchesExec = [];
       rptSortedRegionKeys().forEach(function(r){
-        var grp = document.createElement("optgroup"); grp.label = r;
         rptSortedBranchKeys(RPT_REGION_DATA[r]).forEach(function(b){
-          var o = document.createElement("option"); o.value = r + "||" + b; o.textContent = b;
-          if (r===rptScope.region && b===rptScope.branch) o.selected = true;
-          grp.appendChild(o);
+          allBranchesExec.push({ region:r, branch:b });
         });
-        sel2.appendChild(grp);
+      });
+      allBranchesExec.sort(function(a,b){ return a.branch.localeCompare(b.branch); });
+      allBranchesExec.forEach(function(o){
+        var opt = document.createElement("option"); opt.value = o.region + "||" + o.branch; opt.textContent = o.branch;
+        if (o.region===rptScope.region && o.branch===rptScope.branch) opt.selected = true;
+        sel2.appendChild(opt);
       });
       sel2.onchange = function(e){ var parts = e.target.value.split("||"); rptScope.region=parts[0]; rptScope.branch=parts[1]; rptRender(); };
       dd.appendChild(sel2);
@@ -1951,23 +1960,11 @@ function rptRenderPills(){
     if (rptScope.level === "branch" && allBranchOptions.length > 1){
       var branchSel = document.createElement("select");
       branchSel.className = "scope-select";
-      if (regions.length > 1){
-        regions.forEach(function(r){
-          var grp = document.createElement("optgroup"); grp.label = r;
-          allBranchOptions.filter(function(o){ return o.region===r; }).forEach(function(o){
-            var opt = document.createElement("option"); opt.value = r + "||" + o.branch; opt.textContent = o.branch;
-            if (r===rptScope.region && o.branch===rptScope.branch) opt.selected = true;
-            grp.appendChild(opt);
-          });
-          branchSel.appendChild(grp);
-        });
-      } else {
-        allBranchOptions.forEach(function(o){
-          var opt = document.createElement("option"); opt.value = o.region + "||" + o.branch; opt.textContent = o.branch;
-          if (o.branch===rptScope.branch) opt.selected = true;
-          branchSel.appendChild(opt);
-        });
-      }
+      allBranchOptions.slice().sort(function(a,b){ return a.branch.localeCompare(b.branch); }).forEach(function(o){
+        var opt = document.createElement("option"); opt.value = o.region + "||" + o.branch; opt.textContent = o.branch;
+        if (o.region===rptScope.region && o.branch===rptScope.branch) opt.selected = true;
+        branchSel.appendChild(opt);
+      });
       branchSel.onchange = function(e){
         var parts = e.target.value.split("||");
         rptScope.region = parts[0]; rptScope.branch = parts[1];
@@ -2014,7 +2011,8 @@ function rptRenderKpis(){
   var strip = document.getElementById("rpt-kpi-strip");
   strip.innerHTML =
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Documented</div><div class="rpt-kpi-val">' + d.documented + '</div><div class="rpt-kpi-delta">within ' + d.label + '</div></div>' +
-    '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Staffed to Model</div><div class="rpt-kpi-val">' + staffed + '</div><div class="rpt-kpi-delta">' + d.deviations + ' logged deviations</div></div>' +
+    '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Staffed to Model</div><div class="rpt-kpi-val">' + staffed + '</div><div class="rpt-kpi-delta">of ' + d.documented + ' documented</div></div>' +
+    '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Logged Deviations</div><div class="rpt-kpi-val">' + d.deviations + '</div><div class="rpt-kpi-delta">see Reason Themes below</div></div>' +
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Adherence Rate</div><div class="rpt-kpi-val">' + d.adherence + '%</div><div class="rpt-kpi-delta up">+3 pts vs last month</div></div>';
 }
 
@@ -2109,7 +2107,7 @@ function rptRenderComparisonPanel(){
 function rptRenderReasonPanel(){
   var d = rptCurrentScopeData();
   var panel = document.getElementById("rpt-reason-panel");
-  document.getElementById("rpt-reason-label").textContent = "Reason Themes — of " + d.deviations + " deviations, " + d.label;
+  document.getElementById("rpt-reason-label").textContent = "Reason Themes";
 
   if(d.deviations === 0){
     panel.innerHTML = '<div class="rpt-note">No logged deviations in this scope — every documented show here was staffed to the standard model.</div>';
@@ -2132,15 +2130,9 @@ function rptRenderReasonPanel(){
     return '<div class="rpt-pie-legend-row"><span class="rpt-pie-dot" style="background:' + seg.color + '"></span><span class="rpt-pie-legend-lbl">' + seg.name + '</span><span class="rpt-pie-legend-val">' + seg.count + '</span><span class="rpt-pie-legend-pct">' + seg.pct + '%</span></div>';
   }).join("");
 
-  var multiNote = "";
-  if(d.multiExamples.length){
-    var shown = d.multiExamples.slice(0, 5);
-    var extra = d.multiExamples.length - shown.length;
-    multiNote = " Multiple-reason shows in this scope: " + shown.join("; ") + (extra > 0 ? "; +" + extra + " more" : "") + ".";
-  }
   panel.innerHTML =
     '<div class="rpt-pie-wrap">' + pieSvg + '<div class="rpt-pie-legend">' + legendRows + '</div></div>' +
-    '<div class="rpt-note">Reflects each show\'s actual logged reason(s) in NSS for this scope. Shows with more than one reason checked are grouped under "Multiple Reasons" rather than split across categories.' + multiNote + '</div>';
+    '<div class="rpt-note">Reflects each show\'s actual logged reason(s) in NSS for this scope. Shows with more than one reason checked are grouped under "Multiple Reasons" rather than split across categories.</div>';
   rptAnimatePie(panel);
 }
 

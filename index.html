@@ -976,7 +976,7 @@ function showCustomPlan(booths, revenue, s){
   cwhy.push("<strong>Customer-Facing Roles:</strong> Above the 750-booth ceiling, the model widens to 1 role per 200 booths (rather than the standard 1 per 150). "+booths.toLocaleString()+" booths suggests "+sugCF+" customer-facing role"+(sugCF!==1?"s":"")+".");
 
   var brBandLabel=brBase>=5?"$16M+":brBase===4?"$8M\u2013$16M":brBase===3?"$5M\u2013$8M":brBase===2?"$2.5M\u2013$5M":brBase===1?"$750K\u2013$2.5M":"under $750K";
-  var brText="<strong>Back Room Roles:</strong> Base revenue of "+ff(revenue)+" falls in the "+brBandLabel+" band, which is a baseline of "+brBase+" back room role"+(brBase!==1?"s":"")+".";
+  var brText=(revenue===0?"*":"")+"<strong>Back Room Roles:</strong> Base revenue of "+ff(revenue)+" falls in the "+brBandLabel+" band, which is a baseline of "+brBase+" back room role"+(brBase!==1?"s":"")+".";
   if(brHotShot){brText+=" This show's booth count also qualifies it for a dedicated ES Hot Shot role (+1), added at the 1,000-booth mark to handle open service request follow-up with Customer-Facing and Ops.";}
   if(brRevExtra===2){brText+=" Revenue of "+ff(revenue)+" also exceeds the $25M threshold, adding 2 more back room roles on top of the base band.";}
   else if(brRevExtra===1){brText+=" Revenue of "+ff(revenue)+" also exceeds the $16M threshold, adding 1 more back room role on top of the base band.";}
@@ -1631,8 +1631,8 @@ function calculate(){
     boothSourceLabel="Projected Booths of "+ab.count.toLocaleString()+" — no exhibitor list is loaded and no prior year data is available for this show.";
   }
 
-  why.push("<strong>Booth Count Used:</strong> "+boothSourceLabel);
-  why.push("<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
+  why.push((ab.source==="projected"&&ab.count===0?"*":"")+"<strong>Booth Count Used:</strong> "+boothSourceLabel);
+  why.push((ar.amount===0?"*":"")+"<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
   if(ab.count<=50){
     why.push("<strong>Why This Isn't the Small-Event Flow:</strong> This show has "+ab.count+" booths, which would normally route to the Remote Eligibility screen. But its "+revSourceLabel+" of "+ff(ar.amount)+" is at or above the $750K threshold, so it's routed here instead — a show this small can still carry enough exhibitor revenue to require back room (and possibly supervisory) support that the Remote Eligibility screen doesn't surface.");
   }
@@ -2310,7 +2310,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:30 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:38 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

@@ -868,7 +868,7 @@ function applyOverlay(row,rev){
 }
 function fm(n){if(n>=1000000)return"$"+(n/1000000).toFixed(1).replace(/\.0$/,"")+"M";if(n>=1000)return"$"+Math.round(n/1000)+"K";return"$"+n;}
 function ff(n){return"$"+Math.round(n).toLocaleString("en-US");}
-function badge(id,txt,active,warning){var e=document.getElementById(id);e.textContent=txt;var cls=warning?"badge-warning":(active?"badge-active":"badge-inactive");e.className="sf-data-card-badge "+cls;}
+function badge(id,txt,active,warning){var e=document.getElementById(id);e.textContent=warning?txt+"*":txt;var cls=warning?"badge-warning":(active?"badge-active":"badge-inactive");e.className="sf-data-card-badge "+cls;}
 function loadJob(j){document.getElementById("jobInput").value=j;calculate();}
 function toggleSection(sectionId,header){var body=document.getElementById(sectionId);var isOpen=body.classList.contains("open");if(isOpen){body.classList.remove("open");header.classList.remove("open");}else{body.classList.add("open");header.classList.add("open");}}
 
@@ -2310,7 +2310,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:24 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:30 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

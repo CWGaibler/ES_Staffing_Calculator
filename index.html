@@ -2254,70 +2254,6 @@ document.addEventListener('DOMContentLoaded', function(){
   applyStoredIdentity();
 });
 
-// ── TEMPORARY DIAGNOSTIC — auto-detects horizontal overflow and displays the culprit on-screen. Remove once root cause is confirmed. ──
-(function(){
-  var banner;
-  function ensureBanner(){
-    if (banner) return banner;
-    banner = document.createElement('div');
-    banner.id = '__overflow_debug_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#FB471F;color:#fff;font-family:monospace;font-size:11px;padding:8px 10px;max-height:35vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
-    document.body.appendChild(banner);
-    return banner;
-  }
-  function scan(){
-    var vw = document.documentElement.clientWidth;
-    var docWidth = document.documentElement.scrollWidth;
-    if (docWidth <= vw + 1){
-      if (banner) banner.style.display = 'none';
-      return;
-    }
-    var b = ensureBanner();
-    b.style.display = 'block';
-    var offenders = [];
-    [document.documentElement, document.body].forEach(function(el){
-      var r = el.getBoundingClientRect();
-      if (r.right > vw + 1 && r.width > 0){
-        offenders.push({tag: el.tagName+'(root)', id:'', cls:'', right: Math.round(r.right), width: Math.round(r.width)});
-      }
-    });
-    document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__overflow_debug_banner') return;
-      var r = el.getBoundingClientRect();
-      if (r.right > vw + 1 && r.width > 0){
-        offenders.push({
-          tag: el.tagName,
-          id: el.id || '',
-          cls: (typeof el.className === 'string' ? el.className : ''),
-          right: Math.round(r.right),
-          width: Math.round(r.width)
-        });
-      }
-    });
-    offenders.sort(function(a,b){ return b.right - a.right; });
-    var top = offenders.slice(0, 6);
-    var text = 'OVERFLOW DEBUG viewport:'+vw+'px doc:'+docWidth+'px innerWidth:'+window.innerWidth+'px 90vw-expected:'+(window.innerWidth*0.9).toFixed(0)+'px ('+offenders.length+' offending) | ';
-    top.forEach(function(o, i){
-      text += (i+1)+'.<'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.replace(/\s+/g,'.'):'')+' r:'+o.right+'px w:'+o.width+'px | ';
-    });
-    var probe = document.createElement('div');
-    probe.style.cssText = 'position:absolute;visibility:hidden;width:90vw;';
-    document.body.appendChild(probe);
-    text += ' actual-90vw-render:'+Math.round(probe.getBoundingClientRect().width)+'px';
-    document.body.removeChild(probe);
-    b.textContent = text;
-  }
-  var scheduled = false;
-  function scheduleScan(){
-    if (scheduled) return;
-    scheduled = true;
-    setTimeout(function(){ scheduled = false; scan(); }, 150);
-  }
-  new MutationObserver(scheduleScan).observe(document.body, {childList:true, subtree:true, attributes:true});
-  window.addEventListener('resize', scheduleScan);
-  document.addEventListener('DOMContentLoaded', scheduleScan);
-  scheduleScan();
-})();
 
 </script>
 <!-- ROLE DEFINITIONS MODAL -->
@@ -2354,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:06 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:18 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

@@ -2288,9 +2288,103 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:41 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:52 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
+
+<script>
+// ── TEMPORARY DIAGNOSTIC v2 — measures horizontal overflow AND sticky-header/content overlap. Remove once root cause is confirmed. ──
+(function(){
+  var banner;
+  function ensureBanner(){
+    if (banner) return banner;
+    banner = document.createElement('div');
+    banner.id = '__diag_v2_banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#7B2FBE;color:#fff;font-family:monospace;font-size:10px;padding:8px 10px;max-height:40vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
+    document.body.appendChild(banner);
+    return banner;
+  }
+  function scan(){
+    var vw = document.documentElement.clientWidth;
+    var docWidth = document.documentElement.scrollWidth;
+    var b = ensureBanner();
+    b.style.display = 'block';
+
+    var lines = [];
+    lines.push('viewport:'+vw+'px  doc-scrollWidth:'+docWidth+'px  innerWidth:'+window.innerWidth+'px  devicePixelRatio:'+window.devicePixelRatio);
+    if (window.visualViewport) {
+      lines.push('visualViewport: width='+Math.round(window.visualViewport.width)+'px scale='+window.visualViewport.scale.toFixed(3)+' offsetLeft='+Math.round(window.visualViewport.offsetLeft));
+    } else {
+      lines.push('visualViewport: not supported');
+    }
+
+    var header = document.querySelector('.header');
+    var pageSub = document.querySelector('.page-sub');
+    var mainVisible = null;
+    document.querySelectorAll('.main').forEach(function(m){
+      if (getComputedStyle(m).display !== 'none') mainVisible = m;
+    });
+    if (header) {
+      var hr = header.getBoundingClientRect();
+      lines.push('HEADER rect: top='+Math.round(hr.top)+' bottom='+Math.round(hr.bottom)+' height='+Math.round(hr.height)+' width='+Math.round(hr.width));
+    } else {
+      lines.push('HEADER: not found');
+    }
+    if (pageSub) {
+      var pr = pageSub.getBoundingClientRect();
+      lines.push('PAGE-SUB (intro text) rect: top='+Math.round(pr.top)+' bottom='+Math.round(pr.bottom)+' left='+Math.round(pr.left));
+      if (header) {
+        var hr2 = header.getBoundingClientRect();
+        var overlap = hr2.bottom - pr.top;
+        lines.push('OVERLAP (header.bottom - pageSub.top): '+Math.round(overlap)+'px'+(overlap > 0 ? '  <-- POSITIVE MEANS HEADER IS COVERING TEXT' : '  (no overlap)'));
+      }
+    } else {
+      lines.push('PAGE-SUB: not found (may be on a different page/tab)');
+    }
+    if (mainVisible) {
+      var mr = mainVisible.getBoundingClientRect();
+      lines.push('VISIBLE .main rect: id='+mainVisible.id+' top='+Math.round(mr.top)+' width='+Math.round(mr.width)+' scrollWidth='+mainVisible.scrollWidth);
+    }
+
+    var offenders = [];
+    document.querySelectorAll('body *').forEach(function(el){
+      if (el.id === '__diag_v2_banner' || el.closest('#__diag_v2_banner')) return;
+      var r = el.getBoundingClientRect();
+      if (r.right > vw + 1 && r.width > 0){
+        offenders.push({
+          tag: el.tagName,
+          id: el.id || '',
+          cls: (typeof el.className === 'string' ? el.className : ''),
+          right: Math.round(r.right),
+          width: Math.round(r.width)
+        });
+      }
+    });
+    offenders.sort(function(a,b){ return b.right - a.right; });
+    if (offenders.length) {
+      lines.push('WIDTH OFFENDERS ('+offenders.length+' total, top 8):');
+      offenders.slice(0,8).forEach(function(o, i){
+        lines.push('  '+(i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.toString().replace(/\s+/g,'.'):'')+'  right:'+o.right+'px  width:'+o.width+'px');
+      });
+    } else {
+      lines.push('WIDTH OFFENDERS: none found');
+    }
+
+    b.textContent = lines.join('\n');
+  }
+  var scheduled = false;
+  function scheduleScan(){
+    if (scheduled) return;
+    scheduled = true;
+    setTimeout(function(){ scheduled = false; scan(); }, 200);
+  }
+  new MutationObserver(scheduleScan).observe(document.body, {childList:true, subtree:true, attributes:true});
+  window.addEventListener('resize', scheduleScan);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', scheduleScan);
+  document.addEventListener('DOMContentLoaded', scheduleScan);
+  scheduleScan();
+})();
+</script>
 </body>
 </html>
 

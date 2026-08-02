@@ -520,7 +520,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <div class="hdr-divider"></div>
       <div class="hdr-title">ES Staffing Calculator</div>
     </div>
-    <div class="hdr-center" id="hdr-center-reporting" style="visibility:hidden;">
+    <div class="hdr-center" id="hdr-center-reporting" style="display:none;">
       <div class="scope-pills" id="rpt-pill-bar"></div>
       <div class="scope-dropdowns" id="rpt-scope-dropdowns"></div>
       <select class="scope-select rpt-mobile-scope-select msel-hidden" id="rpt-mobile-scope-select"></select>
@@ -1702,13 +1702,13 @@ function showAppTab(tab){
     rpt.style.display = 'none';
     tnCalc.classList.add('tn-active');
     tnRpt.classList.remove('tn-active');
-    hdrCenter.style.visibility = 'hidden';
+    hdrCenter.style.display = 'none';
   } else {
     calc.style.display = 'none';
     rpt.style.display = '';
     tnCalc.classList.remove('tn-active');
     tnRpt.classList.add('tn-active');
-    hdrCenter.style.visibility = 'visible';
+    hdrCenter.style.display = 'flex';
     rptRender();
   }
 }
@@ -2298,7 +2298,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:31 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:38 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

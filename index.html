@@ -469,6 +469,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       function unlock() {
         document.getElementById('auth-gate').style.display = 'none';
         document.body.classList.remove('auth-locked');
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
       }
       if (sessionStorage.getItem(SESSION_KEY) === HASH) { unlock(); return; }
       document.body.classList.add('auth-locked');
@@ -2288,7 +2291,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 13:29 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 13:42 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

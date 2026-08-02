@@ -98,6 +98,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .sf-data-card-badge-wrap{margin-top:auto;padding-top:6px}
 .badge-active{background:rgba(66,187,55,.12);color:#1A6B35;border:1px solid rgba(66,187,55,.3)}
 .badge-inactive{background:rgba(173,177,177,.1);color:#666;border:1px solid rgba(173,177,177,.3)}
+.badge-warning{background:rgba(255,181,0,.15);color:#8A5A00;border:1px solid rgba(255,181,0,.4)}
 
 /* MAIN CONTENT CARD */
 .sf-calc-full{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;border-top:4px solid var(--mb)}
@@ -867,7 +868,7 @@ function applyOverlay(row,rev){
 }
 function fm(n){if(n>=1000000)return"$"+(n/1000000).toFixed(1).replace(/\.0$/,"")+"M";if(n>=1000)return"$"+Math.round(n/1000)+"K";return"$"+n;}
 function ff(n){return"$"+Math.round(n).toLocaleString("en-US");}
-function badge(id,txt,active){var e=document.getElementById(id);e.textContent=txt;e.className="sf-data-card-badge "+(active?"badge-active":"badge-inactive");}
+function badge(id,txt,active,warning){var e=document.getElementById(id);e.textContent=txt;var cls=warning?"badge-warning":(active?"badge-active":"badge-inactive");e.className="sf-data-card-badge "+cls;}
 function loadJob(j){document.getElementById("jobInput").value=j;calculate();}
 function toggleSection(sectionId,header){var body=document.getElementById(sectionId);var isOpen=body.classList.contains("open");if(isOpen){body.classList.remove("open");header.classList.remove("open");}else{body.classList.add("open");header.classList.add("open");}}
 
@@ -1555,9 +1556,10 @@ function calculate(){
   } else if(ab.source==="projected"){
     // No list AND no prior year -- this standalone projection is the only
     // booth figure available, so it IS what's driving the model, not just
-    // a non-driving reference number.
+    // a non-driving reference number. But if the projection itself is 0,
+    // there's no real number behind it at all, so flag it visually.
     box3lbl.textContent="Current Year Booth Count Projection";
-    badge("projectedBoothsBadge","Driving Recommendation",true);
+    badge("projectedBoothsBadge","Driving Recommendation",true,ab.count===0);
   } else {
     // ab.source === "prior-year": Box 1 above already carries the driving
     // badge for this same number, so Box 3 stays non-driving here to avoid
@@ -1566,7 +1568,7 @@ function calculate(){
     badge("projectedBoothsBadge","No List Loaded",false);
   }
   badge("revenueActualsBadge","Prior Year Reference",false);
-  badge("sfRevenueBadge","Driving Recommendation",true);
+  badge("sfRevenueBadge","Driving Recommendation",true,ar.amount===0);
 
   // Prior year is now shown inline in the job line — hide the chip
   // pyJobChip now rendered in showInfoCard
@@ -2308,7 +2310,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:11 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:24 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

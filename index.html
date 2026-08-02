@@ -267,45 +267,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .remote-choice-btn.selected{border-color:var(--mb);background:rgba(0,31,95,.07);color:var(--mb);}
 .remote-choice-btn:hover{border-color:var(--mb);color:var(--mb);}
 
-@media(max-width:768px){
-  .main{padding:20px 14px 60px}
-  .input-row{flex-direction:column}
-  .four-grid,.sf-role-boxes,.custom-roles-grid,.sf-modify-roles,.flow-inputs{grid-template-columns:repeat(2,1fr)}
-  .sf-decision-btns{flex-direction:column}
-  .confirm-banner .cb-summary{grid-template-columns:repeat(3,1fr)}
-  .el-id-card-body{flex-direction:column;align-items:flex-start;gap:14px;padding:14px 16px;}
-  .tl-photo{width:68px;height:68px;font-size:17px;}
-  .el-show-title{font-size:17px;}
-
-  /* Header/tab-bar spacing (mobile review, approved) */
-  .hdr-row1{flex-wrap:wrap;height:auto;min-height:58px;padding:10px 14px;row-gap:6px;}
-  .hdr-logo{height:16px;}
-  .hdr-title{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .hdr-avatar-wrap,.hdr-avatar{width:36px;height:36px;}
-  .hdr-avatar{font-size:12px;}
-  .hdr-row1 .hdr-center{position:static;left:auto;transform:none;order:3;width:100%;justify-content:flex-start;}
-  .hdr-row2{height:42px;padding:0 14px;}
-
-  /* Reporting scope-pill cluster -> single native select on mobile only (Option 1, approved) */
-  #rpt-pill-bar,#rpt-scope-dropdowns{display:none;}
-  .rpt-mobile-scope-select{display:block;width:100%;}
-
-  /* Reporting KPI strip -> 2x2 grid (approved) */
-  .rpt-kpi-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-
-  /* Reporting comparison/reason panels -> stacked, bars-then-donut order preserved via DOM order (approved) */
-  .rpt-grid-2{grid-template-columns:1fr;}
-
-  /* Touch targets -> ~44px tap zone on small interactive elements (approved) */
-  .role-info-btn{width:32px;height:32px;position:relative;}
-  .role-info-btn::before{content:"";position:absolute;inset:-6px;}
-  .scope-pill{padding:11px 16px;}
-}
-
-@media(max-width:480px){
-  /* Staffing Recommendation grid + editable role grids + Remote Eligibility inputs -> single column, stacked (approved) */
-  .custom-roles-grid,.sf-role-boxes,.sf-modify-roles,.flow-inputs{grid-template-columns:1fr}
-}
 
 /* ── Events Lens-style show identity card ── */
 .hdr-row2{display:flex;align-items:stretch;justify-content:flex-start;height:44px;padding:0 24px;}
@@ -410,6 +371,47 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     body.auth-locked { overflow: hidden; }
     .version-footer{position:fixed;bottom:0;left:0;right:0;height:36px;background:#001F5F;display:flex;align-items:center;justify-content:flex-end;padding:0 28px;font-size:11px;font-family:'Nunito Sans',sans-serif;font-weight:600;letter-spacing:0.06em;color:rgba(255,255,255,0.35);z-index:100;}
     body{padding-bottom:36px;}
+
+/* Mobile media queries relocated to end of stylesheet so they win cascade ties against equal-specificity base rules defined later in the file (bugfix) */
+@media(max-width:768px){
+  .main{padding:20px 14px 60px}
+  .input-row{flex-direction:column}
+  .four-grid,.sf-role-boxes,.custom-roles-grid,.sf-modify-roles,.flow-inputs{grid-template-columns:repeat(2,1fr)}
+  .sf-decision-btns{flex-direction:column}
+  .confirm-banner .cb-summary{grid-template-columns:repeat(3,1fr)}
+  .el-id-card-body{flex-direction:column;align-items:flex-start;gap:14px;padding:14px 16px;}
+  .tl-photo{width:68px;height:68px;font-size:17px;}
+  .el-show-title{font-size:17px;}
+
+  /* Header/tab-bar spacing (mobile review, approved) */
+  .hdr-row1{flex-wrap:wrap;height:auto;min-height:58px;padding:10px 14px;row-gap:6px;}
+  .hdr-logo{height:16px;}
+  .hdr-title{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hdr-avatar-wrap,.hdr-avatar{width:36px;height:36px;}
+  .hdr-avatar{font-size:12px;}
+  .hdr-row1 .hdr-center{position:static;left:auto;transform:none;order:3;width:100%;justify-content:flex-start;}
+  .hdr-row2{height:42px;padding:0 14px;}
+
+  /* Reporting scope-pill cluster -> single native select on mobile only (Option 1, approved) */
+  #rpt-pill-bar,#rpt-scope-dropdowns{display:none;}
+  .rpt-mobile-scope-select{display:block;width:100%;}
+
+  /* Reporting KPI strip -> 2x2 grid (approved) */
+  .rpt-kpi-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+
+  /* Reporting comparison/reason panels -> stacked, bars-then-donut order preserved via DOM order (approved) */
+  .rpt-grid-2{grid-template-columns:1fr;}
+
+  /* Touch targets -> ~44px tap zone on small interactive elements (approved) */
+  .role-info-btn{width:32px;height:32px;position:relative;}
+  .role-info-btn::before{content:"";position:absolute;inset:-6px;}
+  .scope-pill{padding:11px 16px;}
+}
+
+@media(max-width:480px){
+  /* Staffing Recommendation grid + editable role grids + Remote Eligibility inputs -> single column, stacked (approved) */
+  .custom-roles-grid,.sf-role-boxes,.sf-modify-roles,.flow-inputs{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -2284,7 +2286,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 02:02 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 10:23 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

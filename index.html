@@ -1551,7 +1551,16 @@ function calculate(){
   } else if(ab.source==="prior-year-override"){
     box3lbl.textContent="Current Year Booth Count";
     badge("projectedBoothsBadge","Potentially Incomplete List",false);
+  } else if(ab.source==="projected"){
+    // No list AND no prior year -- this standalone projection is the only
+    // booth figure available, so it IS what's driving the model, not just
+    // a non-driving reference number.
+    box3lbl.textContent="Current Year Booth Count Projection";
+    badge("projectedBoothsBadge","Driving Recommendation",true);
   } else {
+    // ab.source === "prior-year": Box 1 above already carries the driving
+    // badge for this same number, so Box 3 stays non-driving here to avoid
+    // marking two boxes as driving at once.
     box3lbl.textContent="Current Year Booth Count Projection";
     badge("projectedBoothsBadge","No List Loaded",false);
   }
@@ -2298,7 +2307,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:38 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:52 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

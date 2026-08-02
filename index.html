@@ -286,8 +286,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
 #rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:default;border:none;background:transparent;pointer-events:none;appearance:none;-webkit-appearance:none;}
 .rpt-dummy-banner{background:#3C3489;color:#fff;font-size:12px;font-weight:800;text-align:center;padding:7px;letter-spacing:.02em;margin:-28px -32px 22px;}
-.rpt-export-btn{font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;flex-shrink:0;}
-.rpt-export-btn:hover{border-color:var(--mb);color:var(--mb);}
 .rpt-kpi-strip{display:flex;gap:14px;margin-bottom:22px;}
 .rpt-kpi-card{background:var(--white);border:2.5px solid var(--mb);border-radius:10px;padding:14px 22px;flex:1;}
 .rpt-kpi-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
@@ -775,7 +773,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div>
       <div class="page-sub">Use the data below to review staffing model compliance across branches and regions.</div>
     </div>
-    <button class="rpt-export-btn" style="cursor:default;opacity:.6;" disabled>Download as Excel</button>
   </div>
 
   <div class="el-section-div">By the Numbers</div>
@@ -943,10 +940,10 @@ function showCustomPlan(booths, revenue, s){
 
   // Static suggestion boxes (read-only, same visual pattern as Normal flow)
   var sugTotal=sugCF+sugBR+sugAS+sugSV;
-  [{id:"cf",c:sugCF,s:"Customer-Facing<br>Role",p:"Customer-Facing<br>Roles"},
-   {id:"br",c:sugBR,s:"Back Room<br>Role",p:"Back Room<br>Roles"},
-   {id:"as",c:sugAS,s:"Additional Support<br>Role",p:"Additional Support<br>Roles"},
-   {id:"sv",c:sugSV,s:"Supervisory<br>Role",p:"Supervisory<br>Roles"},
+  [{id:"cf",c:sugCF,s:"Customer-Facing Role",p:"Customer-Facing Roles"},
+   {id:"br",c:sugBR,s:"Back Room Role",p:"Back Room Roles"},
+   {id:"as",c:sugAS,s:"Additional Support Role",p:"Additional Support Roles"},
+   {id:"sv",c:sugSV,s:"Supervisory Role",p:"Supervisory Roles"},
    {id:"fr",c:0,s:"Freight Rigging / Storage Desk Role",p:"Freight Rigging / Storage Desk Roles"}
   ].forEach(function(r){
     document.getElementById("count-custom-"+r.id).textContent=r.c;
@@ -1241,7 +1238,7 @@ function showDeviation(){
   document.getElementById("dev-model-sv").textContent="Model: "+currentRec.sv;
 }
 function buildSummaryHTML(cf,br,as_,sv,fr,deviated){
-  var roles=[{s:"Customer-Facing<br>Role",p:"Customer-Facing<br>Roles",c:cf,changed:deviated&&cf!==currentRec.cf},{s:"Back Room<br>Role",p:"Back Room<br>Roles",c:br,changed:deviated&&br!==currentRec.br},{s:"Additional Support<br>Role",p:"Additional Support<br>Roles",c:as_,changed:deviated&&as_!==currentRec.as},{s:"Supervisory<br>Role",p:"Supervisory<br>Roles",c:sv,changed:deviated&&sv!==currentRec.sv},{s:"Freight / Storage Desk<br>Role",p:"Freight / Storage Desk<br>Roles",c:fr,changed:deviated&&fr!==currentRec.fr}];
+  var roles=[{s:"Customer-Facing Role",p:"Customer-Facing Roles",c:cf,changed:deviated&&cf!==currentRec.cf},{s:"Back Room Role",p:"Back Room Roles",c:br,changed:deviated&&br!==currentRec.br},{s:"Additional Support Role",p:"Additional Support Roles",c:as_,changed:deviated&&as_!==currentRec.as},{s:"Supervisory Role",p:"Supervisory Roles",c:sv,changed:deviated&&sv!==currentRec.sv},{s:"Freight / Storage Desk Role",p:"Freight / Storage Desk Roles",c:fr,changed:deviated&&fr!==currentRec.fr}];
   return roles.map(function(r){var col=r.changed?"var(--orange)":"var(--freeman-blue)";return'<div class="cb-role"><div class="cb-role-count" style="color:'+col+'">'+r.c+'</div><div class="cb-role-name">'+(r.c===1?r.s:r.p)+'</div></div>';}).join("");
 }
 function agreeWithPlan(){
@@ -1586,10 +1583,10 @@ function calculate(){
   var total=ov.cf+ov.br+ov.as+ov.sv;
   currentRec={cf:ov.cf,br:ov.br,as:ov.as,sv:ov.sv,fr:0};
 
-  [{id:"cf",c:ov.cf,s:"Customer-Facing<br>Role",p:"Customer-Facing<br>Roles"},
-   {id:"br",c:ov.br,s:"Back Room<br>Role",p:"Back Room<br>Roles"},
-   {id:"as",c:ov.as,s:"Additional Support<br>Role",p:"Additional Support<br>Roles"},
-   {id:"sv",c:ov.sv,s:"Supervisory<br>Role",p:"Supervisory<br>Roles"},
+  [{id:"cf",c:ov.cf,s:"Customer-Facing Role",p:"Customer-Facing Roles"},
+   {id:"br",c:ov.br,s:"Back Room Role",p:"Back Room Roles"},
+   {id:"as",c:ov.as,s:"Additional Support Role",p:"Additional Support Roles"},
+   {id:"sv",c:ov.sv,s:"Supervisory Role",p:"Supervisory Roles"},
    {id:"fr",c:0,s:"Freight Rigging / Storage Desk Role",p:"Freight Rigging / Storage Desk Roles"}
   ].forEach(function(r){
     document.getElementById("count-"+r.id).textContent=r.c;
@@ -2301,152 +2298,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:02 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:18 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
-<script>
-// ── TEMPORARY DIAGNOSTIC v5 — adds a full ancestor-chain walk from page-sub up to body to pinpoint exactly where the header-overlap gap originates, since the header/main measurement alone wasn't enough and the header-inner restructure didn't change the numbers. Remove once root cause is confirmed. ──
-(function(){
-  var banner;
-  function ensureBanner(){
-    if (banner) return banner;
-    banner = document.createElement('div');
-    banner.id = '__diag_v5_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#00E5FF;color:#000;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
-    document.body.appendChild(banner);
-    return banner;
-  }
-  function scan(){
-    var vw = document.documentElement.clientWidth;
-    var docWidth = document.documentElement.scrollWidth;
-    var b = ensureBanner();
-    b.style.display = 'block';
-
-    var lines = [];
-    lines.push('viewport:'+vw+'px  doc-scrollWidth:'+docWidth+'px  innerWidth:'+window.innerWidth+'px  devicePixelRatio:'+window.devicePixelRatio);
-    if (window.visualViewport) {
-      lines.push('visualViewport: width='+Math.round(window.visualViewport.width)+'px scale='+window.visualViewport.scale.toFixed(3));
-    }
-
-    // Check html/body directly (v2 never did this)
-    ['html','body'].forEach(function(sel){
-      var el = document.querySelector(sel);
-      lines.push(sel.toUpperCase()+': clientWidth='+el.clientWidth+' scrollWidth='+el.scrollWidth+' offsetWidth='+el.offsetWidth);
-    });
-
-    var header = document.querySelector('.header');
-    var pageSub = document.querySelector('.page-sub');
-    var pageHdr = document.querySelector('.page-hdr');
-    var mainVisible = null;
-    document.querySelectorAll('.main').forEach(function(m){
-      if (getComputedStyle(m).display !== 'none') mainVisible = m;
-    });
-    if (header) {
-      var hr = header.getBoundingClientRect();
-      var hcs = getComputedStyle(header);
-      lines.push('HEADER: top='+Math.round(hr.top)+' bottom='+Math.round(hr.bottom)+' height='+Math.round(hr.height)+' position='+hcs.position+' marginBottom='+hcs.marginBottom);
-    }
-    if (mainVisible) {
-      var mr = mainVisible.getBoundingClientRect();
-      var mcs = getComputedStyle(mainVisible);
-      lines.push('MAIN(#'+mainVisible.id+'): top='+Math.round(mr.top)+' paddingTop='+mcs.paddingTop+' marginTop='+mcs.marginTop+' position='+mcs.position+' transform='+mcs.transform);
-    }
-    if (pageHdr) {
-      var phr = pageHdr.getBoundingClientRect();
-      lines.push('PAGE-HDR: top='+Math.round(phr.top));
-    }
-    if (pageSub) {
-      var pr = pageSub.getBoundingClientRect();
-      lines.push('PAGE-SUB: top='+Math.round(pr.top));
-    }
-    if (header && pageSub) {
-      var hr2 = header.getBoundingClientRect();
-      var pr2 = pageSub.getBoundingClientRect();
-      var overlap = hr2.bottom - pr2.top;
-      lines.push('OVERLAP (header.bottom - pageSub.top) = '+Math.round(overlap)+'px'+(overlap > 0 ? ' <-- HEADER COVERS TEXT' : ''));
-    }
-
-    // ANCESTOR CHAIN WALK: print every ancestor from page-sub up to body,
-    // with its own top position and box-model properties, to find exactly
-    // where the unexpected vertical jump happens.
-    if (pageSub) {
-      lines.push('ANCESTOR CHAIN (page-sub up to body):');
-      var node = pageSub;
-      var depth = 0;
-      while (node && node !== document.body.parentElement && depth < 15) {
-        var ncs = getComputedStyle(node);
-        var nr = node.getBoundingClientRect();
-        var label = node.tagName + (node.id ? '#'+node.id : '') + (typeof node.className === 'string' && node.className ? '.'+node.className.replace(/\s+/g,'.') : '');
-        lines.push('  ['+depth+'] '+label+'  top='+Math.round(nr.top)+' position='+ncs.position+' marginTop='+ncs.marginTop+' paddingTop='+ncs.paddingTop+' display='+ncs.display);
-        node = node.parentElement;
-        depth++;
-      }
-    }
-
-    // SELF-OVERFLOW scan: find elements whose own content (scrollWidth) is wider
-    // than their own box (clientWidth) -- this is invisible to getBoundingClientRect
-    // checks because the element's OWN box can still report as normal-sized.
-    var selfOverflow = [];
-    document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v5_banner' || el.closest('#__diag_v5_banner')) return;
-      var cw = el.clientWidth;
-      var sw = el.scrollWidth;
-      if (cw > 0 && sw - cw > 2) {
-        selfOverflow.push({
-          tag: el.tagName,
-          id: el.id || '',
-          cls: (typeof el.className === 'string' ? el.className : ''),
-          clientWidth: cw,
-          scrollWidth: sw,
-          gap: sw - cw
-        });
-      }
-    });
-    selfOverflow.sort(function(a,b){ return b.gap - a.gap; });
-    if (selfOverflow.length) {
-      lines.push('SELF-OVERFLOW (content wider than own box, '+selfOverflow.length+' total, top 8):');
-      selfOverflow.slice(0,8).forEach(function(o, i){
-        lines.push('  '+(i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.toString().replace(/\s+/g,'.'):'')+'  clientW:'+o.clientWidth+'px  scrollW:'+o.scrollWidth+'px  gap:'+o.gap+'px');
-      });
-    } else {
-      lines.push('SELF-OVERFLOW: none found');
-    }
-
-    // BOX-OVERFLOW scan (same as v2 -- element's own box extends past viewport)
-    var boxOffenders = [];
-    document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v5_banner' || el.closest('#__diag_v5_banner')) return;
-      var r = el.getBoundingClientRect();
-      if (r.right > vw + 1 && r.width > 0){
-        boxOffenders.push({tag: el.tagName, id: el.id || '', cls: (typeof el.className === 'string' ? el.className : ''), right: Math.round(r.right), width: Math.round(r.width)});
-      }
-    });
-    boxOffenders.sort(function(a,b){ return b.right - a.right; });
-    if (boxOffenders.length) {
-      lines.push('BOX-OVERFLOW ('+boxOffenders.length+' total, top 5):');
-      boxOffenders.slice(0,5).forEach(function(o, i){
-        lines.push('  '+(i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.toString().replace(/\s+/g,'.'):'')+'  right:'+o.right+'px  width:'+o.width+'px');
-      });
-    } else {
-      lines.push('BOX-OVERFLOW: none found');
-    }
-
-    b.textContent = lines.join('\n');
-  }
-  var scheduled = false;
-  function scheduleScan(){
-    if (scheduled) return;
-    scheduled = true;
-    setTimeout(function(){ scheduled = false; scan(); }, 200);
-  }
-  new MutationObserver(scheduleScan).observe(document.body, {childList:true, subtree:true, attributes:true});
-  window.addEventListener('resize', scheduleScan);
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', scheduleScan);
-  document.addEventListener('DOMContentLoaded', scheduleScan);
-  scheduleScan();
-})();
-</script>
 </body>
 </html>
 

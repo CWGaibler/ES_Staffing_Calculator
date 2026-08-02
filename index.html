@@ -2294,19 +2294,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 14:22 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 14:36 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
 <script>
-// ── TEMPORARY DIAGNOSTIC v4 — adds exact vertical chain measurement (header/main/page-hdr/page-sub) to pinpoint where the header-overlap gap actually originates. Remove once root cause is confirmed. ──
+// ── TEMPORARY DIAGNOSTIC v5 — adds a full ancestor-chain walk from page-sub up to body to pinpoint exactly where the header-overlap gap originates, since the header/main measurement alone wasn't enough and the header-inner restructure didn't change the numbers. Remove once root cause is confirmed. ──
 (function(){
   var banner;
   function ensureBanner(){
     if (banner) return banner;
     banner = document.createElement('div');
-    banner.id = '__diag_v4_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#FFD600;color:#000;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
+    banner.id = '__diag_v5_banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#00C853;color:#000;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
     document.body.appendChild(banner);
     return banner;
   }
@@ -2360,12 +2360,29 @@ document.addEventListener('DOMContentLoaded', function(){
       lines.push('OVERLAP (header.bottom - pageSub.top) = '+Math.round(overlap)+'px'+(overlap > 0 ? ' <-- HEADER COVERS TEXT' : ''));
     }
 
+    // ANCESTOR CHAIN WALK: print every ancestor from page-sub up to body,
+    // with its own top position and box-model properties, to find exactly
+    // where the unexpected vertical jump happens.
+    if (pageSub) {
+      lines.push('ANCESTOR CHAIN (page-sub up to body):');
+      var node = pageSub;
+      var depth = 0;
+      while (node && node !== document.body.parentElement && depth < 15) {
+        var ncs = getComputedStyle(node);
+        var nr = node.getBoundingClientRect();
+        var label = node.tagName + (node.id ? '#'+node.id : '') + (typeof node.className === 'string' && node.className ? '.'+node.className.replace(/\s+/g,'.') : '');
+        lines.push('  ['+depth+'] '+label+'  top='+Math.round(nr.top)+' position='+ncs.position+' marginTop='+ncs.marginTop+' paddingTop='+ncs.paddingTop+' display='+ncs.display);
+        node = node.parentElement;
+        depth++;
+      }
+    }
+
     // SELF-OVERFLOW scan: find elements whose own content (scrollWidth) is wider
     // than their own box (clientWidth) -- this is invisible to getBoundingClientRect
     // checks because the element's OWN box can still report as normal-sized.
     var selfOverflow = [];
     document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v4_banner' || el.closest('#__diag_v4_banner')) return;
+      if (el.id === '__diag_v5_banner' || el.closest('#__diag_v5_banner')) return;
       var cw = el.clientWidth;
       var sw = el.scrollWidth;
       if (cw > 0 && sw - cw > 2) {
@@ -2392,7 +2409,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // BOX-OVERFLOW scan (same as v2 -- element's own box extends past viewport)
     var boxOffenders = [];
     document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v4_banner' || el.closest('#__diag_v4_banner')) return;
+      if (el.id === '__diag_v5_banner' || el.closest('#__diag_v5_banner')) return;
       var r = el.getBoundingClientRect();
       if (r.right > vw + 1 && r.width > 0){
         boxOffenders.push({tag: el.tagName, id: el.id || '', cls: (typeof el.className === 'string' ? el.className : ''), right: Math.round(r.right), width: Math.round(r.width)});

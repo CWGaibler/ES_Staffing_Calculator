@@ -379,9 +379,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
   .main{padding:20px 20px 60px}
   .input-row{flex-direction:column;align-items:stretch;}
   .input-row .calc-btn{width:100%;}
-  .four-grid,.sf-role-boxes,.custom-roles-grid,.sf-modify-roles,.flow-inputs{grid-template-columns:repeat(2,1fr)}
+  .four-grid,.sf-role-boxes,.custom-roles-grid,.sf-modify-roles,.flow-inputs,.confirm-banner .cb-summary{grid-template-columns:repeat(2,1fr)}
   .sf-decision-btns{flex-direction:column}
-  .confirm-banner .cb-summary{grid-template-columns:repeat(3,1fr)}
   .el-id-card-body{flex-direction:column;align-items:stretch;gap:14px;padding:14px 16px;}
   .tl-photo{width:68px;height:68px;font-size:17px;}
   .el-show-title{font-size:17px;}
@@ -413,7 +412,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 @media(max-width:480px){
   /* Staffing Recommendation grid + editable role grids + Remote Eligibility inputs -> single column, stacked (approved) */
-  .custom-roles-grid,.sf-role-boxes,.sf-modify-roles,.flow-inputs{grid-template-columns:1fr}
+  .custom-roles-grid,.sf-role-boxes,.sf-modify-roles,.flow-inputs,.confirm-banner .cb-summary{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -2290,7 +2289,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:18 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:33 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

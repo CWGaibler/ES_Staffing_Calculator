@@ -339,10 +339,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       background: #001F5F;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Nunito Sans', sans-serif;
+      padding: 16px; box-sizing: border-box;
     }
     #auth-card {
       background: #fff; border-radius: 12px;
-      padding: 40px 48px; width: 400px; max-width: 90vw;
+      padding: 40px 48px; width: 100%; max-width: 400px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.35);
       text-align: center;
     }
@@ -2273,6 +2274,12 @@ document.addEventListener('DOMContentLoaded', function(){
     var b = ensureBanner();
     b.style.display = 'block';
     var offenders = [];
+    [document.documentElement, document.body].forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if (r.right > vw + 1 && r.width > 0){
+        offenders.push({tag: el.tagName+'(root)', id:'', cls:'', right: Math.round(r.right), width: Math.round(r.width)});
+      }
+    });
     document.querySelectorAll('body *').forEach(function(el){
       if (el.id === '__overflow_debug_banner') return;
       var r = el.getBoundingClientRect();
@@ -2288,10 +2295,15 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     offenders.sort(function(a,b){ return b.right - a.right; });
     var top = offenders.slice(0, 6);
-    var text = 'OVERFLOW DEBUG — viewport:'+vw+'px  doc:'+docWidth+'px  ('+offenders.length+' offending elements)\\n';
+    var text = 'OVERFLOW DEBUG viewport:'+vw+'px doc:'+docWidth+'px innerWidth:'+window.innerWidth+'px 90vw-expected:'+(window.innerWidth*0.9).toFixed(0)+'px ('+offenders.length+' offending) | ';
     top.forEach(function(o, i){
-      text += (i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.replace(/\s+/g,'.'):'')+' right:'+o.right+'px width:'+o.width+'px\\n';
+      text += (i+1)+'.<'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.replace(/\s+/g,'.'):'')+' r:'+o.right+'px w:'+o.width+'px | ';
     });
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;width:90vw;';
+    document.body.appendChild(probe);
+    text += ' actual-90vw-render:'+Math.round(probe.getBoundingClientRect().width)+'px';
+    document.body.removeChild(probe);
     b.textContent = text;
   }
   var scheduled = false;
@@ -2341,7 +2353,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 11:23 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 11:32 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

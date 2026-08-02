@@ -1643,12 +1643,12 @@ function calculate(){
   else if(ar.amount>=2500000){brBandLabel="$2.5M–$5M";}
   else if(ar.amount>=750000){brBandLabel="$750K–$2.5M";}
   else{brBandLabel="under $750K";}
-  if(ov.br===0){why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, which does not require back room staffing.");}
+  if(ov.br===0){why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, which does not require back room staffing."+(ar.amount===0?" No revenue estimate is currently available for this show in Salesforce, so this recommendation can't reflect actual revenue-driven need — confirm with Growth once a projection is entered.":""));}
   else{why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue, not booth count. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, recommending "+ov.br+" back room role"+(ov.br!==1?"s":"")+".");}
 
   if(base.as>0){why.push("<strong>Additional Support Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.as+" additional support role"+(base.as!==1?"s":"")+" in the baseline. These roles provide extra coverage for customer-facing tasks on high-demand days.");}
   else{why.push("<strong>Additional Support Roles:</strong> Additional support roles are included in the baseline starting at 601 booths. This show has "+ab.count+" booths. If this show has specific high-demand dates or compressed timelines, a modification can be documented below.");}
-  if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This show has "+ab.count+" booths and a "+revSourceLabel+" of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger.");}
+  if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This show has "+ab.count+" booths and a "+revSourceLabel+" of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger."+(ar.amount===0?" No revenue estimate is currently available for this show in Salesforce, so the revenue-based trigger can't be confirmed until a projection is entered.":""));}
   else if(base.sv>0){why.push("<strong>Supervisory Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.sv+" supervisory role"+(base.sv!==1?"s":"")+" in the baseline. Events of this size require dedicated on-site leadership.");}
   else{why.push("<strong>Supervisory Roles:</strong> This show’s "+ab.count+" booths are below the 451-booth baseline trigger, but the "+revSourceLabel+" of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
   why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
@@ -2307,7 +2307,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:52 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:03 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

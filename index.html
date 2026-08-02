@@ -2288,19 +2288,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 12:52 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 13:08 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
 <script>
-// ── TEMPORARY DIAGNOSTIC v2 — measures horizontal overflow AND sticky-header/content overlap. Remove once root cause is confirmed. ──
+// ── TEMPORARY DIAGNOSTIC v3 — v2 missed content that overflows INSIDE an element without making that element's own box wider (and never checked html/body directly). v3 fixes both. Remove once root cause is confirmed. ──
 (function(){
   var banner;
   function ensureBanner(){
     if (banner) return banner;
     banner = document.createElement('div');
-    banner.id = '__diag_v2_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#7B2FBE;color:#fff;font-family:monospace;font-size:10px;padding:8px 10px;max-height:40vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
+    banner.id = '__diag_v3_banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0B7A6A;color:#fff;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
     document.body.appendChild(banner);
     return banner;
   }
@@ -2313,61 +2313,70 @@ document.addEventListener('DOMContentLoaded', function(){
     var lines = [];
     lines.push('viewport:'+vw+'px  doc-scrollWidth:'+docWidth+'px  innerWidth:'+window.innerWidth+'px  devicePixelRatio:'+window.devicePixelRatio);
     if (window.visualViewport) {
-      lines.push('visualViewport: width='+Math.round(window.visualViewport.width)+'px scale='+window.visualViewport.scale.toFixed(3)+' offsetLeft='+Math.round(window.visualViewport.offsetLeft));
-    } else {
-      lines.push('visualViewport: not supported');
+      lines.push('visualViewport: width='+Math.round(window.visualViewport.width)+'px scale='+window.visualViewport.scale.toFixed(3));
     }
+
+    // Check html/body directly (v2 never did this)
+    ['html','body'].forEach(function(sel){
+      var el = document.querySelector(sel);
+      lines.push(sel.toUpperCase()+': clientWidth='+el.clientWidth+' scrollWidth='+el.scrollWidth+' offsetWidth='+el.offsetWidth);
+    });
 
     var header = document.querySelector('.header');
     var pageSub = document.querySelector('.page-sub');
-    var mainVisible = null;
-    document.querySelectorAll('.main').forEach(function(m){
-      if (getComputedStyle(m).display !== 'none') mainVisible = m;
-    });
-    if (header) {
+    if (header && pageSub) {
       var hr = header.getBoundingClientRect();
-      lines.push('HEADER rect: top='+Math.round(hr.top)+' bottom='+Math.round(hr.bottom)+' height='+Math.round(hr.height)+' width='+Math.round(hr.width));
-    } else {
-      lines.push('HEADER: not found');
-    }
-    if (pageSub) {
       var pr = pageSub.getBoundingClientRect();
-      lines.push('PAGE-SUB (intro text) rect: top='+Math.round(pr.top)+' bottom='+Math.round(pr.bottom)+' left='+Math.round(pr.left));
-      if (header) {
-        var hr2 = header.getBoundingClientRect();
-        var overlap = hr2.bottom - pr.top;
-        lines.push('OVERLAP (header.bottom - pageSub.top): '+Math.round(overlap)+'px'+(overlap > 0 ? '  <-- POSITIVE MEANS HEADER IS COVERING TEXT' : '  (no overlap)'));
-      }
-    } else {
-      lines.push('PAGE-SUB: not found (may be on a different page/tab)');
-    }
-    if (mainVisible) {
-      var mr = mainVisible.getBoundingClientRect();
-      lines.push('VISIBLE .main rect: id='+mainVisible.id+' top='+Math.round(mr.top)+' width='+Math.round(mr.width)+' scrollWidth='+mainVisible.scrollWidth);
+      var overlap = hr.bottom - pr.top;
+      lines.push('HEADER bottom='+Math.round(hr.bottom)+'  PAGE-SUB top='+Math.round(pr.top)+'  OVERLAP='+Math.round(overlap)+'px'+(overlap > 0 ? ' <-- HEADER COVERS TEXT' : ''));
     }
 
-    var offenders = [];
+    // SELF-OVERFLOW scan: find elements whose own content (scrollWidth) is wider
+    // than their own box (clientWidth) -- this is invisible to getBoundingClientRect
+    // checks because the element's OWN box can still report as normal-sized.
+    var selfOverflow = [];
     document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v2_banner' || el.closest('#__diag_v2_banner')) return;
-      var r = el.getBoundingClientRect();
-      if (r.right > vw + 1 && r.width > 0){
-        offenders.push({
+      if (el.id === '__diag_v3_banner' || el.closest('#__diag_v3_banner')) return;
+      var cw = el.clientWidth;
+      var sw = el.scrollWidth;
+      if (cw > 0 && sw - cw > 2) {
+        selfOverflow.push({
           tag: el.tagName,
           id: el.id || '',
           cls: (typeof el.className === 'string' ? el.className : ''),
-          right: Math.round(r.right),
-          width: Math.round(r.width)
+          clientWidth: cw,
+          scrollWidth: sw,
+          gap: sw - cw
         });
       }
     });
-    offenders.sort(function(a,b){ return b.right - a.right; });
-    if (offenders.length) {
-      lines.push('WIDTH OFFENDERS ('+offenders.length+' total, top 8):');
-      offenders.slice(0,8).forEach(function(o, i){
+    selfOverflow.sort(function(a,b){ return b.gap - a.gap; });
+    if (selfOverflow.length) {
+      lines.push('SELF-OVERFLOW (content wider than own box, '+selfOverflow.length+' total, top 8):');
+      selfOverflow.slice(0,8).forEach(function(o, i){
+        lines.push('  '+(i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.toString().replace(/\s+/g,'.'):'')+'  clientW:'+o.clientWidth+'px  scrollW:'+o.scrollWidth+'px  gap:'+o.gap+'px');
+      });
+    } else {
+      lines.push('SELF-OVERFLOW: none found');
+    }
+
+    // BOX-OVERFLOW scan (same as v2 -- element's own box extends past viewport)
+    var boxOffenders = [];
+    document.querySelectorAll('body *').forEach(function(el){
+      if (el.id === '__diag_v3_banner' || el.closest('#__diag_v3_banner')) return;
+      var r = el.getBoundingClientRect();
+      if (r.right > vw + 1 && r.width > 0){
+        boxOffenders.push({tag: el.tagName, id: el.id || '', cls: (typeof el.className === 'string' ? el.className : ''), right: Math.round(r.right), width: Math.round(r.width)});
+      }
+    });
+    boxOffenders.sort(function(a,b){ return b.right - a.right; });
+    if (boxOffenders.length) {
+      lines.push('BOX-OVERFLOW ('+boxOffenders.length+' total, top 5):');
+      boxOffenders.slice(0,5).forEach(function(o, i){
         lines.push('  '+(i+1)+'. <'+o.tag+'>'+(o.id?'#'+o.id:'')+(o.cls?'.'+o.cls.toString().replace(/\s+/g,'.'):'')+'  right:'+o.right+'px  width:'+o.width+'px');
       });
     } else {
-      lines.push('WIDTH OFFENDERS: none found');
+      lines.push('BOX-OVERFLOW: none found');
     }
 
     b.textContent = lines.join('\n');

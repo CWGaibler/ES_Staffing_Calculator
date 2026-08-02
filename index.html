@@ -995,6 +995,7 @@ function showCustomPlan(booths, revenue, s){
   cwhy.push("These starting numbers are a floor, not a final answer — adjust them below based on what you know about this specific show.");
 
   document.getElementById("customWhyList").innerHTML=cwhy.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
+  document.getElementById("customWhyHeader").innerHTML="Why This Result"+(cwhy.some(function(r){return r.charAt(0)==="*";})?"*":"")+" <span class=\"sf-chev\">&#9660;</span>";
 
   // ── CONSIDER THESE BEFORE DECIDING (Custom Plan) ─────────────────────────
   // Reuses Normal flow's grey city / booth trend / timeline / billing / freight
@@ -1656,6 +1657,7 @@ function calculate(){
   else{why.push("<strong>Supervisory Roles:</strong> This show’s "+ab.count+" booths are below the 451-booth baseline trigger, but the "+revSourceLabel+" of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
   why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
   document.getElementById("whyList").innerHTML=why.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
+  document.getElementById("whyHeader").innerHTML="Why This Result"+(why.some(function(r){return r.charAt(0)==="*";})?"*":"")+" <span class=\"sf-chev\">&#9660;</span>";
 
   // Consider these — grey city for ALL shows
   var bdiff=s.currentBooths-s.projectedBooths,bpct=Math.round(Math.abs(bdiff)/s.projectedBooths*100);
@@ -2310,7 +2312,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:38 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:45 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

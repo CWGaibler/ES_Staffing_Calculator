@@ -370,7 +370,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     #auth-btn:hover { background: #00BDF6; }
     #auth-error { font-size: 12px; color: #FB471F; margin-top: 8px; min-height: 16px; display: none; }
     #auth-notice { font-size: 12px; color: #7A8099; margin-top: 20px; line-height: 1.5; }
-    body.auth-locked { overflow: hidden; }
+    body.auth-locked { position: fixed; width: 100%; overflow: hidden; }
     .version-footer{position:fixed;bottom:0;left:0;right:0;height:36px;background:#001F5F;display:flex;align-items:center;justify-content:flex-end;padding:0 28px;font-size:11px;font-family:'Nunito Sans',sans-serif;font-weight:600;letter-spacing:0.06em;color:rgba(255,255,255,0.35);z-index:100;}
     body{padding-bottom:36px;}
 
@@ -475,18 +475,11 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       function unlock() {
         document.getElementById('auth-gate').style.display = 'none';
         document.body.classList.remove('auth-locked');
+        // body was position:fixed while auth-locked (see CSS), which prevents
+        // iOS Safari from scrolling the background page at all while the
+        // password field is focused -- so no scroll correction should be
+        // needed here. Kept as a single, harmless safety net only.
         resetScroll();
-        // The address bar can collapse (and reshuffle scroll position again)
-        // AFTER this point as the keyboard closes, so re-apply the reset
-        // once that settles, via both a timer and a visualViewport listener.
-        setTimeout(resetScroll, 50);
-        setTimeout(resetScroll, 350);
-        setTimeout(resetScroll, 700);
-        if (window.visualViewport) {
-          var vvHandler = function(){ resetScroll(); };
-          window.visualViewport.addEventListener('resize', vvHandler);
-          setTimeout(function(){ window.visualViewport.removeEventListener('resize', vvHandler); }, 1500);
-        }
       }
       if (sessionStorage.getItem(SESSION_KEY) === HASH) { unlock(); return; }
       document.body.classList.add('auth-locked');
@@ -2308,7 +2301,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 14:48 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 15:02 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
@@ -2320,7 +2313,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (banner) return banner;
     banner = document.createElement('div');
     banner.id = '__diag_v5_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#8E24AA;color:#fff;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#00E5FF;color:#000;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
     document.body.appendChild(banner);
     return banner;
   }

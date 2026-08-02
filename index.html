@@ -2291,19 +2291,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 13:48 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 14:05 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
 <script>
-// ── TEMPORARY DIAGNOSTIC v3 — v2 missed content that overflows INSIDE an element without making that element's own box wider (and never checked html/body directly). v3 fixes both. Remove once root cause is confirmed. ──
+// ── TEMPORARY DIAGNOSTIC v4 — adds exact vertical chain measurement (header/main/page-hdr/page-sub) to pinpoint where the header-overlap gap actually originates. Remove once root cause is confirmed. ──
 (function(){
   var banner;
   function ensureBanner(){
     if (banner) return banner;
     banner = document.createElement('div');
-    banner.id = '__diag_v3_banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#FF6B00;color:#000;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
+    banner.id = '__diag_v4_banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0057FF;color:#fff;font-family:monospace;font-size:10px;padding:8px 10px;max-height:45vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;box-shadow:0 -4px 12px rgba(0,0,0,.3);';
     document.body.appendChild(banner);
     return banner;
   }
@@ -2327,11 +2327,34 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var header = document.querySelector('.header');
     var pageSub = document.querySelector('.page-sub');
-    if (header && pageSub) {
+    var pageHdr = document.querySelector('.page-hdr');
+    var mainVisible = null;
+    document.querySelectorAll('.main').forEach(function(m){
+      if (getComputedStyle(m).display !== 'none') mainVisible = m;
+    });
+    if (header) {
       var hr = header.getBoundingClientRect();
+      var hcs = getComputedStyle(header);
+      lines.push('HEADER: top='+Math.round(hr.top)+' bottom='+Math.round(hr.bottom)+' height='+Math.round(hr.height)+' position='+hcs.position+' marginBottom='+hcs.marginBottom);
+    }
+    if (mainVisible) {
+      var mr = mainVisible.getBoundingClientRect();
+      var mcs = getComputedStyle(mainVisible);
+      lines.push('MAIN(#'+mainVisible.id+'): top='+Math.round(mr.top)+' paddingTop='+mcs.paddingTop+' marginTop='+mcs.marginTop+' position='+mcs.position+' transform='+mcs.transform);
+    }
+    if (pageHdr) {
+      var phr = pageHdr.getBoundingClientRect();
+      lines.push('PAGE-HDR: top='+Math.round(phr.top));
+    }
+    if (pageSub) {
       var pr = pageSub.getBoundingClientRect();
-      var overlap = hr.bottom - pr.top;
-      lines.push('HEADER bottom='+Math.round(hr.bottom)+'  PAGE-SUB top='+Math.round(pr.top)+'  OVERLAP='+Math.round(overlap)+'px'+(overlap > 0 ? ' <-- HEADER COVERS TEXT' : ''));
+      lines.push('PAGE-SUB: top='+Math.round(pr.top));
+    }
+    if (header && pageSub) {
+      var hr2 = header.getBoundingClientRect();
+      var pr2 = pageSub.getBoundingClientRect();
+      var overlap = hr2.bottom - pr2.top;
+      lines.push('OVERLAP (header.bottom - pageSub.top) = '+Math.round(overlap)+'px'+(overlap > 0 ? ' <-- HEADER COVERS TEXT' : ''));
     }
 
     // SELF-OVERFLOW scan: find elements whose own content (scrollWidth) is wider
@@ -2339,7 +2362,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // checks because the element's OWN box can still report as normal-sized.
     var selfOverflow = [];
     document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v3_banner' || el.closest('#__diag_v3_banner')) return;
+      if (el.id === '__diag_v4_banner' || el.closest('#__diag_v4_banner')) return;
       var cw = el.clientWidth;
       var sw = el.scrollWidth;
       if (cw > 0 && sw - cw > 2) {
@@ -2366,7 +2389,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // BOX-OVERFLOW scan (same as v2 -- element's own box extends past viewport)
     var boxOffenders = [];
     document.querySelectorAll('body *').forEach(function(el){
-      if (el.id === '__diag_v3_banner' || el.closest('#__diag_v3_banner')) return;
+      if (el.id === '__diag_v4_banner' || el.closest('#__diag_v4_banner')) return;
       var r = el.getBoundingClientRect();
       if (r.right > vw + 1 && r.width > 0){
         boxOffenders.push({tag: el.tagName, id: el.id || '', cls: (typeof el.className === 'string' ? el.className : ''), right: Math.round(r.right), width: Math.round(r.width)});

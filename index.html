@@ -979,6 +979,7 @@ function showCustomPlan(booths, revenue, s){
   if(brHotShot){brText+=" This show's booth count also qualifies it for a dedicated ES Hot Shot role (+1), added at the 1,000-booth mark to handle open service request follow-up with Customer-Facing and Ops.";}
   if(brRevExtra===2){brText+=" Revenue of "+ff(revenue)+" also exceeds the $25M threshold, adding 2 more back room roles on top of the base band.";}
   else if(brRevExtra===1){brText+=" Revenue of "+ff(revenue)+" also exceeds the $16M threshold, adding 1 more back room role on top of the base band.";}
+  if(revenue===0){brText+=" No revenue estimate is currently available for this show in Salesforce, so this recommendation can't reflect actual revenue-driven need — confirm with Growth once a projection is entered.";}
   cwhy.push(brText);
 
   if(sugAS>0){cwhy.push("<strong>Additional Support Roles:</strong> Additional support scales in steps above 600 booths — "+booths.toLocaleString()+" booths lands in the tier recommending "+sugAS+" additional support role"+(sugAS!==1?"s":"")+".");}
@@ -986,7 +987,7 @@ function showCustomPlan(booths, revenue, s){
 
   if(sugSV===2){cwhy.push("<strong>Supervisory Roles:</strong> A second supervisor is added at 1,200+ booths for dedicated on-site leadership on shows of this scale. This show has "+booths.toLocaleString()+" booths.");}
   else if(sugSV===1){cwhy.push("<strong>Supervisory Roles:</strong> A supervisory role is included once a show reaches 451 booths or $2M in revenue. This show's booth count or revenue exceeds that threshold.");}
-  else{cwhy.push("<strong>Supervisory Roles:</strong> Supervisory roles are included starting at 451 booths or $2M in revenue. This show is below both thresholds.");}
+  else{cwhy.push("<strong>Supervisory Roles:</strong> Supervisory roles are included starting at 451 booths or $2M in revenue. This show is below both thresholds."+(revenue===0?" No revenue estimate is currently available for this show in Salesforce, so the revenue-based trigger can't be confirmed until a projection is entered.":""));}
 
   cwhy.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
 
@@ -2307,7 +2308,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:03 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 16:11 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

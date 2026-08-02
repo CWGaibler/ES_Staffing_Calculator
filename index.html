@@ -267,7 +267,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .remote-choice-btn.selected{border-color:var(--mb);background:rgba(0,31,95,.07);color:var(--mb);}
 .remote-choice-btn:hover{border-color:var(--mb);color:var(--mb);}
 
-@media(max-width:640px){
+@media(max-width:768px){
   .main{padding:20px 14px 60px}
   .input-row{flex-direction:column}
   .four-grid,.sf-role-boxes,.custom-roles-grid,.sf-modify-roles,.flow-inputs{grid-template-columns:repeat(2,1fr)}
@@ -276,6 +276,35 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
   .el-id-card-body{flex-direction:column;align-items:flex-start;gap:14px;padding:14px 16px;}
   .tl-photo{width:68px;height:68px;font-size:17px;}
   .el-show-title{font-size:17px;}
+
+  /* Header/tab-bar spacing (mobile review, approved) */
+  .hdr-row1{flex-wrap:wrap;height:auto;min-height:58px;padding:10px 14px;row-gap:6px;}
+  .hdr-logo{height:16px;}
+  .hdr-title{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hdr-avatar-wrap,.hdr-avatar{width:36px;height:36px;}
+  .hdr-avatar{font-size:12px;}
+  .hdr-row1 .hdr-center{position:static;left:auto;transform:none;order:3;width:100%;justify-content:flex-start;}
+  .hdr-row2{height:42px;padding:0 14px;}
+
+  /* Reporting scope-pill cluster -> single native select on mobile only (Option 1, approved) */
+  #rpt-pill-bar,#rpt-scope-dropdowns{display:none;}
+  .rpt-mobile-scope-select{display:block;width:100%;}
+
+  /* Reporting KPI strip -> 2x2 grid (approved) */
+  .rpt-kpi-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+
+  /* Reporting comparison/reason panels -> stacked, bars-then-donut order preserved via DOM order (approved) */
+  .rpt-grid-2{grid-template-columns:1fr;}
+
+  /* Touch targets -> ~44px tap zone on small interactive elements (approved) */
+  .role-info-btn{width:32px;height:32px;position:relative;}
+  .role-info-btn::before{content:"";position:absolute;inset:-6px;}
+  .scope-pill{padding:11px 16px;}
+}
+
+@media(max-width:480px){
+  /* Staffing Recommendation grid + editable role grids + Remote Eligibility inputs -> single column, stacked (approved) */
+  .custom-roles-grid,.sf-role-boxes,.sf-modify-roles,.flow-inputs{grid-template-columns:1fr}
 }
 
 /* ── Events Lens-style show identity card ── */
@@ -289,6 +318,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .scope-pill.active{background:rgba(0,189,246,.18);border-color:var(--mb);color:var(--mb);}
 .scope-pill.fixed{cursor:default;}
 .scope-select{font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;padding:4px 10px;border-radius:999px;border:1.5px solid var(--mb);background:rgba(0,189,246,.12);color:var(--mb);cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2300BDF6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
+.rpt-mobile-scope-select{display:none;padding:9px 30px 9px 14px;font-size:14px;text-align:left;}
+.rpt-mobile-scope-select.msel-hidden{display:none!important;}
 .hdr-avatar-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
 .hdr-avatar{width:40px;height:40px;border-radius:50%;background:#001F5F;border:2px solid var(--mb);color:#fff;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.02em;pointer-events:none;user-select:none;overflow:hidden;}
 #rpt-identity-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:default;border:none;background:transparent;pointer-events:none;}
@@ -479,6 +510,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div class="hdr-center" id="hdr-center-reporting" style="display:none;">
       <div class="scope-pills" id="rpt-pill-bar"></div>
       <div class="scope-dropdowns" id="rpt-scope-dropdowns"></div>
+      <select class="scope-select rpt-mobile-scope-select msel-hidden" id="rpt-mobile-scope-select"></select>
     </div>
     <div class="hdr-right">
       <div class="hdr-avatar-wrap">
@@ -1987,6 +2019,73 @@ function rptRenderPills(){
   }
 }
 
+function rptRenderMobileSelect(){
+  var msel = document.getElementById("rpt-mobile-scope-select");
+  if (!msel) return;
+  var p = RPT_PERSONAS[rptCurrentPersonaKey];
+  msel.innerHTML = "";
+
+  function addOption(label, value, isSelected){
+    var o = document.createElement("option");
+    o.value = value; o.textContent = label;
+    if (isSelected) o.selected = true;
+    msel.appendChild(o);
+  }
+
+  if (p.tier === "exec"){
+    addOption("Enterprise", "enterprise||", rptScope.level==="enterprise");
+    rptSortedRegionKeys().forEach(function(r){
+      addOption("Region: " + r, "region||" + r, rptScope.level==="region" && rptScope.region===r);
+    });
+    var allBranchesExec = [];
+    rptSortedRegionKeys().forEach(function(r){
+      rptSortedBranchKeys(RPT_REGION_DATA[r]).forEach(function(b){
+        allBranchesExec.push({ region:r, branch:b });
+      });
+    });
+    allBranchesExec.sort(function(a,b){ return a.branch.localeCompare(b.branch); });
+    allBranchesExec.forEach(function(o){
+      addOption("Branch: " + o.branch, "branch||" + o.region + "||" + o.branch, rptScope.level==="branch" && rptScope.region===o.region && rptScope.branch===o.branch);
+    });
+  }
+
+  if (p.tier === "rd"){
+    var regions = (Array.isArray(p.region) ? p.region.slice() : [p.region]).sort(function(a,b){ return a.localeCompare(b); });
+    regions.forEach(function(r){
+      addOption("Region: " + r, "region||" + r, rptScope.level==="region" && rptScope.region===r);
+    });
+    var allBranchOptions = [];
+    regions.forEach(function(r){
+      rptSortedBranchKeys(RPT_REGION_DATA[r]).forEach(function(b){
+        allBranchOptions.push({ region:r, branch:b });
+      });
+    });
+    allBranchOptions.sort(function(a,b){ return a.branch.localeCompare(b.branch); });
+    allBranchOptions.forEach(function(o){
+      addOption("Branch: " + o.branch, "branch||" + o.region + "||" + o.branch, rptScope.level==="branch" && rptScope.region===o.region && rptScope.branch===o.branch);
+    });
+  }
+
+  if (p.tier === "branch"){
+    var branches = Array.isArray(p.branch) ? p.branch.slice() : [p.branch];
+    if (branches.length > 1){
+      branches.sort(function(a,b){ return a.localeCompare(b); }).forEach(function(b){
+        addOption(b, "branch||" + p.region + "||" + b, rptScope.branch===b);
+      });
+    }
+  }
+
+  msel.onchange = function(e){
+    var parts = e.target.value.split("||");
+    if (parts[0]==="enterprise"){ rptScope = {level:"enterprise",region:null,branch:null}; }
+    else if (parts[0]==="region"){ rptScope = {level:"region", region:parts[1], branch:null}; }
+    else if (parts[0]==="branch"){ rptScope = {level:"branch", region:parts[1], branch:parts[2]}; }
+    rptRender();
+  };
+
+  msel.classList.toggle("msel-hidden", msel.options.length === 0);
+}
+
 function rptCurrentScopeData(){
   if (rptScope.level === "enterprise") return Object.assign({ label:"Enterprise-Wide" }, RPT_ENTERPRISE);
   if (rptScope.level === "region") return Object.assign({ label:rptScope.region }, RPT_REGION_DATA[rptScope.region]);
@@ -2126,6 +2225,7 @@ function rptRenderReasonPanel(){
 
 function rptRender(){
   rptRenderPills();
+  rptRenderMobileSelect();
   rptRenderKpis();
   rptRenderComparisonPanel();
   rptRenderReasonPanel();
@@ -2184,7 +2284,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-07-30 13:25 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-02 02:02 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 </body>

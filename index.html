@@ -2126,7 +2126,7 @@ function rptRenderKpis(){
   strip.innerHTML =
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Documented</div><div class="rpt-kpi-val">' + d.documented + '</div><div class="rpt-kpi-delta">within ' + d.label + '</div></div>' +
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Staffed to Model</div><div class="rpt-kpi-val">' + staffed + '</div><div class="rpt-kpi-delta">of ' + d.documented + ' documented</div></div>' +
-    '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Deviating from Model</div><div class="rpt-kpi-val">' + d.deviations + '</div><div class="rpt-kpi-delta">see Reason Themes below</div></div>' +
+    '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Shows Deviating from Model</div><div class="rpt-kpi-val">' + d.deviations + '</div><div class="rpt-kpi-delta">see Staffing Modification Reasons below</div></div>' +
     '<div class="rpt-kpi-card"><div class="rpt-kpi-lbl">Adherence Rate</div><div class="rpt-kpi-val">' + d.adherence + '%</div><div class="rpt-kpi-delta up">+3 pts vs last month</div></div>';
 }
 
@@ -2221,7 +2221,7 @@ function rptRenderComparisonPanel(){
 function rptRenderReasonPanel(){
   var d = rptCurrentScopeData();
   var panel = document.getElementById("rpt-reason-panel");
-  document.getElementById("rpt-reason-label").textContent = "Reason Themes";
+  document.getElementById("rpt-reason-label").textContent = "Staffing Modification Reasons";
 
   if(d.deviations === 0){
     panel.innerHTML = '<div class="rpt-note">No logged deviations in this scope — every documented show here was staffed to the standard model.</div>';

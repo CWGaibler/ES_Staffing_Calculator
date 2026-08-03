@@ -1536,7 +1536,7 @@ function calculate(){
 
   // Four data indicators
   document.getElementById("currentBoothsVal").textContent=s.pyBooths?s.pyBooths.toLocaleString():"N/A";
-  var box3val=(s.exhibitorList && s.currentBooths>0)?s.currentBooths:ab.count;
+  var box3val=(s.exhibitorList && s.currentBooths>0)?s.currentBooths:(ab.source==="prior-year"?(s.projectedBooths||0):ab.count);
   document.getElementById("projectedBoothsVal").textContent=box3val.toLocaleString();
   document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
   document.getElementById("sfRevenueVal").textContent=ff(ar.amount);

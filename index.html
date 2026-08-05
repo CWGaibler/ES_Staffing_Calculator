@@ -317,6 +317,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .el-id-card-bar{height:4px;background:var(--mb);}
 .el-id-card-body{padding:16px 20px;display:flex;gap:20px;align-items:center;}
 .el-show-title{font-size:20px;font-weight:800;color:var(--fb);margin-bottom:3px;line-height:1.2;}
+.el-show-jobnum{color:var(--mb);font-weight:700;}
 .el-show-meta{font-size:14px;color:var(--muted);display:flex;gap:0;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
 .el-show-meta span{display:flex;align-items:center;}
 .tl-photo{width:116px;height:116px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;overflow:hidden;letter-spacing:-.02em;}
@@ -1526,7 +1527,7 @@ function calculate(){
           '<div class="el-show-title">'+
             '<span>'+s.name+'</span>'+
             '<span style="font-weight:400;color:var(--border);margin:0 10px">|</span>'+
-            '<span style="color:var(--mb);font-size:20px;font-weight:700">Job #'+raw+'</span>'+
+            '<span class="el-show-jobnum">Job #'+raw+'</span>'+
           '</div>'+
           '<div class="el-show-meta">'+metaHtml+'</div>'+
           (chipsHtml ? '<div style="display:flex;flex-wrap:wrap;gap:5px">'+chipsHtml+'</div>' : '')+
@@ -1613,7 +1614,7 @@ function calculate(){
 
   // Revenue source label (set here for use throughout why block)
   var revSourceLabel="Salesforce projection";
-  var revSourceDetail="Salesforce projects "+ff(ar.amount)+" in exhibitor revenue for this show.";
+  var revSourceDetail="Salesforce projects "+ff(ar.amount)+" in exhibitor revenue for this show."+(ar.amount===0?" Without an estimate, certain revenue-based roles will not project accurately. Please work with your Growth partners to gather this missing information.":"");
 
   // Booth source explanation
   var boothSourceLabel;
@@ -2312,7 +2313,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-05 02:02 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-05 14:55 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 

@@ -582,11 +582,11 @@ input.sf-data-card-val::placeholder{color:#C9CEDD;font-weight:700}
 </header>
 <div class="main" id="page-calculator">
   <div class="page-hdr">
-    <div class="page-sub">Enter an event number or event name to generate a staffing recommendation based on the <a href="https://freemanco.sharepoint.com/teams/CustomerExperienceOrg/SitePages/Exhibitor_Services_Staffing.aspx" target="_blank" style="color:var(--mb);font-weight:700;text-decoration:underline;text-underline-offset:2px;">ES Staffing Model</a>.</div>
+    <div class="page-sub"><span id="pageSubLeadIn">Enter an event number or event name to generate a staffing recommendation</span> based on the <a href="https://freemanco.sharepoint.com/teams/CustomerExperienceOrg/SitePages/Exhibitor_Services_Staffing.aspx" target="_blank" style="color:var(--mb);font-weight:700;text-decoration:underline;text-underline-offset:2px;">ES Staffing Model</a>.</div>
   </div>
 
   <div class="el-section-div-row">
-    <div class="el-section-div" id="findShowSectionLbl" style="margin-bottom:0;flex:none">Find a Show</div>
+    <div class="el-section-div" id="findShowSectionLbl" style="margin-bottom:0;flex:none">Find an Event</div>
     <div class="scenario-switch-wrap">
       Scenario Mode
       <div class="switch" id="scenarioModeSwitch" onclick="toggleScenarioMode()" role="button" aria-label="Toggle Scenario Mode"><div class="switch-knob"></div></div>
@@ -1754,7 +1754,8 @@ function toggleScenarioMode(){
   var sw=document.getElementById("scenarioModeSwitch");
   var on=!sw.classList.contains("on");
   sw.className="switch"+(on?" on":"");
-  document.getElementById("findShowSectionLbl").textContent = on ? "Test a Scenario" : "Find a Show";
+  document.getElementById("findShowSectionLbl").textContent = on ? "Test a Scenario" : "Find an Event";
+  document.getElementById("pageSubLeadIn").textContent = on ? "Input data points for a test scenario to generate a staffing recommendation" : "Enter an event number or event name to generate a staffing recommendation";
   document.getElementById("lookupInputRow").style.display = on ? "none" : "block";
   document.getElementById("scenarioSubmitRow").style.display = on ? "flex" : "none";
   document.getElementById("results").classList.toggle("scenario-active", on);
@@ -1791,7 +1792,7 @@ function renderScenarioCard(){
         '<div class="tl-photo" style="background:url(&quot;'+SCENARIO_PLACEHOLDER_IMG+'&quot;) center/cover no-repeat"></div>'+
         '<div style="flex:1;min-width:0">'+
           '<div class="el-show-title">'+
-            '<span>Scenario Preview</span>'+
+            '<span>Event Scenario</span>'+
             '<span style="font-weight:400;color:var(--border);margin:0 10px">|</span>'+
             '<span class="el-show-jobnum">Job #: N/A</span>'+
           '</div>'+

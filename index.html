@@ -880,6 +880,25 @@ function activeRevenue(s,boothCount){
   var sfRev=s.sfRevenue||0;
   return{amount:sfRev,source:"salesforce",warn:false,perBooth:0};
 }
+// Scenario-mode-only booth precedence. Deliberately NOT a change to activeBooths()
+// above, which stays exactly as real shows rely on it. In Scenario Mode there is
+// never a live exhibitor list, so a Current Year Projection — when entered — is
+// the more relevant, deliberately-provided figure and should drive the
+// recommendation outright. Prior Year only drives if no projection was entered.
+// bigSwing flags (but does not override) cases where the two figures diverge by
+// more than the same 80%/150% band used elsewhere in the model, so the reasoning
+// text can prompt a double-check.
+function scenarioActiveBooths(s){
+  var proj=s.projectedBooths||0, py=s.pyBooths||0;
+  if(proj>0){
+    var bigSwing = py>0 && (proj<py*0.8 || proj>py*1.5);
+    return{count:proj,source:"projected",py:py,proj:proj,bigSwing:bigSwing};
+  }
+  if(py>0){
+    return{count:py,source:"prior-year",py:py,proj:proj,bigSwing:false};
+  }
+  return{count:0,source:"projected",py:py,proj:proj,bigSwing:false};
+}
 function applyOverlay(row,rev){
   var cf=row.cf, as_=row.as, sv=row.sv, r=[];
   // BR driven purely by revenue band
@@ -1795,7 +1814,7 @@ function calculateScenario(){
   // takes the same no-list fallback path it already uses for real shows —
   // this is an existing, exercised code path, not new behavior.
   var s={currentBooths:0, projectedBooths:curB, pyBooths:py, pyRevenue:pyRev, sfRevenue:curRev, exhibitorList:false};
-  var ab=activeBooths(s), ar=activeRevenue(s,ab.count);
+  var ab=scenarioActiveBooths(s), ar=activeRevenue(s,ab.count);
 
   // Box 1 / Box 3 badges — same logic as calculate(), "No List Loaded" swapped to "Not Used"
   if(ab.source==="prior-year"){ badge("currentBoothsBadge","Driving Recommendation",true); }
@@ -1853,14 +1872,19 @@ function calculateScenario(){
 
   var boothSourceLabel;
   if(ab.source==="prior-year"){
-    boothSourceLabel = s.projectedBooths>0
-      ? "Prior Year Booths of "+ab.count.toLocaleString()+" — a Current Year Booth Count of "+s.projectedBooths.toLocaleString()+" was also entered, but the Prior Year figure is used as the more reliable reference while it's present."
-      : "Prior Year Booths of "+ab.count.toLocaleString()+" — no Current Year figure was entered. Prior Year booth count is used as the most reliable available reference.";
+    boothSourceLabel = "Prior Year Booths of "+ab.count.toLocaleString()+" — no Current Year Booth Count Projection was entered. Prior Year booth count is used as the most reliable available reference.";
+  } else if(ab.count>0){
+    boothSourceLabel = ab.py>0
+      ? "Current Year Booth Count Projection of "+ab.count.toLocaleString()+" is used to drive this recommendation. Prior Year Booths of "+ab.py.toLocaleString()+" is shown for reference only."
+      : "Current Year Booth Count Projection of "+ab.count.toLocaleString()+" — no Prior Year figure was entered for this scenario.";
   } else {
-    boothSourceLabel = "Projected Booths of "+ab.count.toLocaleString()+" — no Prior Year figure was entered for this scenario.";
+    boothSourceLabel = "No booth count was entered for this scenario.";
   }
 
-  why.push((ab.source==="projected"&&ab.count===0?"*":"")+"<strong>Booth Count Used:</strong> "+boothSourceLabel);
+  why.push((ab.count===0?"*":"")+"<strong>Booth Count Used:</strong> "+boothSourceLabel);
+  if(ab.bigSwing){
+    why.push("<strong>Booth Count Swing:</strong> Current Year Booth Count Projection of "+ab.proj.toLocaleString()+" is being used to drive this recommendation, but it's a significant swing from Prior Year Booths of "+ab.py.toLocaleString()+" — worth confirming this projection is accurate before finalizing.");
+  }
   why.push((ar.amount===0?"*":"")+"<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
   if(ab.count<=50){
     why.push("<strong>Why This Isn't the Small-Event Flow:</strong> This scenario models "+ab.count+" booths, which would normally route to the Remote Eligibility screen. But its "+revSourceLabel+" of "+ff(ar.amount)+" is at or above the $750K threshold, so it's routed here instead — a show this small can still carry enough exhibitor revenue to require back room (and possibly supervisory) support that the Remote Eligibility screen doesn't surface.");

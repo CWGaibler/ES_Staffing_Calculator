@@ -38,6 +38,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .el-section-div{font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;display:flex;align-items:center;gap:8px}
 .el-section-div::after{content:"";flex:1;height:1px;background:var(--border)}
 
+/* SCENARIO MODE TOGGLE — sits on the "Find a Show" section-divider row */
+.el-section-div-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.scenario-switch-wrap{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.switch{position:relative;width:38px;height:20px;background:var(--border);border-radius:999px;cursor:pointer;flex-shrink:0}
+.switch.on{background:var(--mb)}
+.switch-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .15s}
+.switch.on .switch-knob{left:20px}
+
 /* INPUT CARD */
 .input-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
 .input-card-label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:10px}
@@ -94,6 +102,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 .sf-data-card{background:var(--white);border:2.5px solid var(--mb);border-radius:10px;padding:16px 12px;display:flex;flex-direction:column}
 .sf-data-card-lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px;min-height:30px;line-height:1.3}
 .sf-data-card-val{font-size:20px;font-weight:800;color:var(--fb);line-height:1.1}
+input.sf-data-card-val{border:none;background:transparent;width:100%;padding:0;font-family:'Nunito Sans',sans-serif;outline:none}
+input.sf-data-card-val:not([readonly]){border-bottom:1.5px dashed var(--border);cursor:text}
+input.sf-data-card-val:not([readonly]):focus{border-bottom-color:var(--mb)}
+input.sf-data-card-val::placeholder{color:#C9CEDD;font-weight:700}
 .sf-data-card-badge{display:inline-block;font-size:14px;font-weight:700;margin-top:3px;padding:2px 10px;border-radius:999px}
 .sf-data-card-badge-wrap{margin-top:auto;padding-top:6px}
 .badge-active{background:rgba(66,187,55,.12);color:#1A6B35;border:1px solid rgba(66,187,55,.3)}
@@ -188,6 +200,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
 
 /* DECISION SECTION */
 .sf-decision-section{padding:16px 14px;border-top:2px solid var(--border);background:var(--white)}
+/* Scenario mode never commits a real decision — nothing here is saved, so hide every decision/finalize section */
+#results.scenario-active .sf-decision-section{display:none}
 .sf-decision-lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
 .sf-decision-btns{display:flex;gap:8px;flex-wrap:wrap}
 .sf-btn-agree{font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;padding:8px 16px;border-radius:8px;border:none;background:var(--green);color:#fff;cursor:pointer;flex:1}
@@ -571,7 +585,15 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <div class="page-sub">Enter an event number or event name to generate a staffing recommendation based on the <a href="https://freemanco.sharepoint.com/teams/CustomerExperienceOrg/SitePages/Exhibitor_Services_Staffing.aspx" target="_blank" style="color:var(--mb);font-weight:700;text-decoration:underline;text-underline-offset:2px;">ES Staffing Model</a>.</div>
   </div>
 
-  <div class="el-section-div">Find a Show</div>
+  <div class="el-section-div-row">
+    <div class="el-section-div" id="findShowSectionLbl" style="margin-bottom:0;flex:none">Find a Show</div>
+    <div class="scenario-switch-wrap">
+      Scenario Mode
+      <div class="switch" id="scenarioModeSwitch" onclick="toggleScenarioMode()" role="button" aria-label="Toggle Scenario Mode"><div class="switch-knob"></div></div>
+    </div>
+  </div>
+
+  <div id="lookupInputRow">
     <div class="input-card">
     <div class="input-row">
       <div class="input-group" style="position:relative;">
@@ -582,6 +604,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
       <button class="calc-btn" onclick="calculate()">Get Recommendation &#8594;</button>
     </div>
   </div>
+  </div>
 
   <div id="results">
     <!-- SHOW INFO BAR -->
@@ -590,10 +613,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--surface);color:var(--
     <!-- DATA CARDS -->
     <div class="el-section-div">By the Numbers</div>
     <div class="four-grid">
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booth Count</div><div class="sf-data-card-val" id="currentBoothsVal">—</div><div class="sf-data-card-badge-wrap"><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exh. Revenue</div><div class="sf-data-card-val" id="revenueActualsVal">—</div><div class="sf-data-card-badge-wrap"><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Booth Count</div><div class="sf-data-card-val" id="projectedBoothsVal">—</div><div class="sf-data-card-badge-wrap"><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
-      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Exh. Revenue Projection</div><div class="sf-data-card-val" id="sfRevenueVal">—</div><div class="sf-data-card-badge-wrap"><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Booth Count</div><input type="text" class="sf-data-card-val" id="currentBoothsVal" readonly value="—"><div class="sf-data-card-badge-wrap"><span id="currentBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Prior Year Exh. Revenue</div><input type="text" class="sf-data-card-val" id="revenueActualsVal" readonly value="—"><div class="sf-data-card-badge-wrap"><span id="revenueActualsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl" id="projectedBoothsLbl">Current Year Booth Count</div><input type="text" class="sf-data-card-val" id="projectedBoothsVal" readonly value="—"><div class="sf-data-card-badge-wrap"><span id="projectedBoothsBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+      <div class="sf-data-card"><div class="sf-data-card-lbl">Current Year Exh. Revenue Projection</div><input type="text" class="sf-data-card-val" id="sfRevenueVal" readonly value="—"><div class="sf-data-card-badge-wrap"><span id="sfRevenueBadge" class="sf-data-card-badge badge-inactive">—</span></div></div>
+    </div>
+
+    <div id="scenarioSubmitRow" style="display:none;justify-content:flex-end;margin:-4px 0 16px">
+      <button class="calc-btn" onclick="calculateScenario()">Get Recommendation &#8594;</button>
     </div>
 
     <!-- 751+ CUSTOM PLAN -->
@@ -896,7 +923,7 @@ function showNormalFlow(){
 }
 
 // ── 751+ CUSTOM PLAN ────────────────────────────────────────────────────────
-function showCustomPlan(booths, revenue, s){
+function showCustomPlan(booths, revenue, s, isScenario){
   showOnlyFlow("customPlanCard");
   document.getElementById("customPlanHeader").style.display="flex";
   document.getElementById("whyHeader").style.display="none";
@@ -981,7 +1008,7 @@ function showCustomPlan(booths, revenue, s){
   if(brHotShot){brText+=" This show's booth count also qualifies it for a dedicated ES Hot Shot role (+1), added at the 1,000-booth mark to handle open service request follow-up with Customer-Facing and Ops.";}
   if(brRevExtra===2){brText+=" Revenue of "+ff(revenue)+" also exceeds the $25M threshold, adding 2 more back room roles on top of the base band.";}
   else if(brRevExtra===1){brText+=" Revenue of "+ff(revenue)+" also exceeds the $16M threshold, adding 1 more back room role on top of the base band.";}
-  if(revenue===0){brText+=" No revenue estimate is currently available for this show in Salesforce, so this recommendation can't reflect actual revenue-driven need — confirm with Growth once a projection is entered.";}
+  if(revenue===0){brText+=isScenario?" No revenue figure was entered for this scenario, so this recommendation can't reflect actual revenue-driven need.":" No revenue estimate is currently available for this show in Salesforce, so this recommendation can't reflect actual revenue-driven need — confirm with Growth once a projection is entered.";}
   cwhy.push(brText);
 
   if(sugAS>0){cwhy.push("<strong>Additional Support Roles:</strong> Additional support scales in steps above 600 booths — "+booths.toLocaleString()+" booths lands in the tier recommending "+sugAS+" additional support role"+(sugAS!==1?"s":"")+".");}
@@ -989,7 +1016,7 @@ function showCustomPlan(booths, revenue, s){
 
   if(sugSV===2){cwhy.push("<strong>Supervisory Roles:</strong> A second supervisor is added at 1,200+ booths for dedicated on-site leadership on shows of this scale. This show has "+booths.toLocaleString()+" booths.");}
   else if(sugSV===1){cwhy.push("<strong>Supervisory Roles:</strong> A supervisory role is included once a show reaches 451 booths or $2M in revenue. This show's booth count or revenue exceeds that threshold.");}
-  else{cwhy.push("<strong>Supervisory Roles:</strong> Supervisory roles are included starting at 451 booths or $2M in revenue. This show is below both thresholds."+(revenue===0?" No revenue estimate is currently available for this show in Salesforce, so the revenue-based trigger can't be confirmed until a projection is entered.":""));}
+  else{cwhy.push("<strong>Supervisory Roles:</strong> Supervisory roles are included starting at 451 booths or $2M in revenue. This show is below both thresholds."+(revenue===0?(isScenario?" No revenue figure was entered for this scenario, so the revenue-based trigger can't be confirmed until a projection is entered.":" No revenue estimate is currently available for this show in Salesforce, so the revenue-based trigger can't be confirmed until a projection is entered."):""));}
 
   cwhy.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
 
@@ -1001,15 +1028,17 @@ function showCustomPlan(booths, revenue, s){
   // ── CONSIDER THESE BEFORE DECIDING (Custom Plan) ─────────────────────────
   // Reuses Normal flow's grey city / booth trend / timeline / billing / freight
   // bullets verbatim, plus one Custom-specific addition for High-Touch Accounts.
-  var cbdiff=s.currentBooths-s.projectedBooths,cbpct=Math.round(Math.abs(cbdiff)/s.projectedBooths*100);
   var cqs=[
     {i:"\uD83C\uDFD9",t:"Is this show taking place in a grey city? Grey city events may have additional staffing complexity that warrants adjusting from the model recommendation."},
-    {i:"\uD83D\uDCCA",t:"Current booths ("+s.currentBooths.toLocaleString()+") are "+cbpct+"% "+(cbdiff>=0?"above":"below")+" projection ("+s.projectedBooths.toLocaleString()+"). Prior year was "+s.pyBooths.toLocaleString()+" booths. Does the trend feel consistent with expectations?"},
     {i:"\u23F1",t:"Does this show have a compressed move-in or teardown timeline that would benefit from additional support on specific days?"},
     {i:"\uD83D\uDCB3",t:"Are there heightened collection needs or specialized billing complexity that would increase back room workload beyond the model suggestion?"},
-    {i:"\uD83D\uDE9A",t:"Does this show require any freight-specific service stations \u2014 cold storage, access/controlled storage, or rigging desks \u2014 that are not captured in the model?"},
-    {i:"\uD83E\uDD1D",t:"Check the NSS High-Touch Accounts column \u2014 an assigned HTA team member may change what staffing requirements this show needs."}
+    {i:"\uD83D\uDE9A",t:"Does this show require any freight-specific service stations \u2014 cold storage, access/controlled storage, or rigging desks \u2014 that are not captured in the model?"}
   ];
+  if(!isScenario){
+    var cbdiff=s.currentBooths-s.projectedBooths,cbpct=Math.round(Math.abs(cbdiff)/s.projectedBooths*100);
+    cqs.splice(1,0,{i:"\uD83D\uDCCA",t:"Current booths ("+s.currentBooths.toLocaleString()+") are "+cbpct+"% "+(cbdiff>=0?"above":"below")+" projection ("+s.projectedBooths.toLocaleString()+"). Prior year was "+s.pyBooths.toLocaleString()+" booths. Does the trend feel consistent with expectations?"});
+    cqs.push({i:"\uD83E\uDD1D",t:"Check the NSS High-Touch Accounts column \u2014 an assigned HTA team member may change what staffing requirements this show needs."});
+  }
   document.getElementById("customQuestionsList").innerHTML=cqs.map(function(q){return'<div class="sf-consider-item"><div class="sf-consider-icon">'+q.i+'</div><div>'+q.t+'</div></div>';}).join("");
 }
 function submitCustomPlan(){
@@ -1536,11 +1565,11 @@ function calculate(){
     '</div>';
 
   // Four data indicators
-  document.getElementById("currentBoothsVal").textContent=s.pyBooths?s.pyBooths.toLocaleString():"N/A";
+  document.getElementById("currentBoothsVal").value=s.pyBooths?s.pyBooths.toLocaleString():"N/A";
   var box3val=(s.exhibitorList && s.currentBooths>0)?s.currentBooths:(ab.source==="prior-year"?(s.projectedBooths||0):ab.count);
-  document.getElementById("projectedBoothsVal").textContent=box3val.toLocaleString();
-  document.getElementById("revenueActualsVal").textContent=s.pyRevenue?ff(s.pyRevenue):"N/A";
-  document.getElementById("sfRevenueVal").textContent=ff(ar.amount);
+  document.getElementById("projectedBoothsVal").value=box3val.toLocaleString();
+  document.getElementById("revenueActualsVal").value=s.pyRevenue?ff(s.pyRevenue):"N/A";
+  document.getElementById("sfRevenueVal").value=ff(ar.amount);
   // Box 1 and Box 3 badges depend on booth source
   if(ab.source==="prior-year" || ab.source==="prior-year-override"){
     badge("currentBoothsBadge","Driving Recommendation",true);
@@ -1668,6 +1697,200 @@ function calculate(){
     {i:"\u23F1",t:"Does this show have a compressed move-in or teardown timeline that would benefit from additional support on specific days?"},
     {i:"\uD83D\uDCB3",t:"Are there heightened collection needs or specialized billing complexity that would increase back room workload beyond the model suggestion?"},
     {i:"\uD83D\uDE9A",t:"Does this show require any freight-specific service stations \u2014 cold storage, access/controlled storage, or rigging desks \u2014 that are not captured in the model?"}
+  ];
+  document.getElementById("questionsList").innerHTML=qs.map(function(q){return'<div class="sf-consider-item"><div class="sf-consider-icon">'+q.i+'</div><div>'+q.t+'</div></div>';}).join("");
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SCENARIO MODE — model a projection from entered numbers, no real show.
+// Reuses activeBooths()/activeRevenue()/applyOverlay()/getRow()/MODEL,
+// showNormalFlow()/showCustomPlan()/showRemoteEligibility() unmodified.
+// Nothing here is saved; the "By the Numbers" boxes are the input fields.
+// ════════════════════════════════════════════════════════════════════════
+
+function toggleScenarioMode(){
+  var sw=document.getElementById("scenarioModeSwitch");
+  var on=!sw.classList.contains("on");
+  sw.className="switch"+(on?" on":"");
+  document.getElementById("findShowSectionLbl").textContent = on ? "Test a Scenario" : "Find a Show";
+  document.getElementById("lookupInputRow").style.display = on ? "none" : "block";
+  document.getElementById("scenarioSubmitRow").style.display = on ? "flex" : "none";
+  document.getElementById("results").classList.toggle("scenario-active", on);
+
+  var boxIds=["currentBoothsVal","revenueActualsVal","projectedBoothsVal","sfRevenueVal"];
+  boxIds.forEach(function(id){
+    var el=document.getElementById(id);
+    el.readOnly=!on;
+    if(on){ el.value=""; el.placeholder="—"; } else { el.value="—"; }
+  });
+  ["currentBoothsBadge","revenueActualsBadge","projectedBoothsBadge","sfRevenueBadge"].forEach(function(id){
+    badge(id,"—",false);
+  });
+  document.getElementById("projectedBoothsLbl").textContent="Current Year Booth Count";
+
+  if(on){
+    renderScenarioCard();
+    document.getElementById("results").style.display="block";
+    showOnlyFlow(null); // hides all three flow cards until Get Recommendation is clicked
+    // Guard against stale state left over from a prior real-show interaction this session
+    ["confirmBanner"].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display="none";});
+    ["deviationPanel","remoteDeviationPanel"].forEach(function(id){var el=document.getElementById(id);if(el){el.style.display="none";el.classList.remove("open");}});
+  } else {
+    document.getElementById("results").style.display="none";
+    document.getElementById("jobInput").value="";
+  }
+}
+
+function renderScenarioCard(){
+  document.getElementById("showInfoCard").innerHTML=
+    '<div class="el-id-card">'+
+      '<div class="el-id-card-bar"></div>'+
+      '<div class="el-id-card-body">'+
+        '<div class="tl-photo" style="background:var(--fb-lt);color:var(--mb)">?</div>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div class="el-show-title">'+
+            '<span>Scenario Preview</span>'+
+            '<span style="font-weight:400;color:var(--border);margin:0 10px">|</span>'+
+            '<span class="el-show-jobnum">Not a Real Show</span>'+
+          '</div>'+
+          '<div class="el-show-meta">Facility: N/A | Branch: N/A | Growth: N/A</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+}
+
+// Live comma / "$" formatting on the four boxes — same approach already used
+// on the Remote Eligibility flow's manual revenue/freight inputs.
+(function attachScenarioFormatting(){
+  var boothIds=["currentBoothsVal","projectedBoothsVal"];
+  var revIds=["revenueActualsVal","sfRevenueVal"];
+  boothIds.forEach(function(id){
+    document.getElementById(id).addEventListener("input",function(){
+      if(this.readOnly) return;
+      var raw=this.value.replace(/[^0-9]/g,"");
+      this.value = raw ? parseInt(raw,10).toLocaleString("en-US") : "";
+    });
+  });
+  revIds.forEach(function(id){
+    document.getElementById(id).addEventListener("input",function(){
+      if(this.readOnly) return;
+      var raw=this.value.replace(/[^0-9]/g,"");
+      this.value = raw ? "$"+parseInt(raw,10).toLocaleString("en-US") : "";
+    });
+  });
+})();
+
+function scenarioBoxNum(id){
+  var v=document.getElementById(id).value.replace(/[^0-9.]/g,"");
+  return v?parseFloat(v):0;
+}
+
+function calculateScenario(){
+  var py=scenarioBoxNum("currentBoothsVal");
+  var pyRev=scenarioBoxNum("revenueActualsVal");
+  var curB=scenarioBoxNum("projectedBoothsVal");
+  var curRev=scenarioBoxNum("sfRevenueVal");
+
+  // No live exhibitor list exists in scenario mode, so activeBooths() always
+  // takes the same no-list fallback path it already uses for real shows —
+  // this is an existing, exercised code path, not new behavior.
+  var s={currentBooths:0, projectedBooths:curB, pyBooths:py, pyRevenue:pyRev, sfRevenue:curRev, exhibitorList:false};
+  var ab=activeBooths(s), ar=activeRevenue(s,ab.count);
+
+  // Box 1 / Box 3 badges — same logic as calculate(), "No List Loaded" swapped to "Not Used"
+  if(ab.source==="prior-year"){ badge("currentBoothsBadge","Driving Recommendation",true); }
+  else { badge("currentBoothsBadge","Prior Year Reference",false); }
+  document.getElementById("projectedBoothsLbl").textContent="Current Year Booth Count Projection";
+  if(ab.source==="projected"){ badge("projectedBoothsBadge","Driving Recommendation",true,ab.count===0); }
+  else { badge("projectedBoothsBadge","Not Used",false); }
+  badge("revenueActualsBadge","Prior Year Reference",false);
+  badge("sfRevenueBadge","Driving Recommendation",true,ar.amount===0);
+
+  document.getElementById("results").style.display="block";
+
+  var rev=ar.amount;
+  if(ab.count>750){
+    showCustomPlan(ab.count, rev, s, true);
+    return;
+  }
+  if(ab.count<=50 && rev<750000){
+    // Reuse the real Remote Eligibility screen unmodified — it already requires
+    // manual MHA/freight entry every time, real show or not. Register the
+    // scenario under a temp key so showRemoteEligibility()'s existing
+    // SHOWS[currentJob] lookup pre-fills revenue exactly like it does for real shows.
+    var tempKey="__SCENARIO_TEMP__";
+    SHOWS[tempKey]={sfRevenue:rev};
+    currentJob=tempKey;
+    showRemoteEligibility(ab.count);
+    delete SHOWS[tempKey];
+    return;
+  }
+
+  showNormalFlow();
+  var row=getRow(ab.count);
+  var base=row||MODEL[MODEL.length-1];
+  var ov=applyOverlay(base,ar.amount);
+  var total=ov.cf+ov.br+ov.as+ov.sv;
+  currentRec={cf:ov.cf,br:ov.br,as:ov.as,sv:ov.sv,fr:0};
+
+  [{id:"cf",c:ov.cf,s:"Customer-Facing Role",p:"Customer-Facing Roles"},
+   {id:"br",c:ov.br,s:"Back Room Role",p:"Back Room Roles"},
+   {id:"as",c:ov.as,s:"Additional Support Role",p:"Additional Support Roles"},
+   {id:"sv",c:ov.sv,s:"Supervisory Role",p:"Supervisory Roles"},
+   {id:"fr",c:0,s:"Freight Rigging / Storage Desk Role",p:"Freight Rigging / Storage Desk Roles"}
+  ].forEach(function(r){
+    document.getElementById("count-"+r.id).textContent=r.c;
+    document.getElementById("block-"+r.id).className="sf-role-box "+(r.id==="fr"?"sf-role-box-freight ":"")+(r.c>0?"active-role":"zero");
+    document.getElementById("label-"+r.id).innerHTML=r.c===1?r.s:r.p;
+  });
+  document.getElementById("totalCount").textContent=total;
+
+  var why=[];
+  var revSourceLabel="entered revenue";
+  var revSourceDetail = ar.amount===0
+    ? "No revenue figure was entered for this scenario. Without one, certain revenue-based roles will not project accurately."
+    : ff(ar.amount)+" was entered as the revenue figure for this scenario.";
+
+  var boothSourceLabel;
+  if(ab.source==="prior-year"){
+    boothSourceLabel = s.projectedBooths>0
+      ? "Prior Year Booths of "+ab.count.toLocaleString()+" — a Current Year Booth Count of "+s.projectedBooths.toLocaleString()+" was also entered, but the Prior Year figure is used as the more reliable reference while it's present."
+      : "Prior Year Booths of "+ab.count.toLocaleString()+" — no Current Year figure was entered. Prior Year booth count is used as the most reliable available reference.";
+  } else {
+    boothSourceLabel = "Projected Booths of "+ab.count.toLocaleString()+" — no Prior Year figure was entered for this scenario.";
+  }
+
+  why.push((ab.source==="projected"&&ab.count===0?"*":"")+"<strong>Booth Count Used:</strong> "+boothSourceLabel);
+  why.push((ar.amount===0?"*":"")+"<strong>Revenue Estimate ("+revSourceLabel+"):</strong> "+revSourceDetail);
+  if(ab.count<=50){
+    why.push("<strong>Why This Isn't the Small-Event Flow:</strong> This scenario models "+ab.count+" booths, which would normally route to the Remote Eligibility screen. But its "+revSourceLabel+" of "+ff(ar.amount)+" is at or above the $750K threshold, so it's routed here instead — a show this small can still carry enough exhibitor revenue to require back room (and possibly supervisory) support that the Remote Eligibility screen doesn't surface.");
+  }
+  why.push("<strong>Customer-Facing Roles:</strong> "+ab.count+" booths falls in the "+base.min+"–"+base.max+" booth range, which has a baseline of "+base.cf+" customer-facing role"+(base.cf!==1?"s":"")+".");
+
+  var brBandLabel;
+  if(ar.amount>=16000000){brBandLabel="$16M+";}
+  else if(ar.amount>=8000000){brBandLabel="$8M–$16M";}
+  else if(ar.amount>=5000000){brBandLabel="$5M–$8M";}
+  else if(ar.amount>=2500000){brBandLabel="$2.5M–$5M";}
+  else if(ar.amount>=750000){brBandLabel="$750K–$2.5M";}
+  else{brBandLabel="under $750K";}
+  if(ov.br===0){why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, which does not require back room staffing."+(ar.amount===0?" No revenue figure was entered for this scenario, so this recommendation can't reflect actual revenue-driven need.":""));}
+  else{why.push("<strong>Back Room Roles:</strong> Back room staffing is driven by estimated exhibitor revenue, not booth count. The "+revSourceLabel+" of "+ff(ar.amount)+" falls in the "+brBandLabel+" revenue band, recommending "+ov.br+" back room role"+(ov.br!==1?"s":"")+".");}
+
+  if(base.as>0){why.push("<strong>Additional Support Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.as+" additional support role"+(base.as!==1?"s":"")+" in the baseline. These roles provide extra coverage for customer-facing tasks on high-demand days.");}
+  else{why.push("<strong>Additional Support Roles:</strong> Additional support roles are included in the baseline starting at 601 booths. This scenario models "+ab.count+" booths. If this show has specific high-demand dates or compressed timelines, a modification can be documented below.");}
+  if(ov.sv===0){why.push("<strong>Supervisory Roles:</strong> Supervisory roles are included in the baseline starting at 451 booths. This scenario models "+ab.count+" booths and an "+revSourceLabel+" of "+ff(ar.amount)+", which does not exceed the $2M revenue trigger."+(ar.amount===0?" No revenue figure was entered for this scenario, so the revenue-based trigger can't be confirmed until a projection is entered.":""));}
+  else if(base.sv>0){why.push("<strong>Supervisory Roles:</strong> The "+base.min+"–"+base.max+" booth range includes "+base.sv+" supervisory role"+(base.sv!==1?"s":"")+" in the baseline. Events of this size require dedicated on-site leadership.");}
+  else{why.push("<strong>Supervisory Roles:</strong> This scenario's "+ab.count+" booths are below the 451-booth baseline trigger, but the "+revSourceLabel+" of "+ff(ar.amount)+" exceeds the $2M absolute threshold, which requires a supervisory role regardless of booth count.");}
+  why.push("<strong>Freight Rigging / Storage Desk Roles:</strong> Roles dedicated to managing cold and frozen storage, access storage, or freight rigging desks. These are not driven by the staffing model — they default to 0 and should only be added if the show operationally requires a dedicated storage or rigging presence.");
+  document.getElementById("whyList").innerHTML=why.map(function(r){return'<div class="sf-why-item"><div class="sf-why-dot"></div><div class="sf-why-text">'+r+'</div></div>';}).join("");
+  document.getElementById("whyHeader").innerHTML="Why This Result"+(why.some(function(r){return r.charAt(0)==="*";})?"*":"")+" <span class=\"sf-chev\">&#9660;</span>";
+
+  var qs=[
+    {i:"🏙",t:"Is this show taking place in a grey city? Grey city events may have additional staffing complexity that warrants adjusting from the model recommendation."},
+    {i:"⏱",t:"Does this show have a compressed move-in or teardown timeline that would benefit from additional support on specific days?"},
+    {i:"💳",t:"Are there heightened collection needs or specialized billing complexity that would increase back room workload beyond the model suggestion?"},
+    {i:"🚚",t:"Does this show require any freight-specific service stations — cold storage, access/controlled storage, or rigging desks — that are not captured in the model?"}
   ];
   document.getElementById("questionsList").innerHTML=qs.map(function(q){return'<div class="sf-consider-item"><div class="sf-consider-icon">'+q.i+'</div><div>'+q.t+'</div></div>';}).join("");
 }

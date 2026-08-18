@@ -861,6 +861,16 @@ var MODEL=[
   {min:701,max:750, cf:5,as:1,sv:1}
 ];
 
+// CF floor for the Custom Plan flow (751+ booths). Below 750 the model adds
+// 1 CF per 150 booths (see MODEL above); above 750 it widens to 1 per 200.
+// Recomputing straight off the total booth count at the wider ratio can
+// otherwise produce FEWER customer-facing roles for a 751-booth show than a
+// 750-booth show already received (e.g. 751/200 rounds up to 4, vs. 5 at
+// exactly 750) -- a real regression a leader could notice and rightly
+// question. This floor guarantees the recommendation never goes backward:
+// CF above 750 is always at least whatever the top of the 1:150 tier earned.
+var CF_FLOOR_AT_750 = MODEL[MODEL.length-1].cf;
+
 var currentRec={cf:0,br:0,as:0,sv:0,fr:0};
 var currentJob="";
 
@@ -968,8 +978,10 @@ function showCustomPlan(booths, revenue, s, isScenario){
   ["customWhyHeader","customQuestionsHeader"].forEach(function(id){document.getElementById(id).classList.remove("open");});
 
   // ── CUSTOM PLAN RULES (751+ booths) ─────────────────────────────────────
-  // CF: 1 per 200 booths (wider ratio than normal model's 1:150)
-  var sugCF=Math.ceil(booths/200);
+  // CF: 1 per 200 booths (wider ratio than normal model's 1:150), floored at
+  // whatever the 1:150 tier already earned at 750 booths so this can never
+  // recommend fewer CF roles than a smaller show already received.
+  var sugCF=Math.max(CF_FLOOR_AT_750, Math.ceil(booths/200));
 
   // BR: revenue band + ES Hot Shot at 1000+ + revenue scaling above $16M
   var brBase=0;
@@ -1033,7 +1045,8 @@ function showCustomPlan(booths, revenue, s, isScenario){
 
   // ── WHY THIS RESULT (Custom Plan) ────────────────────────────────────────
   var cwhy=[];
-  cwhy.push("<strong>Customer-Facing Roles:</strong> Above the 750-booth ceiling, the model widens to 1 role per 200 booths (rather than the standard 1 per 150). "+booths.toLocaleString()+" booths suggests "+sugCF+" customer-facing role"+(sugCF!==1?"s":"")+".");
+  var cfAtFloor=(sugCF===CF_FLOOR_AT_750 && Math.ceil(booths/200)<CF_FLOOR_AT_750);
+  cwhy.push("<strong>Customer-Facing Roles:</strong> Above the 750-booth ceiling, the model widens to 1 role per 200 booths (rather than the standard 1 per 150) — and never recommends fewer roles than a smaller show already receives. "+booths.toLocaleString()+" booths suggests "+sugCF+" customer-facing role"+(sugCF!==1?"s":"")+(cfAtFloor?" (held at the 750-booth level; the 1:200 ratio alone would suggest fewer)":"")+".");
 
   var brBandLabel=brBase>=5?"$16M+":brBase===4?"$8M\u2013$16M":brBase===3?"$5M\u2013$8M":brBase===2?"$2.5M\u2013$5M":brBase===1?"$750K\u2013$2.5M":"under $750K";
   var brText=(revenue===0?"*":"")+"<strong>Back Room Roles:</strong> Base revenue of "+ff(revenue)+" falls in the "+brBandLabel+" band, which is a baseline of "+brBase+" back room role"+(brBase!==1?"s":"")+".";
@@ -2599,7 +2612,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- build-prev: 2026-06-17 15:50:16 UTC -->
 
-    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-11 12:35 UTC</div>
+    <div class="version-footer">ES Staffing Calculator&nbsp;&nbsp;&middot;&nbsp;&nbsp;Build 2026-08-18 10:45 UTC</div>
 <!-- build-prev: 2026-06-26T11:16:15Z -->
 <!-- build: 2026-06-26T12:31:41Z -->
 
